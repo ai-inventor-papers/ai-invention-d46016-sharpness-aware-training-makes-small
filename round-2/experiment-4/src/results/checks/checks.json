@@ -1,0 +1,24 @@
+{
+ "ece_perfect_calibration_synthetic_N400k": 0.002419233028098387,
+ "ece_constant_c0.8_a0.6": 0.20000000000000018,
+ "temperature_fit_calibrated_synthetic": 0.9955190891976818,
+ "split_sizes": {
+  "train": 50000,
+  "val": 10000,
+  "test": 10000
+ },
+ "logit_shape_check": [
+  64,
+  10
+ ],
+ "rho0_sam_vs_sgd_one_epoch": {
+  "max_abs_batch_loss_diff": 0.0,
+  "max_abs_param_diff": 0.0,
+  "max_abs_test_logit_diff_eval_mode": 0.1459188461303711,
+  "note": "Parameters and batch losses are compared. Eval-mode logits can differ because BatchNorm running statistics are updated in both SAM passes, as the spec requires."
+ },
+ "placebo_same_seed_sgd": {
+  "paired_nll_diff": 0.0,
+  "max_abs_logit_diff": 0.0
+ }
+}

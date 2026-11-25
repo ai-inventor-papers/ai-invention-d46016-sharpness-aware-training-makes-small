@@ -1,0 +1,15 @@
+{
+ "seed": 101,
+ "final_val_nll_raw_by_rho": {
+  "0.05": 0.2103902844910903,
+  "0.1": 0.19983867205089795,
+  "0.2": 0.22988255751812825
+ },
+ "chosen_rho": 0.1,
+ "selection_rule": "lowest final-epoch validation NLL (raw); test not used",
+ "wall_time_s": {
+  "tune_sam_rho0.05_s101": 72.6803822517395,
+  "tune_sam_rho0.1_s101": 75.37374186515808,
+  "tune_sam_rho0.2_s101": 81.88092398643494
+ }
+}

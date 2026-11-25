@@ -1,0 +1,73 @@
+{
+ "target": "SAM 40-epoch eval-mode training loss (condition 1)",
+ "E_star": 10,
+ "tolerance_b": 0.01,
+ "flag_a_over": 0.02,
+ "rows": [
+  {
+   "seed": 0,
+   "sam40_train_loss": 0.10183064840827384,
+   "sgd40_train_loss": 0.008040267656811938,
+   "matched_epoch_e_s": 10,
+   "sgd_matched_epoch_train_loss": 0.10637930578112692,
+   "gap_matched_epoch_a": 0.004548657372853079,
+   "flag_gap_a_over_0.02": false,
+   "sgd_matched_loss_E_star": 10,
+   "sgd_matched_loss_train_loss": 0.10497397701681199,
+   "gap_matched_loss_b": 0.003143328608538151,
+   "flag_gap_b_over_0.01": false
+  },
+  {
+   "seed": 1,
+   "sam40_train_loss": 0.09940649285379259,
+   "sgd40_train_loss": 0.007428998183353422,
+   "matched_epoch_e_s": 11,
+   "sgd_matched_epoch_train_loss": 0.10787659974114755,
+   "gap_matched_epoch_a": 0.008470106887354958,
+   "flag_gap_a_over_0.02": false,
+   "sgd_matched_loss_E_star": 10,
+   "sgd_matched_loss_train_loss": 0.10438812831318466,
+   "gap_matched_loss_b": 0.004981635459392064,
+   "flag_gap_b_over_0.01": false
+  },
+  {
+   "seed": 2,
+   "sam40_train_loss": 0.11010284616935614,
+   "sgd40_train_loss": 0.008524215209340345,
+   "matched_epoch_e_s": 10,
+   "sgd_matched_epoch_train_loss": 0.10579708167386948,
+   "gap_matched_epoch_a": -0.004305764495486669,
+   "flag_gap_a_over_0.02": false,
+   "sgd_matched_loss_E_star": 10,
+   "sgd_matched_loss_train_loss": 0.11120033177475881,
+   "gap_matched_loss_b": 0.0010974856054026677,
+   "flag_gap_b_over_0.01": false
+  },
+  {
+   "seed": 3,
+   "sam40_train_loss": 0.1017485613147293,
+   "sgd40_train_loss": 0.007762957335719434,
+   "matched_epoch_e_s": 11,
+   "sgd_matched_epoch_train_loss": 0.0971908574876657,
+   "gap_matched_epoch_a": -0.0045577038270635944,
+   "flag_gap_a_over_0.02": false,
+   "sgd_matched_loss_E_star": 10,
+   "sgd_matched_loss_train_loss": 0.1072302115425739,
+   "gap_matched_loss_b": 0.005481650227844595,
+   "flag_gap_b_over_0.01": false
+  },
+  {
+   "seed": 4,
+   "sam40_train_loss": 0.10264625312826536,
+   "sgd40_train_loss": 0.007384492072528779,
+   "matched_epoch_e_s": 10,
+   "sgd_matched_epoch_train_loss": 0.10445419665601734,
+   "gap_matched_epoch_a": 0.0018079435277519734,
+   "flag_gap_a_over_0.02": false,
+   "sgd_matched_loss_E_star": 10,
+   "sgd_matched_loss_train_loss": 0.10302214888573173,
+   "gap_matched_loss_b": 0.0003758957574663685,
+   "flag_gap_b_over_0.01": false
+  }
+ ]
+}

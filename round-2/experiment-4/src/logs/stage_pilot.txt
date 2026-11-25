@@ -1,0 +1,158 @@
+06:21:37|INFO   |Device: mps; stage=pilot; torch=2.16.0.dev20261116
+06:21:37|INFO   |===== stage: pilot =====
+06:21:37|INFO   |Normalisation from 50k train split: mean=0.2861 std=0.3533
+06:21:37|INFO   |Split sizes: train=50000 val=10000 test=10000 device=mps
+06:21:37|INFO   |START pilot_sam_rho0.1_s100: method=sam rho=0.1 epochs=40 seed=100
+06:21:40|INFO   |  pilot_sam_rho0.1_s100 ep01 lr=0.01000 batch_loss=0.5635 train_loss_eval=0.3891 test_acc=0.8474 T=0.942 t=2.4s
+06:21:42|INFO   |  pilot_sam_rho0.1_s100 ep02 lr=0.00998 batch_loss=0.3414 train_loss_eval=0.3077 test_acc=0.8761 T=0.967 t=1.4s
+06:21:44|INFO   |  pilot_sam_rho0.1_s100 ep03 lr=0.00994 batch_loss=0.2922 train_loss_eval=0.2664 test_acc=0.8904 T=0.898 t=1.4s
+06:21:45|INFO   |  pilot_sam_rho0.1_s100 ep04 lr=0.00986 batch_loss=0.2640 train_loss_eval=0.2435 test_acc=0.8952 T=0.912 t=1.4s
+06:21:47|INFO   |  pilot_sam_rho0.1_s100 ep05 lr=0.00976 batch_loss=0.2460 train_loss_eval=0.2285 test_acc=0.8997 T=0.871 t=1.5s
+06:21:49|INFO   |  pilot_sam_rho0.1_s100 ep06 lr=0.00962 batch_loss=0.2334 train_loss_eval=0.2193 test_acc=0.9040 T=0.928 t=1.5s
+06:21:51|INFO   |  pilot_sam_rho0.1_s100 ep07 lr=0.00946 batch_loss=0.2212 train_loss_eval=0.2125 test_acc=0.9045 T=0.900 t=1.5s
+06:21:53|INFO   |  pilot_sam_rho0.1_s100 ep08 lr=0.00926 batch_loss=0.2114 train_loss_eval=0.2053 test_acc=0.9066 T=0.923 t=1.5s
+06:21:55|INFO   |  pilot_sam_rho0.1_s100 ep09 lr=0.00905 batch_loss=0.2032 train_loss_eval=0.1900 test_acc=0.9102 T=0.909 t=1.4s
+06:21:56|INFO   |  pilot_sam_rho0.1_s100 ep10 lr=0.00880 batch_loss=0.1943 train_loss_eval=0.1932 test_acc=0.9092 T=0.981 t=1.4s
+06:21:58|INFO   |  pilot_sam_rho0.1_s100 ep11 lr=0.00854 batch_loss=0.1874 train_loss_eval=0.1820 test_acc=0.9124 T=0.927 t=1.5s
+06:22:00|INFO   |  pilot_sam_rho0.1_s100 ep12 lr=0.00825 batch_loss=0.1812 train_loss_eval=0.1745 test_acc=0.9127 T=0.928 t=1.6s
+06:22:02|INFO   |  pilot_sam_rho0.1_s100 ep13 lr=0.00794 batch_loss=0.1764 train_loss_eval=0.1691 test_acc=0.9126 T=0.912 t=1.4s
+06:22:04|INFO   |  pilot_sam_rho0.1_s100 ep14 lr=0.00761 batch_loss=0.1707 train_loss_eval=0.1664 test_acc=0.9139 T=0.886 t=1.4s
+06:22:05|INFO   |  pilot_sam_rho0.1_s100 ep15 lr=0.00727 batch_loss=0.1659 train_loss_eval=0.1574 test_acc=0.9160 T=0.950 t=1.4s
+06:22:07|INFO   |  pilot_sam_rho0.1_s100 ep16 lr=0.00691 batch_loss=0.1611 train_loss_eval=0.1553 test_acc=0.9173 T=0.910 t=1.5s
+06:22:09|INFO   |  pilot_sam_rho0.1_s100 ep17 lr=0.00655 batch_loss=0.1559 train_loss_eval=0.1530 test_acc=0.9175 T=0.925 t=1.5s
+06:22:11|INFO   |  pilot_sam_rho0.1_s100 ep18 lr=0.00617 batch_loss=0.1518 train_loss_eval=0.1454 test_acc=0.9173 T=0.938 t=1.4s
+06:22:13|INFO   |  pilot_sam_rho0.1_s100 ep19 lr=0.00578 batch_loss=0.1484 train_loss_eval=0.1435 test_acc=0.9185 T=0.916 t=1.4s
+06:22:15|INFO   |  pilot_sam_rho0.1_s100 ep20 lr=0.00539 batch_loss=0.1444 train_loss_eval=0.1381 test_acc=0.9194 T=0.936 t=1.5s
+06:22:16|INFO   |  pilot_sam_rho0.1_s100 ep21 lr=0.00500 batch_loss=0.1413 train_loss_eval=0.1354 test_acc=0.9182 T=0.971 t=1.5s
+06:22:18|INFO   |  pilot_sam_rho0.1_s100 ep22 lr=0.00461 batch_loss=0.1375 train_loss_eval=0.1346 test_acc=0.9183 T=0.951 t=1.5s
+06:22:20|INFO   |  pilot_sam_rho0.1_s100 ep23 lr=0.00422 batch_loss=0.1343 train_loss_eval=0.1307 test_acc=0.9203 T=0.933 t=1.5s
+06:22:22|INFO   |  pilot_sam_rho0.1_s100 ep24 lr=0.00383 batch_loss=0.1319 train_loss_eval=0.1279 test_acc=0.9183 T=0.964 t=1.4s
+06:22:23|INFO   |  pilot_sam_rho0.1_s100 ep25 lr=0.00345 batch_loss=0.1294 train_loss_eval=0.1261 test_acc=0.9198 T=0.953 t=1.4s
+06:22:25|INFO   |  pilot_sam_rho0.1_s100 ep26 lr=0.00309 batch_loss=0.1275 train_loss_eval=0.1225 test_acc=0.9198 T=0.996 t=1.5s
+06:22:27|INFO   |  pilot_sam_rho0.1_s100 ep27 lr=0.00273 batch_loss=0.1247 train_loss_eval=0.1236 test_acc=0.9189 T=0.977 t=1.5s
+06:22:29|INFO   |  pilot_sam_rho0.1_s100 ep28 lr=0.00239 batch_loss=0.1231 train_loss_eval=0.1193 test_acc=0.9201 T=0.984 t=1.5s
+06:22:31|INFO   |  pilot_sam_rho0.1_s100 ep29 lr=0.00206 batch_loss=0.1207 train_loss_eval=0.1171 test_acc=0.9206 T=0.996 t=1.5s
+06:22:33|INFO   |  pilot_sam_rho0.1_s100 ep30 lr=0.00175 batch_loss=0.1193 train_loss_eval=0.1168 test_acc=0.9213 T=0.993 t=1.8s
+06:22:35|INFO   |  pilot_sam_rho0.1_s100 ep31 lr=0.00146 batch_loss=0.1176 train_loss_eval=0.1169 test_acc=0.9206 T=0.985 t=1.6s
+06:22:37|INFO   |  pilot_sam_rho0.1_s100 ep32 lr=0.00120 batch_loss=0.1170 train_loss_eval=0.1140 test_acc=0.9209 T=1.006 t=1.6s
+06:22:39|INFO   |  pilot_sam_rho0.1_s100 ep33 lr=0.00095 batch_loss=0.1157 train_loss_eval=0.1140 test_acc=0.9215 T=0.994 t=1.5s
+06:22:41|INFO   |  pilot_sam_rho0.1_s100 ep34 lr=0.00074 batch_loss=0.1148 train_loss_eval=0.1135 test_acc=0.9210 T=1.000 t=1.5s
+06:22:42|INFO   |  pilot_sam_rho0.1_s100 ep35 lr=0.00054 batch_loss=0.1141 train_loss_eval=0.1138 test_acc=0.9214 T=0.988 t=1.6s
+06:22:44|INFO   |  pilot_sam_rho0.1_s100 ep36 lr=0.00038 batch_loss=0.1138 train_loss_eval=0.1127 test_acc=0.9214 T=0.999 t=1.6s
+06:22:46|INFO   |  pilot_sam_rho0.1_s100 ep37 lr=0.00024 batch_loss=0.1132 train_loss_eval=0.1127 test_acc=0.9216 T=0.999 t=1.6s
+06:22:48|INFO   |  pilot_sam_rho0.1_s100 ep38 lr=0.00014 batch_loss=0.1129 train_loss_eval=0.1124 test_acc=0.9210 T=1.001 t=1.6s
+06:22:50|INFO   |  pilot_sam_rho0.1_s100 ep39 lr=0.00006 batch_loss=0.1127 train_loss_eval=0.1122 test_acc=0.9215 T=0.999 t=1.7s
+06:22:52|INFO   |  pilot_sam_rho0.1_s100 ep40 lr=0.00002 batch_loss=0.1124 train_loss_eval=0.1121 test_acc=0.9212 T=1.004 t=1.5s
+06:22:52|INFO   |DONE pilot_sam_rho0.1_s100: wall=75s final_train_loss=0.1121 test_acc=0.9212
+06:22:52|INFO   |Target training loss L_SAM40 = 0.11208
+06:22:52|INFO   |START pilot_sgd_E10_s100: method=sgd rho=0.0 epochs=10 seed=100
+06:22:54|INFO   |  pilot_sgd_E10_s100 ep01 lr=0.01000 batch_loss=0.4435 train_loss_eval=0.3154 test_acc=0.8690 T=1.014 t=0.7s
+06:22:55|INFO   |  pilot_sgd_E10_s100 ep02 lr=0.00976 batch_loss=0.2851 train_loss_eval=0.2536 test_acc=0.8903 T=1.007 t=0.8s
+06:22:56|INFO   |  pilot_sgd_E10_s100 ep03 lr=0.00905 batch_loss=0.2448 train_loss_eval=0.2096 test_acc=0.9031 T=1.063 t=0.7s
+06:22:57|INFO   |  pilot_sgd_E10_s100 ep04 lr=0.00794 batch_loss=0.2142 train_loss_eval=0.2094 test_acc=0.8953 T=1.138 t=0.8s
+06:22:58|INFO   |  pilot_sgd_E10_s100 ep05 lr=0.00655 batch_loss=0.1893 train_loss_eval=0.1717 test_acc=0.9100 T=1.039 t=0.8s
+06:22:59|INFO   |  pilot_sgd_E10_s100 ep06 lr=0.00500 batch_loss=0.1706 train_loss_eval=0.1477 test_acc=0.9167 T=1.121 t=0.9s
+06:23:00|INFO   |  pilot_sgd_E10_s100 ep07 lr=0.00345 batch_loss=0.1503 train_loss_eval=0.1367 test_acc=0.9133 T=1.151 t=0.9s
+06:23:02|INFO   |  pilot_sgd_E10_s100 ep08 lr=0.00206 batch_loss=0.1323 train_loss_eval=0.1258 test_acc=0.9171 T=1.166 t=0.9s
+06:23:03|INFO   |  pilot_sgd_E10_s100 ep09 lr=0.00095 batch_loss=0.1206 train_loss_eval=0.1149 test_acc=0.9201 T=1.160 t=0.8s
+06:23:04|INFO   |  pilot_sgd_E10_s100 ep10 lr=0.00024 batch_loss=0.1135 train_loss_eval=0.1112 test_acc=0.9208 T=1.153 t=0.9s
+06:23:04|INFO   |DONE pilot_sgd_E10_s100: wall=11s final_train_loss=0.1112 test_acc=0.9208
+06:23:04|INFO   |pilot SGD E=10: final train loss=0.11119 gap=-0.00089
+06:23:04|INFO   |START pilot_sgd_E12_s100: method=sgd rho=0.0 epochs=12 seed=100
+06:23:05|INFO   |  pilot_sgd_E12_s100 ep01 lr=0.01000 batch_loss=0.4435 train_loss_eval=0.3154 test_acc=0.8690 T=1.014 t=0.7s
+06:23:06|INFO   |  pilot_sgd_E12_s100 ep02 lr=0.00983 batch_loss=0.2851 train_loss_eval=0.2578 test_acc=0.8881 T=0.979 t=1.0s
+06:23:07|INFO   |  pilot_sgd_E12_s100 ep03 lr=0.00933 batch_loss=0.2458 train_loss_eval=0.2065 test_acc=0.9043 T=1.056 t=0.7s
+06:23:09|INFO   |  pilot_sgd_E12_s100 ep04 lr=0.00854 batch_loss=0.2173 train_loss_eval=0.2026 test_acc=0.8961 T=1.107 t=0.8s
+06:23:10|INFO   |  pilot_sgd_E12_s100 ep05 lr=0.00750 batch_loss=0.1922 train_loss_eval=0.1919 test_acc=0.9011 T=1.096 t=0.7s
+06:23:12|INFO   |  pilot_sgd_E12_s100 ep06 lr=0.00629 batch_loss=0.1774 train_loss_eval=0.1589 test_acc=0.9135 T=1.119 t=1.6s
+06:23:13|INFO   |  pilot_sgd_E12_s100 ep07 lr=0.00500 batch_loss=0.1542 train_loss_eval=0.1480 test_acc=0.9112 T=1.179 t=1.3s
+06:23:15|INFO   |  pilot_sgd_E12_s100 ep08 lr=0.00371 batch_loss=0.1361 train_loss_eval=0.1268 test_acc=0.9170 T=1.217 t=1.1s
+06:23:16|INFO   |  pilot_sgd_E12_s100 ep09 lr=0.00250 batch_loss=0.1210 train_loss_eval=0.1173 test_acc=0.9178 T=1.225 t=1.3s
+06:23:18|INFO   |  pilot_sgd_E12_s100 ep10 lr=0.00146 batch_loss=0.1096 train_loss_eval=0.1102 test_acc=0.9177 T=1.240 t=1.1s
+06:23:19|INFO   |  pilot_sgd_E12_s100 ep11 lr=0.00067 batch_loss=0.1010 train_loss_eval=0.0996 test_acc=0.9205 T=1.213 t=1.0s
+06:23:21|INFO   |  pilot_sgd_E12_s100 ep12 lr=0.00017 batch_loss=0.0966 train_loss_eval=0.0951 test_acc=0.9214 T=1.204 t=0.9s
+06:23:21|INFO   |DONE pilot_sgd_E12_s100: wall=16s final_train_loss=0.0951 test_acc=0.9214
+06:23:21|INFO   |pilot SGD E=12: final train loss=0.09511 gap=-0.01696
+06:23:21|INFO   |START pilot_sgd_E14_s100: method=sgd rho=0.0 epochs=14 seed=100
+06:23:22|INFO   |  pilot_sgd_E14_s100 ep01 lr=0.01000 batch_loss=0.4435 train_loss_eval=0.3154 test_acc=0.8690 T=1.014 t=1.0s
+06:23:23|INFO   |  pilot_sgd_E14_s100 ep02 lr=0.00987 batch_loss=0.2842 train_loss_eval=0.2578 test_acc=0.8868 T=1.013 t=0.9s
+06:23:25|INFO   |  pilot_sgd_E14_s100 ep03 lr=0.00950 batch_loss=0.2474 train_loss_eval=0.2116 test_acc=0.9030 T=1.055 t=1.0s
+06:23:26|INFO   |  pilot_sgd_E14_s100 ep04 lr=0.00891 batch_loss=0.2190 train_loss_eval=0.2026 test_acc=0.8971 T=1.104 t=1.0s
+06:23:27|INFO   |  pilot_sgd_E14_s100 ep05 lr=0.00812 batch_loss=0.1936 train_loss_eval=0.2164 test_acc=0.8933 T=1.152 t=1.0s
+06:23:29|INFO   |  pilot_sgd_E14_s100 ep06 lr=0.00717 batch_loss=0.1812 train_loss_eval=0.1629 test_acc=0.9112 T=1.114 t=1.0s
+06:23:30|INFO   |  pilot_sgd_E14_s100 ep07 lr=0.00611 batch_loss=0.1574 train_loss_eval=0.1541 test_acc=0.9103 T=1.199 t=1.0s
+06:23:31|INFO   |  pilot_sgd_E14_s100 ep08 lr=0.00500 batch_loss=0.1395 train_loss_eval=0.1227 test_acc=0.9176 T=1.210 t=1.0s
+06:23:33|INFO   |  pilot_sgd_E14_s100 ep09 lr=0.00389 batch_loss=0.1236 train_loss_eval=0.1309 test_acc=0.9123 T=1.275 t=0.9s
+06:23:34|INFO   |  pilot_sgd_E14_s100 ep10 lr=0.00283 batch_loss=0.1111 train_loss_eval=0.1069 test_acc=0.9172 T=1.283 t=1.4s
+06:23:36|INFO   |  pilot_sgd_E14_s100 ep11 lr=0.00188 batch_loss=0.0987 train_loss_eval=0.0915 test_acc=0.9200 T=1.250 t=1.1s
+06:23:37|INFO   |  pilot_sgd_E14_s100 ep12 lr=0.00109 batch_loss=0.0899 train_loss_eval=0.0844 test_acc=0.9208 T=1.281 t=1.0s
+06:23:38|INFO   |  pilot_sgd_E14_s100 ep13 lr=0.00050 batch_loss=0.0842 train_loss_eval=0.0821 test_acc=0.9220 T=1.254 t=0.8s
+06:23:40|INFO   |  pilot_sgd_E14_s100 ep14 lr=0.00013 batch_loss=0.0810 train_loss_eval=0.0801 test_acc=0.9215 T=1.259 t=0.7s
+06:23:40|INFO   |DONE pilot_sgd_E14_s100: wall=19s final_train_loss=0.0801 test_acc=0.9215
+06:23:40|INFO   |pilot SGD E=14: final train loss=0.08011 gap=-0.03197
+06:23:40|INFO   |START pilot_sgd_E16_s100: method=sgd rho=0.0 epochs=16 seed=100
+06:23:41|INFO   |  pilot_sgd_E16_s100 ep01 lr=0.01000 batch_loss=0.4435 train_loss_eval=0.3154 test_acc=0.8690 T=1.014 t=0.7s
+06:23:42|INFO   |  pilot_sgd_E16_s100 ep02 lr=0.00990 batch_loss=0.2843 train_loss_eval=0.2613 test_acc=0.8851 T=0.992 t=0.7s
+06:23:43|INFO   |  pilot_sgd_E16_s100 ep03 lr=0.00962 batch_loss=0.2472 train_loss_eval=0.2111 test_acc=0.9032 T=1.046 t=0.7s
+06:23:44|INFO   |  pilot_sgd_E16_s100 ep04 lr=0.00916 batch_loss=0.2192 train_loss_eval=0.2044 test_acc=0.8982 T=1.089 t=0.9s
+06:23:45|INFO   |  pilot_sgd_E16_s100 ep05 lr=0.00854 batch_loss=0.1955 train_loss_eval=0.2370 test_acc=0.8846 T=1.203 t=0.7s
+06:23:46|INFO   |  pilot_sgd_E16_s100 ep06 lr=0.00778 batch_loss=0.1824 train_loss_eval=0.1810 test_acc=0.9021 T=1.147 t=0.8s
+06:23:48|INFO   |  pilot_sgd_E16_s100 ep07 lr=0.00691 batch_loss=0.1599 train_loss_eval=0.1465 test_acc=0.9109 T=1.172 t=0.7s
+06:23:49|INFO   |  pilot_sgd_E16_s100 ep08 lr=0.00598 batch_loss=0.1421 train_loss_eval=0.1213 test_acc=0.9190 T=1.185 t=0.7s
+06:23:50|INFO   |  pilot_sgd_E16_s100 ep09 lr=0.00500 batch_loss=0.1264 train_loss_eval=0.1463 test_acc=0.9075 T=1.339 t=0.7s
+06:23:51|INFO   |  pilot_sgd_E16_s100 ep10 lr=0.00402 batch_loss=0.1147 train_loss_eval=0.1092 test_acc=0.9146 T=1.314 t=0.7s
+06:23:52|INFO   |  pilot_sgd_E16_s100 ep11 lr=0.00309 batch_loss=0.0997 train_loss_eval=0.0870 test_acc=0.9199 T=1.253 t=0.7s
+06:23:53|INFO   |  pilot_sgd_E16_s100 ep12 lr=0.00222 batch_loss=0.0888 train_loss_eval=0.0815 test_acc=0.9207 T=1.316 t=0.9s
+06:23:54|INFO   |  pilot_sgd_E16_s100 ep13 lr=0.00146 batch_loss=0.0802 train_loss_eval=0.0737 test_acc=0.9227 T=1.337 t=1.1s
+06:23:56|INFO   |  pilot_sgd_E16_s100 ep14 lr=0.00084 batch_loss=0.0741 train_loss_eval=0.0695 test_acc=0.9233 T=1.311 t=0.9s
+06:23:57|INFO   |  pilot_sgd_E16_s100 ep15 lr=0.00038 batch_loss=0.0702 train_loss_eval=0.0673 test_acc=0.9227 T=1.330 t=0.7s
+06:23:58|INFO   |  pilot_sgd_E16_s100 ep16 lr=0.00010 batch_loss=0.0677 train_loss_eval=0.0667 test_acc=0.9224 T=1.323 t=0.7s
+06:23:58|INFO   |DONE pilot_sgd_E16_s100: wall=18s final_train_loss=0.0667 test_acc=0.9224
+06:23:58|INFO   |pilot SGD E=16: final train loss=0.06675 gap=-0.04533
+06:23:58|INFO   |START pilot_sgd_E18_s100: method=sgd rho=0.0 epochs=18 seed=100
+06:23:59|INFO   |  pilot_sgd_E18_s100 ep01 lr=0.01000 batch_loss=0.4435 train_loss_eval=0.3154 test_acc=0.8690 T=1.014 t=0.7s
+06:24:00|INFO   |  pilot_sgd_E18_s100 ep02 lr=0.00992 batch_loss=0.2851 train_loss_eval=0.2667 test_acc=0.8820 T=1.018 t=0.7s
+06:24:01|INFO   |  pilot_sgd_E18_s100 ep03 lr=0.00970 batch_loss=0.2486 train_loss_eval=0.2096 test_acc=0.9021 T=1.059 t=0.7s
+06:24:02|INFO   |  pilot_sgd_E18_s100 ep04 lr=0.00933 batch_loss=0.2200 train_loss_eval=0.2070 test_acc=0.8964 T=1.119 t=0.7s
+06:24:03|INFO   |  pilot_sgd_E18_s100 ep05 lr=0.00883 batch_loss=0.1962 train_loss_eval=0.2262 test_acc=0.8869 T=1.177 t=0.7s
+06:24:04|INFO   |  pilot_sgd_E18_s100 ep06 lr=0.00821 batch_loss=0.1851 train_loss_eval=0.1764 test_acc=0.9025 T=1.163 t=0.7s
+06:24:05|INFO   |  pilot_sgd_E18_s100 ep07 lr=0.00750 batch_loss=0.1616 train_loss_eval=0.1463 test_acc=0.9123 T=1.148 t=0.7s
+06:24:07|INFO   |  pilot_sgd_E18_s100 ep08 lr=0.00671 batch_loss=0.1446 train_loss_eval=0.1230 test_acc=0.9178 T=1.181 t=0.8s
+06:24:08|INFO   |  pilot_sgd_E18_s100 ep09 lr=0.00587 batch_loss=0.1297 train_loss_eval=0.1451 test_acc=0.9066 T=1.325 t=0.7s
+06:24:09|INFO   |  pilot_sgd_E18_s100 ep10 lr=0.00500 batch_loss=0.1176 train_loss_eval=0.1150 test_acc=0.9132 T=1.342 t=0.7s
+06:24:10|INFO   |  pilot_sgd_E18_s100 ep11 lr=0.00413 batch_loss=0.1024 train_loss_eval=0.0843 test_acc=0.9206 T=1.235 t=0.7s
+06:24:11|INFO   |  pilot_sgd_E18_s100 ep12 lr=0.00329 batch_loss=0.0899 train_loss_eval=0.0783 test_acc=0.9197 T=1.325 t=0.7s
+06:24:12|INFO   |  pilot_sgd_E18_s100 ep13 lr=0.00250 batch_loss=0.0801 train_loss_eval=0.0745 test_acc=0.9205 T=1.391 t=0.7s
+06:24:13|INFO   |  pilot_sgd_E18_s100 ep14 lr=0.00179 batch_loss=0.0719 train_loss_eval=0.0653 test_acc=0.9209 T=1.329 t=0.7s
+06:24:14|INFO   |  pilot_sgd_E18_s100 ep15 lr=0.00117 batch_loss=0.0657 train_loss_eval=0.0595 test_acc=0.9224 T=1.383 t=0.7s
+06:24:15|INFO   |  pilot_sgd_E18_s100 ep16 lr=0.00067 batch_loss=0.0606 train_loss_eval=0.0568 test_acc=0.9225 T=1.377 t=0.7s
+06:24:16|INFO   |  pilot_sgd_E18_s100 ep17 lr=0.00030 batch_loss=0.0576 train_loss_eval=0.0564 test_acc=0.9214 T=1.388 t=0.7s
+06:24:17|INFO   |  pilot_sgd_E18_s100 ep18 lr=0.00008 batch_loss=0.0563 train_loss_eval=0.0551 test_acc=0.9219 T=1.389 t=0.7s
+06:24:17|INFO   |DONE pilot_sgd_E18_s100: wall=19s final_train_loss=0.0551 test_acc=0.9219
+06:24:17|INFO   |pilot SGD E=18: final train loss=0.05515 gap=-0.05693
+06:24:17|INFO   |START pilot_sgd_E20_s100: method=sgd rho=0.0 epochs=20 seed=100
+06:24:18|INFO   |  pilot_sgd_E20_s100 ep01 lr=0.01000 batch_loss=0.4435 train_loss_eval=0.3154 test_acc=0.8690 T=1.014 t=0.7s
+06:24:19|INFO   |  pilot_sgd_E20_s100 ep02 lr=0.00994 batch_loss=0.2848 train_loss_eval=0.2563 test_acc=0.8888 T=1.016 t=0.7s
+06:24:21|INFO   |  pilot_sgd_E20_s100 ep03 lr=0.00976 batch_loss=0.2484 train_loss_eval=0.2139 test_acc=0.9010 T=1.072 t=0.8s
+06:24:22|INFO   |  pilot_sgd_E20_s100 ep04 lr=0.00946 batch_loss=0.2215 train_loss_eval=0.2016 test_acc=0.8972 T=1.114 t=0.7s
+06:24:23|INFO   |  pilot_sgd_E20_s100 ep05 lr=0.00905 batch_loss=0.1974 train_loss_eval=0.2157 test_acc=0.8946 T=1.116 t=0.7s
+06:24:24|INFO   |  pilot_sgd_E20_s100 ep06 lr=0.00854 batch_loss=0.1835 train_loss_eval=0.1886 test_acc=0.8987 T=1.185 t=0.7s
+06:24:25|INFO   |  pilot_sgd_E20_s100 ep07 lr=0.00794 batch_loss=0.1636 train_loss_eval=0.1426 test_acc=0.9105 T=1.163 t=0.8s
+06:24:26|INFO   |  pilot_sgd_E20_s100 ep08 lr=0.00727 batch_loss=0.1465 train_loss_eval=0.1245 test_acc=0.9185 T=1.185 t=0.8s
+06:24:27|INFO   |  pilot_sgd_E20_s100 ep09 lr=0.00655 batch_loss=0.1316 train_loss_eval=0.1367 test_acc=0.9089 T=1.285 t=0.7s
+06:24:28|INFO   |  pilot_sgd_E20_s100 ep10 lr=0.00578 batch_loss=0.1190 train_loss_eval=0.1158 test_acc=0.9150 T=1.355 t=0.8s
+06:24:29|INFO   |  pilot_sgd_E20_s100 ep11 lr=0.00500 batch_loss=0.1048 train_loss_eval=0.0920 test_acc=0.9193 T=1.279 t=0.7s
+06:24:30|INFO   |  pilot_sgd_E20_s100 ep12 lr=0.00422 batch_loss=0.0914 train_loss_eval=0.0808 test_acc=0.9180 T=1.384 t=0.9s
+06:24:31|INFO   |  pilot_sgd_E20_s100 ep13 lr=0.00345 batch_loss=0.0828 train_loss_eval=0.0719 test_acc=0.9212 T=1.398 t=0.7s
+06:24:33|INFO   |  pilot_sgd_E20_s100 ep14 lr=0.00273 batch_loss=0.0722 train_loss_eval=0.0642 test_acc=0.9220 T=1.335 t=0.8s
+06:24:34|INFO   |  pilot_sgd_E20_s100 ep15 lr=0.00206 batch_loss=0.0645 train_loss_eval=0.0557 test_acc=0.9232 T=1.407 t=0.7s
+06:24:35|INFO   |  pilot_sgd_E20_s100 ep16 lr=0.00146 batch_loss=0.0575 train_loss_eval=0.0515 test_acc=0.9235 T=1.409 t=0.9s
+06:24:36|INFO   |  pilot_sgd_E20_s100 ep17 lr=0.00095 batch_loss=0.0527 train_loss_eval=0.0496 test_acc=0.9213 T=1.438 t=0.8s
+06:24:37|INFO   |  pilot_sgd_E20_s100 ep18 lr=0.00054 batch_loss=0.0497 train_loss_eval=0.0468 test_acc=0.9228 T=1.443 t=0.7s
+06:24:38|INFO   |  pilot_sgd_E20_s100 ep19 lr=0.00024 batch_loss=0.0475 train_loss_eval=0.0460 test_acc=0.9225 T=1.447 t=0.7s
+06:24:39|INFO   |  pilot_sgd_E20_s100 ep20 lr=0.00006 batch_loss=0.0464 train_loss_eval=0.0459 test_acc=0.9227 T=1.443 t=0.7s
+06:24:39|INFO   |DONE pilot_sgd_E20_s100: wall=22s final_train_loss=0.0459 test_acc=0.9227
+06:24:39|INFO   |pilot SGD E=20: final train loss=0.04587 gap=-0.06620
+06:24:39|INFO   |chosen E*=10
+06:24:39|INFO   |stage pilot finished in 182.7s
+EXIT 0

@@ -1,0 +1,11 @@
+06:16:17|INFO   |Device: mps; stage=checks; torch=2.16.0.dev20261116
+06:16:17|INFO   |===== stage: checks =====
+06:16:17|INFO   |Normalisation from 50k train split: mean=0.2861 std=0.3533
+06:16:17|INFO   |Split sizes: train=50000 val=10000 test=10000 device=mps
+06:16:17|INFO   |check (a) ECE: calibrated synthetic=0.00242 (expect ~0), constant c=0.8 a=0.6 -> 0.200000 (expect 0.2)
+06:16:17|INFO   |check (b) temperature on calibrated synthetic logits: T=0.9955 (expect ~1)
+06:16:18|INFO   |check (d) split sizes {'train': 50000, 'val': 10000, 'test': 10000}, logit shape (64, 10)
+06:16:22|INFO   |check (c) rho=0 SAM vs SGD one epoch: max batch-loss diff=0.00e+00, max param diff=0.00e+00, eval logit diff=1.46e-01
+06:16:23|INFO   |check (e) placebo (SGD vs SGD, same seed): NLL diff=0.000e+00, max logit diff=0.000e+00
+06:16:23|INFO   |stage checks finished in 6.6s
+EXIT 0

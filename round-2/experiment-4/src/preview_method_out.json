@@ -1,0 +1,476 @@
+{
+  "metadata": {
+    "method_name": "SAM vs SGD at matched training loss (Fashion-MNIST small CNN)",
+    "description": "Paired seeds 0-4. Primary test: SAM 40 epochs vs SGD with E* epochs (matched eval-mode train loss). Secondary: SAM epoch 40 vs SGD 40-epoch snapshot at the matched epoch. Every model temperature-scale...",
+    "hyperparameters": {
+      "lr": 0.01,
+      "momentum": 0.9,
+      "weight_decay": 0.0005,
+      "batch": 128,
+      "schedule": "per-epoch cosine 0.5*lr*(1+cos(pi e/E))",
+      "rho_tuned": 0.1,
+      "E_star": 10,
+      "bins": 15
+    },
+    "predict_fields": {
+      "predict_sam_40ep": "SAM, rho tuned, epoch 40 (condition 1)",
+      "predict_sgd_40ep": "SGD, epoch 40 (condition 2)",
+      "predict_sgd_matched_epoch": "SGD 40-epoch run at matched epoch e_s (comparison a)",
+      "predict_sgd_matched_loss": "SGD, E* epochs, final (condition 3, primary comparison)"
+    },
+    "tuning": {
+      "seed": 101,
+      "final_val_nll_raw_by_rho": {
+        "0.05": 0.2103902844910903,
+        "0.1": 0.19983867205089795,
+        "0.2": 0.22988255751812825
+      },
+      "chosen_rho": 0.1,
+      "selection_rule": "lowest final-epoch validation NLL (raw); test not used",
+      "wall_time_s": {
+        "tune_sam_rho0.05_s101": 72.6803822517395,
+        "tune_sam_rho0.1_s101": 75.37374186515808,
+        "tune_sam_rho0.2_s101": 81.88092398643494
+      }
+    },
+    "pilot": {
+      "target_seed": 100,
+      "rho": 0.1,
+      "L_SAM40": 0.1120761380850252,
+      "tolerance": 0.01,
+      "grid": {
+        "10": 0.11118779387817747,
+        "12": 0.09511223640264736,
+        "14": 0.08010898710086703,
+        "16": 0.06674584129222656,
+        "18": 0.05514540069525428,
+        "20": 0.04587461528273831
+      },
+      "extended_grid": false,
+      "E_star": 10,
+      "feasible": true,
+      "rule": "smallest E whose final eval-mode training loss is within tolerance of L_SAM40"
+    },
+    "comparisons": {
+      "a_matched_epoch_sgd40": "c2 at epoch e_s",
+      "b_matched_loss_sgdE": "c3 SGD E=10 final"
+    },
+    "results": {
+      "a_matched_epoch_sgd40": {
+        "accuracy": {
+          "mean": 0.01022000000000003,
+          "sd": 0.004281588490268537,
+          "t": 5.337415022949724,
+          "df": 4,
+          "t_crit": 2.7764451051977934,
+          "ci95": [
+            0.004903705716509979,
+            0.01553629428349008
+          ],
+          "p_two_sided": 0.005935589840343246,
+          "per_seed": [
+            0.012300000000000089,
+            0.016100000000000003,
+            0.0047000000000000375
+          ],
+          "sam_mean": 0.92378,
+          "comparator_mean": 0.91356,
+          "lower_is_better": false,
+          "p_holm": 0.023742359361372985
+        },
+        "ece_raw": {
+          "mean": -0.018757508873036895,
+          "sd": 0.0030899695953887922,
+          "t": -13.5739409835159,
+          "df": 4,
+          "t_crit": 2.7764451051977934,
+          "ci95": [
+            -0.02259421287517541,
+            -0.01492080487089838
+          ],
+          "p_two_sided": 0.00017051979582884165,
+          "per_seed": [
+            -0.020485877150375496,
+            -0.01838550465236986,
+            -0.013949731532712686
+          ],
+          "sam_mean": 0.007843261920023475,
+          "comparator_mean": 0.02660077079306037,
+          "lower_is_better": true,
+          "p_holm": 0.0018757177541172583
+        },
+        "ece_ts": {
+          "mean": -0.0006605949869648581,
+          "sd": 0.0019317505392438578,
+          "t": -0.7646615162986847,
+          "df": 4,
+          "t_crit": 2.7764451051977934,
+          "ci95": [
+            -0.0030591800850546637,
+            0.0017379901111249478
+          ],
+          "p_two_sided": 0.4870933949627667,
+          "per_seed": [
+            -0.00015632494469870143,
+            -0.0007005469630106051,
+            -0.000817627364019414
+          ],
+          "sam_mean": 0.006690110121682367,
+          "comparator_mean": 0.007350705108647225,
+          "lower_is_better": true,
+          "p_holm": 0.9741867899255334
+        },
+        "nll_raw": {
+          "mean": -0.04141055092472988,
+          "sd": 0.01066909882088586,
+          "t": -8.678971711476231,
+          "df": 4,
+          "t_crit": 2.7764451051977934,
+          "ci95": [
+            -0.05465798682390208,
+            -0.02816311502555768
+          ],
+          "p_two_sided": 0.00097003166469358,
+          "per_seed": [
+            -0.04331358963896739,
+            -0.05331517888192372,
+            -0.025389215300962997
+          ],
+          "sam_mean": 0.21387789597386106,
+          "comparator_mean": 0.2552884468985909,
+          "lower_is_better": true,
+          "p_holm": 0.00873028498224222
+        },
+        "nll_ts": {
+          "mean": -0.027446550534640207,
+          "sd": 0.008010014109794567,
+          "t": -7.661953137921841,
+          "df": 4,
+          "t_crit": 2.7764451051977934,
+          "ci95": [
+            -0.03739229667987629,
+            -0.017500804389404122
+          ],
+          "p_two_sided": 0.0015596106462369675,
+          "per_seed": [
+            -0.02869468130282224,
+            -0.03921428175911104,
+            -0.018207802294351427
+          ],
+          "sam_mean": 0.21356197504188504,
+          "comparator_mean": 0.24100852557652522,
+          "lower_is_better": true,
+          "p_holm": 0.009442804616807033
+        },
+        "brier": {
+          "mean": -0.017102793313639994,
+          "sd": 0.0058631817026749255,
+          "t": -6.522569211351667,
+          "df": 4,
+          "t_crit": 2.7764451051977934,
+          "ci95": [
+            -0.024382894948778495,
+            -0.009822691678501493
+          ],
+          "p_two_sided": 0.0028530658082748994,
+          "per_seed": [
+            -0.019257982224866035,
+            -0.025334036504475438,
+            -0.009738269514705036
+          ],
+          "sam_mean": 0.1109015151167538,
+          "comparator_mean": 0.1280043084303938,
+          "lower_is_better": true,
+          "p_holm": 0.014265329041374498
+        },
+        "ace": {
+          "mean": -0.004519930673996654,
+          "sd": 0.0012247691585834629,
+          "t": -8.252062986573169,
+          "df": 4,
+          "t_crit": 2.7764451051977934,
+          "ci95": [
+            -0.006040682444320057,
+            -0.002999178903673251
+          ],
+          "p_two_sided": 0.0011763491252585335,
+          "per_seed": [
+            -0.004439334240673038,
+            -0.006189375217420602,
+            -0.003154364432569832
+          ],
+          "sam_mean": 0.001721837117621672,
+          "comparator_mean": 0.006241767791618327,
+          "lower_is_better": true,
+          "p_holm": 0.009410793002068268
+        }
+      },
+      "b_matched_loss_sgdE": {
+        "accuracy": {
+          "mean": 0.0024599999999999956,
+          "sd": 0.0014275853739794766,
+          "t": 3.853168661511205,
+          "df": 4,
+          "t_crit": 2.7764451051977934,
+          "ci95": [
+            0.0006874186367674228,
+            0.004232581363232568
+          ],
+          "p_two_sided": 0.018253202417812576,
+          "per_seed": [
+            0.0044000000000000705,
+            0.0005999999999999339,
+            0.0021999999999999797
+          ],
+          "sam_mean": 0.92378,
+          "comparator_mean": 0.92132,
+          "lower_is_better": false,
+          "p_holm": 0.05475960725343773
+        },
+        "ece_raw": {
+          "mean": -0.007610229782618991,
+          "sd": 0.0012011820551467074,
+          "t": -14.166870913045006,
+          "df": 4,
+          "t_crit": 2.7764451051977934,
+          "ci95": [
+            -0.009101694295783065,
+            -0.006118765269454916
+          ],
+          "p_two_sided": 0.00014413369665020138,
+          "per_seed": [
+            -0.008852450163417366,
+            -0.005965548078861106,
+            -0.008042112595948132
+          ],
+          "sam_mean": 0.007843261920023475,
+          "comparator_mean": 0.015453491702642463,
+          "lower_is_better": true,
+          "p_holm": 0.0018361515348773966
+        },
+        "ece_ts": {
+          "mean": -0.00012644488071851778,
+          "sd": 0.0011802734725454985,
+          "t": -0.23955409934248,
+          "df": 4,
+          "t_crit": 2.7764451051977934,
+          "ci95": [
+            -0.001591947959613202,
+            0.0013390581981761666
+          ],
+          "p_two_sided": 0.82245054144681,
+          "per_seed": [
+            2.2465877308047548e-05,
+            -0.00033487280933777383,
+            -0.0004801395852727583
+          ],
+          "sam_mean": 0.006690110121682367,
+          "comparator_mean": 0.006816555002400884,
+          "lower_is_better": true,
+          "p_holm": 0.9741867899255334
+        },
+        "nll_raw": {
+          "mean": -0.012536990342431248,
+          "sd": 0.0021102007148461445,
+          "t": -13.284784921977705,
+          "df": 4,
+          "t_crit": 2.7764451051977934,
+          "ci95": [
+            -0.015157150599039554,
+            -0.009916830085822942
+          ],
+          "p_two_sided": 0.00018556813947473758,
+          "per_seed": [
+            -0.013265075054611802,
+            -0.011722993942959559,
+            -0.014611366155150907
+          ],
+          "sam_mean": 0.21387789597386106,
+          "comparator_mean": 0.2264148863162923,
+          "lower_is_better": true,
+          "p_holm": 0.0018757177541172583
+        },
+        "nll_ts": {
+          "mean": -0.008177266358229702,
+          "sd": 0.002296921568392094,
+          "t": -7.960621598378602,
+          "df": 4,
+          "t_crit": 2.7764451051977934,
+          "ci95": [
+            -0.011029271176399891,
+            -0.005325261540059513
+          ],
+          "p_two_sided": 0.0013489720881152904,
+          "per_seed": [
+            -0.008106770524560714,
+            -0.0075178468386813135,
+            -0.010309728353753128
+          ],
+          "sam_mean": 0.21356197504188504,
+          "comparator_mean": 0.22173924140011475,
+          "lower_is_better": true,
+          "p_holm": 0.009442804616807033
+        },
+        "brier": {
+          "mean": -0.005378494631469397,
+          "sd": 0.0007181872884280421,
+          "t": -16.74588203713139,
+          "df": 4,
+          "t_crit": 2.7764451051977934,
+          "ci95": [
+            -0.00627024193147808,
+            -0.004486747331460714
+          ],
+          "p_two_sided": 7.451854508126857e-05,
+          "per_seed": [
+            -0.005506131533396796,
+            -0.005438417551715341,
+            -0.005398102463871943
+          ],
+          "sam_mean": 0.1109015151167538,
+          "comparator_mean": 0.1162800097482232,
+          "lower_is_better": true,
+          "p_holm": 0.00104325963113776
+        },
+        "ace": {
+          "mean": -0.0010851526290211336,
+          "sd": 0.00017039841073356092,
+          "t": -14.240009833471753,
+          "df": 4,
+          "t_crit": 2.7764451051977934,
+          "ci95": [
+            -0.001296730200980134,
+            -0.0008735750570621331
+          ],
+          "p_two_sided": 0.00014124242575979973,
+          "per_seed": [
+            -0.0011634252018511775,
+            -0.0009435196047180528,
+            -0.0008657262320892259
+          ],
+          "sam_mean": 0.001721837117621672,
+          "comparator_mean": 0.0028069897466428055,
+          "lower_is_better": true,
+          "p_holm": 0.0018361515348773966
+        }
+      }
+    },
+    "holm_family": "2 comparisons x 7 metrics = 14 tests",
+    "reproduction_check": {
+      "values": {
+        "accuracy": {
+          "observed_sam_minus_sgd40_mean": 0.002379999999999982,
+          "reported": 0.0015,
+          "abs_difference": 0.0008799999999999819,
+          "tolerance": 0.005,
+          "within_tolerance": true
+        },
+        "ece_raw": {
+          "observed_sam_minus_sgd40_mean": -0.03725663640363274,
+          "reported": -0.0378,
+          "abs_difference": 0.0005433635963672592,
+          "tolerance": 0.005,
+          "within_tolerance": true
+        },
+        "nll_raw": {
+          "observed_sam_minus_sgd40_mean": -0.10086016196215217,
+          "reported": -0.098,
+          "abs_difference": -0.0028601619621521635,
+          "tolerance": 0.01,
+          "within_tolerance": true
+        },
+        "nll_ts": {
+          "observed_sam_minus_sgd40_mean": -0.021022102699526056,
+          "reported": -0.0209,
+          "abs_difference": -0.00012210269952605754,
+          "tolerance": 0.01,
+          "within_tolerance": true
+        }
+      },
+      "note": "Tuned rho=0.1 on seed 101. The earlier run's rho is not recorded in this run's inputs, so this comparison is not exact."
+    },
+    "matched_loss_table": [
+      {
+        "seed": 0,
+        "sam40_train_loss": 0.10183064840827384,
+        "sgd40_train_loss": 0.008040267656811938,
+        "matched_epoch_e_s": 10,
+        "sgd_matched_epoch_train_loss": 0.10637930578112692,
+        "gap_matched_epoch_a": 0.004548657372853079,
+        "flag_gap_a_over_0.02": false,
+        "sgd_matched_loss_E_star": 10,
+        "sgd_matched_loss_train_loss": 0.10497397701681199,
+        "gap_matched_loss_b": 0.003143328608538151,
+        "flag_gap_b_over_0.01": false
+      },
+      {
+        "seed": 1,
+        "sam40_train_loss": 0.09940649285379259,
+        "sgd40_train_loss": 0.007428998183353422,
+        "matched_epoch_e_s": 11,
+        "sgd_matched_epoch_train_loss": 0.10787659974114755,
+        "gap_matched_epoch_a": 0.008470106887354958,
+        "flag_gap_a_over_0.02": false,
+        "sgd_matched_loss_E_star": 10,
+        "sgd_matched_loss_train_loss": 0.10438812831318466,
+        "gap_matched_loss_b": 0.004981635459392064,
+        "flag_gap_b_over_0.01": false
+      },
+      {
+        "seed": 2,
+        "sam40_train_loss": 0.11010284616935614,
+        "sgd40_train_loss": 0.008524215209340345,
+        "matched_epoch_e_s": 10,
+        "sgd_matched_epoch_train_loss": 0.10579708167386948,
+        "gap_matched_epoch_a": -0.004305764495486669,
+        "flag_gap_a_over_0.02": false,
+        "sgd_matched_loss_E_star": 10,
+        "sgd_matched_loss_train_loss": 0.11120033177475881,
+        "gap_matched_loss_b": 0.0010974856054026677,
+        "flag_gap_b_over_0.01": false
+      }
+    ],
+    "assumptions": [
+      "No data augmentation (not specified in the plan).",
+      "Convolutions have no bias (followed by BatchNorm).",
+      "BatchNorm running statistics update in both SAM passes (spec); eval-mode logits at rho=0 therefore differ from SGD."
+    ]
+  },
+  "datasets": [
+    {
+      "dataset": "Fashion-MNIST official 10k test set, 5 paired seeds",
+      "examples": [
+        {
+          "input": "Classify Fashion-MNIST official test image 0 (seed 0) into one of 10 classes",
+          "output": "9",
+          "metadata_seed": 0,
+          "metadata_test_index": 0,
+          "predict_sam_40ep": "9",
+          "predict_sgd_40ep": "9",
+          "predict_sgd_matched_epoch": "9",
+          "predict_sgd_matched_loss": "9"
+        },
+        {
+          "input": "Classify Fashion-MNIST official test image 1 (seed 0) into one of 10 classes",
+          "output": "2",
+          "metadata_seed": 0,
+          "metadata_test_index": 1,
+          "predict_sam_40ep": "2",
+          "predict_sgd_40ep": "2",
+          "predict_sgd_matched_epoch": "2",
+          "predict_sgd_matched_loss": "2"
+        },
+        {
+          "input": "Classify Fashion-MNIST official test image 2 (seed 0) into one of 10 classes",
+          "output": "1",
+          "metadata_seed": 0,
+          "metadata_test_index": 2,
+          "predict_sam_40ep": "1",
+          "predict_sgd_40ep": "1",
+          "predict_sgd_matched_epoch": "1",
+          "predict_sgd_matched_loss": "1"
+        }
+      ]
+    }
+  ]
+}

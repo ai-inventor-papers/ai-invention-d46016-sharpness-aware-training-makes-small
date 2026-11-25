@@ -1,0 +1,18 @@
+{
+ "target_seed": 100,
+ "rho": 0.1,
+ "L_SAM40": 0.1120761380850252,
+ "tolerance": 0.01,
+ "grid": {
+  "10": 0.11118779387817747,
+  "12": 0.09511223640264736,
+  "14": 0.08010898710086703,
+  "16": 0.06674584129222656,
+  "18": 0.05514540069525428,
+  "20": 0.04587461528273831
+ },
+ "extended_grid": false,
+ "E_star": 10,
+ "feasible": true,
+ "rule": "smallest E whose final eval-mode training loss is within tolerance of L_SAM40"
+}

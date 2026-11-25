@@ -1,0 +1,35 @@
+06:36:31|INFO   |Device: mps; stage=analyze; torch=2.16.0.dev20261116
+06:36:31|INFO   |===== stage: analyze =====
+06:36:31|INFO   |Analysis: loading runs
+06:36:31|INFO   |seed 0: SAM40 loss=0.1018; matched-epoch e_s=10 gap_a=+0.0045; E*=10 gap_b=+0.0031
+06:36:31|INFO   |seed 1: SAM40 loss=0.0994; matched-epoch e_s=11 gap_a=+0.0085; E*=10 gap_b=+0.0050
+06:36:31|INFO   |seed 2: SAM40 loss=0.1101; matched-epoch e_s=10 gap_a=-0.0043; E*=10 gap_b=+0.0011
+06:36:31|INFO   |seed 3: SAM40 loss=0.1017; matched-epoch e_s=11 gap_a=-0.0046; E*=10 gap_b=+0.0055
+06:36:31|INFO   |seed 4: SAM40 loss=0.1026; matched-epoch e_s=10 gap_a=+0.0018; E*=10 gap_b=+0.0004
+06:36:31|INFO   |Holm-adjusted p-values across the 14-test family:
+06:36:31|INFO   |  a_matched_epoch_sgd40    accuracy  d=+0.01022 CI=[+0.00490,+0.01554] p=0.0059 holm=0.0237
+06:36:31|INFO   |  a_matched_epoch_sgd40    ece_raw   d=-0.01876 CI=[-0.02259,-0.01492] p=0.0002 holm=0.0019
+06:36:31|INFO   |  a_matched_epoch_sgd40    ece_ts    d=-0.00066 CI=[-0.00306,+0.00174] p=0.4871 holm=0.9742
+06:36:31|INFO   |  a_matched_epoch_sgd40    nll_raw   d=-0.04141 CI=[-0.05466,-0.02816] p=0.0010 holm=0.0087
+06:36:31|INFO   |  a_matched_epoch_sgd40    nll_ts    d=-0.02745 CI=[-0.03739,-0.01750] p=0.0016 holm=0.0094
+06:36:31|INFO   |  a_matched_epoch_sgd40    brier     d=-0.01710 CI=[-0.02438,-0.00982] p=0.0029 holm=0.0143
+06:36:31|INFO   |  a_matched_epoch_sgd40    ace       d=-0.00452 CI=[-0.00604,-0.00300] p=0.0012 holm=0.0094
+06:36:31|INFO   |  b_matched_loss_sgdE      accuracy  d=+0.00246 CI=[+0.00069,+0.00423] p=0.0183 holm=0.0548
+06:36:31|INFO   |  b_matched_loss_sgdE      ece_raw   d=-0.00761 CI=[-0.00910,-0.00612] p=0.0001 holm=0.0018
+06:36:31|INFO   |  b_matched_loss_sgdE      ece_ts    d=-0.00013 CI=[-0.00159,+0.00134] p=0.8225 holm=0.9742
+06:36:31|INFO   |  b_matched_loss_sgdE      nll_raw   d=-0.01254 CI=[-0.01516,-0.00992] p=0.0002 holm=0.0019
+06:36:31|INFO   |  b_matched_loss_sgdE      nll_ts    d=-0.00818 CI=[-0.01103,-0.00533] p=0.0013 holm=0.0094
+06:36:31|INFO   |  b_matched_loss_sgdE      brier     d=-0.00538 CI=[-0.00627,-0.00449] p=0.0001 holm=0.0010
+06:36:31|INFO   |  b_matched_loss_sgdE      ace       d=-0.00109 CI=[-0.00130,-0.00087] p=0.0001 holm=0.0018
+06:36:31|INFO   |repro accuracy: observed=+0.00238 reported=+0.0015 within=True
+06:36:31|INFO   |repro ece_raw: observed=-0.03726 reported=-0.0378 within=True
+06:36:31|INFO   |repro nll_raw: observed=-0.10086 reported=-0.0980 within=True
+06:36:31|INFO   |repro nll_ts: observed=-0.02102 reported=-0.0209 within=True
+06:36:32|INFO   |render fig_reliability_sam_vs_matched_loss_sgd
+06:36:34|INFO   |"<workspace>/figures/fig_reliability_sam_vs_matched_loss_sgd.pdf", "<workspace>/figures/fig_reliability_sam_vs_matched_loss_sgd.png"]}
+06:36:34|INFO   |render fig_reliability_sam_vs_matched_epoch_sgd
+06:36:35|INFO   |Volumes/aii-s20027/work/run_S_3Y_l0tX7Xe/round-2/experiment-4/src/figures/fig_reliability_sam_vs_matched_epoch_sgd.pdf", "<workspace>/figures/fig_reliability_sam_vs_matched_epoch_sgd.png"]}
+06:36:35|INFO   |render fig_confidence_histogram
+06:36:36|INFO   |{"ok": true, "written": ["<workspace>/figures/fig_confidence_histogram.pdf", "<workspace>/figures/fig_confidence_histogram.png"]}
+06:36:36|INFO   |Wrote results/method_out.json
+06:36:36|INFO   |stage analyze finished in 4.4s

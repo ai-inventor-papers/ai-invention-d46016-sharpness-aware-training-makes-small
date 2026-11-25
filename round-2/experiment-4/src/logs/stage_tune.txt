@@ -1,0 +1,139 @@
+06:17:44|INFO   |Device: mps; stage=tune; torch=2.16.0.dev20261116
+06:17:44|INFO   |===== stage: tune =====
+06:17:44|INFO   |Normalisation from 50k train split: mean=0.2861 std=0.3533
+06:17:44|INFO   |Split sizes: train=50000 val=10000 test=10000 device=mps
+06:17:44|INFO   |START tune_sam_rho0.05_s101: method=sam rho=0.05 epochs=40 seed=101
+06:17:47|INFO   |  tune_sam_rho0.05_s101 ep01 lr=0.01000 batch_loss=0.4762 train_loss_eval=0.3262 test_acc=0.8666 T=0.874 t=2.4s
+06:17:49|INFO   |  tune_sam_rho0.05_s101 ep02 lr=0.00998 batch_loss=0.2980 train_loss_eval=0.2832 test_acc=0.8813 T=0.939 t=1.4s
+06:17:51|INFO   |  tune_sam_rho0.05_s101 ep03 lr=0.00994 batch_loss=0.2612 train_loss_eval=0.2537 test_acc=0.8907 T=0.900 t=1.4s
+06:17:53|INFO   |  tune_sam_rho0.05_s101 ep04 lr=0.00986 batch_loss=0.2327 train_loss_eval=0.2443 test_acc=0.8881 T=1.055 t=1.4s
+06:17:54|INFO   |  tune_sam_rho0.05_s101 ep05 lr=0.00976 batch_loss=0.2164 train_loss_eval=0.1991 test_acc=0.9070 T=0.943 t=1.4s
+06:17:56|INFO   |  tune_sam_rho0.05_s101 ep06 lr=0.00962 batch_loss=0.2025 train_loss_eval=0.1873 test_acc=0.9090 T=0.914 t=1.4s
+06:17:58|INFO   |  tune_sam_rho0.05_s101 ep07 lr=0.00946 batch_loss=0.1890 train_loss_eval=0.1756 test_acc=0.9120 T=0.947 t=1.4s
+06:18:00|INFO   |  tune_sam_rho0.05_s101 ep08 lr=0.00926 batch_loss=0.1768 train_loss_eval=0.1651 test_acc=0.9143 T=0.947 t=1.4s
+06:18:01|INFO   |  tune_sam_rho0.05_s101 ep09 lr=0.00905 batch_loss=0.1671 train_loss_eval=0.1672 test_acc=0.9116 T=1.025 t=1.4s
+06:18:03|INFO   |  tune_sam_rho0.05_s101 ep10 lr=0.00880 batch_loss=0.1578 train_loss_eval=0.1402 test_acc=0.9166 T=1.043 t=1.4s
+06:18:05|INFO   |  tune_sam_rho0.05_s101 ep11 lr=0.00854 batch_loss=0.1486 train_loss_eval=0.1379 test_acc=0.9184 T=1.065 t=1.4s
+06:18:07|INFO   |  tune_sam_rho0.05_s101 ep12 lr=0.00825 batch_loss=0.1399 train_loss_eval=0.1364 test_acc=0.9163 T=1.020 t=1.4s
+06:18:08|INFO   |  tune_sam_rho0.05_s101 ep13 lr=0.00794 batch_loss=0.1332 train_loss_eval=0.1166 test_acc=0.9230 T=1.054 t=1.4s
+06:18:10|INFO   |  tune_sam_rho0.05_s101 ep14 lr=0.00761 batch_loss=0.1248 train_loss_eval=0.1157 test_acc=0.9214 T=1.053 t=1.4s
+06:18:12|INFO   |  tune_sam_rho0.05_s101 ep15 lr=0.00727 batch_loss=0.1180 train_loss_eval=0.1131 test_acc=0.9178 T=1.072 t=1.4s
+06:18:14|INFO   |  tune_sam_rho0.05_s101 ep16 lr=0.00691 batch_loss=0.1106 train_loss_eval=0.1085 test_acc=0.9198 T=1.076 t=1.4s
+06:18:15|INFO   |  tune_sam_rho0.05_s101 ep17 lr=0.00655 batch_loss=0.1044 train_loss_eval=0.0997 test_acc=0.9223 T=1.083 t=1.4s
+06:18:17|INFO   |  tune_sam_rho0.05_s101 ep18 lr=0.00617 batch_loss=0.1000 train_loss_eval=0.0895 test_acc=0.9229 T=1.142 t=1.4s
+06:18:19|INFO   |  tune_sam_rho0.05_s101 ep19 lr=0.00578 batch_loss=0.0945 train_loss_eval=0.0849 test_acc=0.9236 T=1.124 t=1.4s
+06:18:21|INFO   |  tune_sam_rho0.05_s101 ep20 lr=0.00539 batch_loss=0.0887 train_loss_eval=0.0839 test_acc=0.9235 T=1.132 t=1.4s
+06:18:22|INFO   |  tune_sam_rho0.05_s101 ep21 lr=0.00500 batch_loss=0.0841 train_loss_eval=0.0763 test_acc=0.9239 T=1.140 t=1.4s
+06:18:24|INFO   |  tune_sam_rho0.05_s101 ep22 lr=0.00461 batch_loss=0.0800 train_loss_eval=0.0746 test_acc=0.9247 T=1.134 t=1.4s
+06:18:26|INFO   |  tune_sam_rho0.05_s101 ep23 lr=0.00422 batch_loss=0.0752 train_loss_eval=0.0693 test_acc=0.9255 T=1.167 t=1.4s
+06:18:28|INFO   |  tune_sam_rho0.05_s101 ep24 lr=0.00383 batch_loss=0.0717 train_loss_eval=0.0691 test_acc=0.9223 T=1.189 t=1.4s
+06:18:29|INFO   |  tune_sam_rho0.05_s101 ep25 lr=0.00345 batch_loss=0.0678 train_loss_eval=0.0637 test_acc=0.9255 T=1.176 t=1.4s
+06:18:31|INFO   |  tune_sam_rho0.05_s101 ep26 lr=0.00309 batch_loss=0.0649 train_loss_eval=0.0611 test_acc=0.9232 T=1.221 t=1.4s
+06:18:33|INFO   |  tune_sam_rho0.05_s101 ep27 lr=0.00273 batch_loss=0.0614 train_loss_eval=0.0588 test_acc=0.9246 T=1.240 t=1.5s
+06:18:35|INFO   |  tune_sam_rho0.05_s101 ep28 lr=0.00239 batch_loss=0.0589 train_loss_eval=0.0574 test_acc=0.9251 T=1.221 t=1.7s
+06:18:37|INFO   |  tune_sam_rho0.05_s101 ep29 lr=0.00206 batch_loss=0.0570 train_loss_eval=0.0545 test_acc=0.9247 T=1.231 t=1.6s
+06:18:39|INFO   |  tune_sam_rho0.05_s101 ep30 lr=0.00175 batch_loss=0.0547 train_loss_eval=0.0525 test_acc=0.9252 T=1.248 t=1.4s
+06:18:41|INFO   |  tune_sam_rho0.05_s101 ep31 lr=0.00146 batch_loss=0.0532 train_loss_eval=0.0515 test_acc=0.9253 T=1.252 t=1.4s
+06:18:42|INFO   |  tune_sam_rho0.05_s101 ep32 lr=0.00120 batch_loss=0.0513 train_loss_eval=0.0500 test_acc=0.9257 T=1.256 t=1.4s
+06:18:44|INFO   |  tune_sam_rho0.05_s101 ep33 lr=0.00095 batch_loss=0.0501 train_loss_eval=0.0488 test_acc=0.9244 T=1.263 t=1.4s
+06:18:46|INFO   |  tune_sam_rho0.05_s101 ep34 lr=0.00074 batch_loss=0.0491 train_loss_eval=0.0471 test_acc=0.9258 T=1.281 t=1.4s
+06:18:48|INFO   |  tune_sam_rho0.05_s101 ep35 lr=0.00054 batch_loss=0.0481 train_loss_eval=0.0475 test_acc=0.9254 T=1.275 t=1.4s
+06:18:50|INFO   |  tune_sam_rho0.05_s101 ep36 lr=0.00038 batch_loss=0.0473 train_loss_eval=0.0465 test_acc=0.9253 T=1.286 t=1.4s
+06:18:51|INFO   |  tune_sam_rho0.05_s101 ep37 lr=0.00024 batch_loss=0.0469 train_loss_eval=0.0462 test_acc=0.9248 T=1.285 t=1.4s
+06:18:53|INFO   |  tune_sam_rho0.05_s101 ep38 lr=0.00014 batch_loss=0.0464 train_loss_eval=0.0460 test_acc=0.9247 T=1.289 t=1.4s
+06:18:55|INFO   |  tune_sam_rho0.05_s101 ep39 lr=0.00006 batch_loss=0.0462 train_loss_eval=0.0460 test_acc=0.9247 T=1.289 t=1.4s
+06:18:57|INFO   |  tune_sam_rho0.05_s101 ep40 lr=0.00002 batch_loss=0.0461 train_loss_eval=0.0450 test_acc=0.9248 T=1.306 t=1.4s
+06:18:57|INFO   |DONE tune_sam_rho0.05_s101: wall=72s final_train_loss=0.0450 test_acc=0.9248
+06:18:57|INFO   |tune rho=0.05: final val NLL=0.21039
+06:18:57|INFO   |projected remaining tuning time: 2.4 min
+06:18:57|INFO   |START tune_sam_rho0.1_s101: method=sam rho=0.1 epochs=40 seed=101
+06:18:59|INFO   |  tune_sam_rho0.1_s101 ep01 lr=0.01000 batch_loss=0.5655 train_loss_eval=0.3751 test_acc=0.8450 T=0.893 t=1.4s
+06:19:01|INFO   |  tune_sam_rho0.1_s101 ep02 lr=0.00998 batch_loss=0.3418 train_loss_eval=0.3244 test_acc=0.8677 T=0.848 t=1.5s
+06:19:03|INFO   |  tune_sam_rho0.1_s101 ep03 lr=0.00994 batch_loss=0.2958 train_loss_eval=0.2986 test_acc=0.8749 T=0.824 t=1.5s
+06:19:05|INFO   |  tune_sam_rho0.1_s101 ep04 lr=0.00986 batch_loss=0.2652 train_loss_eval=0.2617 test_acc=0.8889 T=0.939 t=1.6s
+06:19:07|INFO   |  tune_sam_rho0.1_s101 ep05 lr=0.00976 batch_loss=0.2476 train_loss_eval=0.2314 test_acc=0.8975 T=0.895 t=1.6s
+06:19:09|INFO   |  tune_sam_rho0.1_s101 ep06 lr=0.00962 batch_loss=0.2335 train_loss_eval=0.2189 test_acc=0.9043 T=0.883 t=1.7s
+06:19:11|INFO   |  tune_sam_rho0.1_s101 ep07 lr=0.00946 batch_loss=0.2220 train_loss_eval=0.2070 test_acc=0.9068 T=0.890 t=1.6s
+06:19:12|INFO   |  tune_sam_rho0.1_s101 ep08 lr=0.00926 batch_loss=0.2106 train_loss_eval=0.2011 test_acc=0.9082 T=0.855 t=1.5s
+06:19:14|INFO   |  tune_sam_rho0.1_s101 ep09 lr=0.00905 batch_loss=0.2022 train_loss_eval=0.1951 test_acc=0.9081 T=0.930 t=1.4s
+06:19:16|INFO   |  tune_sam_rho0.1_s101 ep10 lr=0.00880 batch_loss=0.1943 train_loss_eval=0.1844 test_acc=0.9114 T=0.926 t=1.5s
+06:19:18|INFO   |  tune_sam_rho0.1_s101 ep11 lr=0.00854 batch_loss=0.1867 train_loss_eval=0.1796 test_acc=0.9123 T=0.902 t=1.5s
+06:19:19|INFO   |  tune_sam_rho0.1_s101 ep12 lr=0.00825 batch_loss=0.1803 train_loss_eval=0.1749 test_acc=0.9126 T=0.882 t=1.4s
+06:19:21|INFO   |  tune_sam_rho0.1_s101 ep13 lr=0.00794 batch_loss=0.1753 train_loss_eval=0.1653 test_acc=0.9148 T=0.928 t=1.4s
+06:19:23|INFO   |  tune_sam_rho0.1_s101 ep14 lr=0.00761 batch_loss=0.1690 train_loss_eval=0.1615 test_acc=0.9145 T=0.923 t=1.5s
+06:19:25|INFO   |  tune_sam_rho0.1_s101 ep15 lr=0.00727 batch_loss=0.1641 train_loss_eval=0.1592 test_acc=0.9146 T=0.935 t=1.4s
+06:19:27|INFO   |  tune_sam_rho0.1_s101 ep16 lr=0.00691 batch_loss=0.1595 train_loss_eval=0.1562 test_acc=0.9171 T=0.898 t=1.4s
+06:19:29|INFO   |  tune_sam_rho0.1_s101 ep17 lr=0.00655 batch_loss=0.1546 train_loss_eval=0.1523 test_acc=0.9165 T=0.936 t=1.6s
+06:19:31|INFO   |  tune_sam_rho0.1_s101 ep18 lr=0.00617 batch_loss=0.1513 train_loss_eval=0.1478 test_acc=0.9178 T=0.944 t=1.6s
+06:19:32|INFO   |  tune_sam_rho0.1_s101 ep19 lr=0.00578 batch_loss=0.1469 train_loss_eval=0.1402 test_acc=0.9196 T=0.955 t=1.5s
+06:19:34|INFO   |  tune_sam_rho0.1_s101 ep20 lr=0.00539 batch_loss=0.1430 train_loss_eval=0.1371 test_acc=0.9184 T=0.959 t=1.5s
+06:19:36|INFO   |  tune_sam_rho0.1_s101 ep21 lr=0.00500 batch_loss=0.1396 train_loss_eval=0.1344 test_acc=0.9197 T=0.941 t=1.5s
+06:19:38|INFO   |  tune_sam_rho0.1_s101 ep22 lr=0.00461 batch_loss=0.1371 train_loss_eval=0.1316 test_acc=0.9193 T=0.954 t=1.6s
+06:19:40|INFO   |  tune_sam_rho0.1_s101 ep23 lr=0.00422 batch_loss=0.1334 train_loss_eval=0.1302 test_acc=0.9192 T=0.964 t=1.5s
+06:19:42|INFO   |  tune_sam_rho0.1_s101 ep24 lr=0.00383 batch_loss=0.1307 train_loss_eval=0.1274 test_acc=0.9207 T=0.953 t=1.5s
+06:19:43|INFO   |  tune_sam_rho0.1_s101 ep25 lr=0.00345 batch_loss=0.1284 train_loss_eval=0.1246 test_acc=0.9210 T=0.963 t=1.5s
+06:19:45|INFO   |  tune_sam_rho0.1_s101 ep26 lr=0.00309 batch_loss=0.1262 train_loss_eval=0.1235 test_acc=0.9214 T=0.979 t=1.5s
+06:19:47|INFO   |  tune_sam_rho0.1_s101 ep27 lr=0.00273 batch_loss=0.1238 train_loss_eval=0.1218 test_acc=0.9227 T=0.978 t=1.5s
+06:19:49|INFO   |  tune_sam_rho0.1_s101 ep28 lr=0.00239 batch_loss=0.1217 train_loss_eval=0.1204 test_acc=0.9215 T=0.968 t=1.5s
+06:19:51|INFO   |  tune_sam_rho0.1_s101 ep29 lr=0.00206 batch_loss=0.1202 train_loss_eval=0.1177 test_acc=0.9215 T=0.983 t=1.5s
+06:19:53|INFO   |  tune_sam_rho0.1_s101 ep30 lr=0.00175 batch_loss=0.1185 train_loss_eval=0.1167 test_acc=0.9209 T=0.998 t=1.7s
+06:19:55|INFO   |  tune_sam_rho0.1_s101 ep31 lr=0.00146 batch_loss=0.1176 train_loss_eval=0.1159 test_acc=0.9207 T=0.990 t=1.6s
+06:19:57|INFO   |  tune_sam_rho0.1_s101 ep32 lr=0.00120 batch_loss=0.1161 train_loss_eval=0.1151 test_acc=0.9230 T=0.979 t=1.5s
+06:19:59|INFO   |  tune_sam_rho0.1_s101 ep33 lr=0.00095 batch_loss=0.1150 train_loss_eval=0.1139 test_acc=0.9218 T=0.989 t=1.5s
+06:20:01|INFO   |  tune_sam_rho0.1_s101 ep34 lr=0.00074 batch_loss=0.1143 train_loss_eval=0.1126 test_acc=0.9226 T=0.993 t=1.5s
+06:20:03|INFO   |  tune_sam_rho0.1_s101 ep35 lr=0.00054 batch_loss=0.1135 train_loss_eval=0.1128 test_acc=0.9227 T=1.001 t=1.5s
+06:20:04|INFO   |  tune_sam_rho0.1_s101 ep36 lr=0.00038 batch_loss=0.1128 train_loss_eval=0.1121 test_acc=0.9225 T=1.002 t=1.5s
+06:20:06|INFO   |  tune_sam_rho0.1_s101 ep37 lr=0.00024 batch_loss=0.1125 train_loss_eval=0.1119 test_acc=0.9228 T=1.000 t=1.5s
+06:20:08|INFO   |  tune_sam_rho0.1_s101 ep38 lr=0.00014 batch_loss=0.1122 train_loss_eval=0.1116 test_acc=0.9234 T=1.003 t=1.6s
+06:20:10|INFO   |  tune_sam_rho0.1_s101 ep39 lr=0.00006 batch_loss=0.1119 train_loss_eval=0.1117 test_acc=0.9230 T=1.004 t=1.6s
+06:20:12|INFO   |  tune_sam_rho0.1_s101 ep40 lr=0.00002 batch_loss=0.1118 train_loss_eval=0.1107 test_acc=0.9229 T=1.015 t=1.7s
+06:20:12|INFO   |DONE tune_sam_rho0.1_s101: wall=75s final_train_loss=0.1107 test_acc=0.9229
+06:20:13|INFO   |tune rho=0.1: final val NLL=0.19984
+06:20:13|INFO   |projected remaining tuning time: 1.3 min
+06:20:13|INFO   |START tune_sam_rho0.2_s101: method=sam rho=0.2 epochs=40 seed=101
+06:20:15|INFO   |  tune_sam_rho0.2_s101 ep01 lr=0.01000 batch_loss=1.9993 train_loss_eval=0.9373 test_acc=0.6875 T=0.597 t=1.7s
+06:20:17|INFO   |  tune_sam_rho0.2_s101 ep02 lr=0.00998 batch_loss=0.6446 train_loss_eval=0.5078 test_acc=0.7824 T=0.751 t=1.8s
+06:20:19|INFO   |  tune_sam_rho0.2_s101 ep03 lr=0.00994 batch_loss=0.4543 train_loss_eval=0.4164 test_acc=0.8415 T=0.767 t=1.7s
+06:20:21|INFO   |  tune_sam_rho0.2_s101 ep04 lr=0.00986 batch_loss=0.3725 train_loss_eval=0.3428 test_acc=0.8625 T=0.914 t=1.7s
+06:20:23|INFO   |  tune_sam_rho0.2_s101 ep05 lr=0.00976 batch_loss=0.3292 train_loss_eval=0.3121 test_acc=0.8743 T=0.821 t=1.9s
+06:20:26|INFO   |  tune_sam_rho0.2_s101 ep06 lr=0.00962 batch_loss=0.3042 train_loss_eval=0.2897 test_acc=0.8848 T=0.824 t=2.3s
+06:20:28|INFO   |  tune_sam_rho0.2_s101 ep07 lr=0.00946 batch_loss=0.2852 train_loss_eval=0.2707 test_acc=0.8878 T=0.876 t=2.3s
+06:20:31|INFO   |  tune_sam_rho0.2_s101 ep08 lr=0.00926 batch_loss=0.2716 train_loss_eval=0.2644 test_acc=0.8905 T=0.838 t=2.3s
+06:20:33|INFO   |  tune_sam_rho0.2_s101 ep09 lr=0.00905 batch_loss=0.2619 train_loss_eval=0.2532 test_acc=0.8956 T=0.831 t=2.0s
+06:20:36|INFO   |  tune_sam_rho0.2_s101 ep10 lr=0.00880 batch_loss=0.2530 train_loss_eval=0.2446 test_acc=0.8988 T=0.841 t=1.9s
+06:20:38|INFO   |  tune_sam_rho0.2_s101 ep11 lr=0.00854 batch_loss=0.2463 train_loss_eval=0.2373 test_acc=0.9001 T=0.839 t=1.5s
+06:20:40|INFO   |  tune_sam_rho0.2_s101 ep12 lr=0.00825 batch_loss=0.2397 train_loss_eval=0.2347 test_acc=0.9015 T=0.823 t=1.8s
+06:20:42|INFO   |  tune_sam_rho0.2_s101 ep13 lr=0.00794 batch_loss=0.2353 train_loss_eval=0.2280 test_acc=0.9044 T=0.840 t=1.5s
+06:20:43|INFO   |  tune_sam_rho0.2_s101 ep14 lr=0.00761 batch_loss=0.2294 train_loss_eval=0.2237 test_acc=0.9041 T=0.853 t=1.5s
+06:20:46|INFO   |  tune_sam_rho0.2_s101 ep15 lr=0.00727 batch_loss=0.2259 train_loss_eval=0.2219 test_acc=0.9035 T=0.859 t=1.8s
+06:20:48|INFO   |  tune_sam_rho0.2_s101 ep16 lr=0.00691 batch_loss=0.2222 train_loss_eval=0.2184 test_acc=0.9052 T=0.838 t=1.5s
+06:20:49|INFO   |  tune_sam_rho0.2_s101 ep17 lr=0.00655 batch_loss=0.2183 train_loss_eval=0.2155 test_acc=0.9083 T=0.824 t=1.5s
+06:20:51|INFO   |  tune_sam_rho0.2_s101 ep18 lr=0.00617 batch_loss=0.2160 train_loss_eval=0.2155 test_acc=0.9048 T=0.825 t=1.7s
+06:20:53|INFO   |  tune_sam_rho0.2_s101 ep19 lr=0.00578 batch_loss=0.2121 train_loss_eval=0.2086 test_acc=0.9066 T=0.868 t=1.5s
+06:20:55|INFO   |  tune_sam_rho0.2_s101 ep20 lr=0.00539 batch_loss=0.2098 train_loss_eval=0.2052 test_acc=0.9087 T=0.880 t=1.6s
+06:20:57|INFO   |  tune_sam_rho0.2_s101 ep21 lr=0.00500 batch_loss=0.2075 train_loss_eval=0.2032 test_acc=0.9101 T=0.862 t=1.6s
+06:20:59|INFO   |  tune_sam_rho0.2_s101 ep22 lr=0.00461 batch_loss=0.2056 train_loss_eval=0.2030 test_acc=0.9097 T=0.853 t=1.5s
+06:21:01|INFO   |  tune_sam_rho0.2_s101 ep23 lr=0.00422 batch_loss=0.2030 train_loss_eval=0.2001 test_acc=0.9108 T=0.849 t=1.7s
+06:21:03|INFO   |  tune_sam_rho0.2_s101 ep24 lr=0.00383 batch_loss=0.2014 train_loss_eval=0.1998 test_acc=0.9110 T=0.848 t=1.6s
+06:21:05|INFO   |  tune_sam_rho0.2_s101 ep25 lr=0.00345 batch_loss=0.2000 train_loss_eval=0.1991 test_acc=0.9100 T=0.839 t=1.5s
+06:21:07|INFO   |  tune_sam_rho0.2_s101 ep26 lr=0.00309 batch_loss=0.1987 train_loss_eval=0.1970 test_acc=0.9120 T=0.847 t=1.6s
+06:21:09|INFO   |  tune_sam_rho0.2_s101 ep27 lr=0.00273 batch_loss=0.1970 train_loss_eval=0.1958 test_acc=0.9114 T=0.860 t=1.6s
+06:21:11|INFO   |  tune_sam_rho0.2_s101 ep28 lr=0.00239 batch_loss=0.1956 train_loss_eval=0.1955 test_acc=0.9129 T=0.843 t=1.7s
+06:21:13|INFO   |  tune_sam_rho0.2_s101 ep29 lr=0.00206 batch_loss=0.1948 train_loss_eval=0.1936 test_acc=0.9129 T=0.851 t=1.6s
+06:21:15|INFO   |  tune_sam_rho0.2_s101 ep30 lr=0.00175 batch_loss=0.1936 train_loss_eval=0.1926 test_acc=0.9124 T=0.870 t=1.6s
+06:21:17|INFO   |  tune_sam_rho0.2_s101 ep31 lr=0.00146 batch_loss=0.1934 train_loss_eval=0.1913 test_acc=0.9128 T=0.868 t=1.7s
+06:21:18|INFO   |  tune_sam_rho0.2_s101 ep32 lr=0.00120 batch_loss=0.1924 train_loss_eval=0.1918 test_acc=0.9137 T=0.858 t=1.6s
+06:21:20|INFO   |  tune_sam_rho0.2_s101 ep33 lr=0.00095 batch_loss=0.1918 train_loss_eval=0.1912 test_acc=0.9129 T=0.853 t=1.6s
+06:21:22|INFO   |  tune_sam_rho0.2_s101 ep34 lr=0.00074 batch_loss=0.1915 train_loss_eval=0.1902 test_acc=0.9140 T=0.864 t=1.6s
+06:21:24|INFO   |  tune_sam_rho0.2_s101 ep35 lr=0.00054 batch_loss=0.1911 train_loss_eval=0.1901 test_acc=0.9135 T=0.871 t=1.6s
+06:21:26|INFO   |  tune_sam_rho0.2_s101 ep36 lr=0.00038 batch_loss=0.1904 train_loss_eval=0.1896 test_acc=0.9139 T=0.868 t=1.6s
+06:21:28|INFO   |  tune_sam_rho0.2_s101 ep37 lr=0.00024 batch_loss=0.1902 train_loss_eval=0.1898 test_acc=0.9147 T=0.868 t=1.7s
+06:21:30|INFO   |  tune_sam_rho0.2_s101 ep38 lr=0.00014 batch_loss=0.1901 train_loss_eval=0.1899 test_acc=0.9149 T=0.866 t=1.6s
+06:21:32|INFO   |  tune_sam_rho0.2_s101 ep39 lr=0.00006 batch_loss=0.1898 train_loss_eval=0.1896 test_acc=0.9142 T=0.869 t=1.6s
+06:21:34|INFO   |  tune_sam_rho0.2_s101 ep40 lr=0.00002 batch_loss=0.1900 train_loss_eval=0.1889 test_acc=0.9144 T=0.874 t=1.5s
+06:21:34|INFO   |DONE tune_sam_rho0.2_s101: wall=81s final_train_loss=0.1889 test_acc=0.9144
+06:21:34|INFO   |tune rho=0.2: final val NLL=0.22988
+06:21:34|INFO   |projected remaining tuning time: 0.0 min
+06:21:34|INFO   |chosen rho=0.1 (lowest final validation NLL: {0.05: 0.2103902844910903, 0.1: 0.19983867205089795, 0.2: 0.22988255751812825})
+06:21:34|INFO   |stage tune finished in 230.3s
+EXIT 0

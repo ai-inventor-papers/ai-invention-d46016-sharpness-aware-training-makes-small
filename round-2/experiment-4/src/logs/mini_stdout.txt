@@ -1,0 +1,17 @@
+06:17:34|INFO   |Device: mps; stage=mini; torch=2.16.0.dev20261116
+06:17:34|INFO   |===== stage: mini =====
+06:17:34|INFO   |Normalisation from 50k train split: mean=0.2861 std=0.3533
+06:17:35|INFO   |Split sizes: train=5000 val=10000 test=10000 device=mps
+06:17:35|INFO   |START mini_sam: method=sam rho=0.1 epochs=2 seed=0
+06:17:37|INFO   |  mini_sam ep01 lr=0.01000 batch_loss=1.2007 train_loss_eval=0.6892 val_acc=0.7358 T=0.936 t=1.6s
+06:17:37|INFO   |  mini_sam ep02 lr=0.00500 batch_loss=0.6346 train_loss_eval=0.5694 val_acc=0.7646 T=0.826 t=0.1s
+06:17:37|INFO   |DONE mini_sam: wall=2s final_train_loss=0.5694 test_acc=0.7646
+06:17:37|INFO   |START mini_sgd: method=sgd rho=0.0 epochs=2 seed=0
+06:17:37|INFO   |  mini_sgd ep01 lr=0.01000 batch_loss=0.9273 train_loss_eval=0.6431 val_acc=0.7231 T=1.082 t=0.0s
+06:17:37|INFO   |  mini_sgd ep02 lr=0.00500 batch_loss=0.5173 train_loss_eval=0.4316 val_acc=0.8141 T=0.987 t=0.1s
+06:17:37|INFO   |DONE mini_sgd: wall=0s final_train_loss=0.4316 test_acc=0.8141
+06:17:37|INFO   |START mini_sgd_short: method=sgd rho=0.0 epochs=1 seed=0
+06:17:38|INFO   |  mini_sgd_short ep01 lr=0.01000 batch_loss=0.9273 train_loss_eval=0.6431 val_acc=0.7231 T=1.082 t=0.0s
+06:17:38|INFO   |DONE mini_sgd_short: wall=0s final_train_loss=0.6431 test_acc=0.7231
+06:17:38|INFO   |mini pipeline finished (outputs under results/checks)
+06:17:38|INFO   |stage mini finished in 3.3s
