@@ -1,0 +1,11 @@
+S1 test ECE gap ep40: mean -0.03778 CI [-0.04145,-0.03412] t-p 8.83e-06; exact sign-flip p 0.0625
+S1 test NLL gap ep40: mean -0.09796 CI [-0.10918,-0.08673]
+S1 accuracy gap ep40: mean +0.00146 CI [-0.00071,+0.00363]
+S1 test ECE gap ep5 (compressed): mean +0.00574 CI [+0.00177,+0.00970] t-p 0.0159
+S1 SAM minus TS-SGD NLL ep40: mean -0.02088 CI [-0.02662,-0.01514]
+Placebo S1 ECE (all 32 label swaps): t-test rejects at 0.05 in 2/32
+S2 val ECE gap ep60: mean -0.01861 CI [-0.02390,-0.01333]; exact sign-flip min p 0.250
+S2 val NLL widening 60 minus 1: mean -0.10277 CI [-0.13743,-0.06810] t-p 0.0061; exact sign-flip p 0.250
+S2 val ECE widening 60 minus 1: mean -0.01423 CI [-0.02891,+0.00046] t-p 0.0530
+Placebo S2 NLL widening (8 sign assignments): t-test rejects at 0.05 in 2/8
+S2 val ECE mean gap extremum: epoch 25 value -0.03257; epoch 60 value -0.01861

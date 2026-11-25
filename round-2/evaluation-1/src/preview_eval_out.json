@@ -1,0 +1,183 @@
+{
+  "metadata": {
+    "evaluation_name": "Does the SAM calibration gap grow? Evaluation of saved outputs (no training)",
+    "description": "Two existing SAM-vs-SGD trajectories on Fashion-MNIST are evaluated separately, never pooled. Source 1: 5 seeds, 40-epoch headline set; 5 and 15 epochs are separate compressed schedules. Source 2: 3 seeds, 60-epoch trajectory with per-epoch validation values. Gap = SAM minus SGD.",
+    "limits": [
+      "Evaluation only; no model was trained or re-run, and no logits were recomputed.",
+      "Source 1 has no validation metrics or training loss in full_method_out.json; those are reported as missing.",
+      "Source 1 5/15-epoch points come from separate cosine schedules, so growth mixes training length with schedule shape.",
+      "Source 2 has n=3 seed pairs: t intervals have df=2 and bootstrap intervals take at most 27 distinct values.",
+      "Gap-vs-training-loss association is co-variation within one schedule, not evidence of mechanism.",
+      "Source 2 learning rate is 0.03; source 1 learning rate is 0.01, which sits at the lower edge of its grid."
+    ],
+    "sources": {
+      "source1": "inputs/dep1_sam_fashion_5seed/full_method_out.json",
+      "source2": "inputs/dep2_sam_trajectory_3seed/full_method_out.json"
+    }
+  },
+  "metrics_agg": {
+    "src1_test_ece_gap_ep40_mean": -0.03778479999999999,
+    "src1_test_ece_gap_ep40_holm_p": 2.6482443570123247e-05,
+    "src1_ece_widen_40_minus_5_mean": -0.0435206,
+    "src1_ece_widen_40_minus_5_p": 3.310318395609107e-05,
+    "src1_ece_widen_40_minus_15_mean": -0.024616599999999995,
+    "src1_ece_widen_40_minus_15_p": 6.8322494735298e-05,
+    "src1_ts_nll_gap_ep40_mean": -0.020882800000000007,
+    "src1_ts_ece_gap_ep40_mean": -0.003068,
+    "src2_val_ece_gap_ep1_mean": -0.004385097771219465,
+    "src2_val_ece_gap_ep5_mean": 0.002201329546371561,
+    "src2_val_ece_gap_ep60_mean": -0.01861186783674155,
+    "src2_val_ece_widen_60_minus_1_mean": -0.01422677006552208,
+    "src2_val_ece_widen_60_minus_1_p": 0.05301244705902798,
+    "src2_val_ece_widen_60_minus_5_mean": -0.020813197383113106,
+    "src2_val_ece_widen_60_minus_5_p": 0.1151316592642713,
+    "src2_test_ece_gap_ep60_mean": -0.017098000736674963,
+    "src2_samraw_minus_tssgd_ece_ep60_mean": 0.01805827226367449,
+    "src2_tssam_minus_tssgd_ece_ep60_mean": -0.0023926437366750936,
+    "src2_tssam_minus_tssgd_ece_ep5_mean": 0.0004970894190266482,
+    "src2_val_ece_gap_peak_mean": -0.03256836598786869,
+    "src2_val_ece_gap_peak_epoch": 25.0,
+    "src2_val_nll_gap_peak_mean": -0.09526646317887633,
+    "src2_val_nll_gap_peak_epoch": 30.0
+  },
+  "datasets": [
+    {
+      "dataset": "source1_paired_gaps_by_seed_and_epoch",
+      "examples": [
+        {
+          "input": "Source 1 paired gap SAM minus SGD, seed 0, epoch 5 (compressed), test set",
+          "output": "gap accuracy -0.01800; gap ECE +0.00146; gap NLL +0.04193",
+          "metadata_seed": "0",
+          "metadata_epoch": "5",
+          "metadata_schedule": "compressed",
+          "metadata_source": "dep1 full_method_out.json",
+          "eval_gap_accuracy": -0.018000000000000016,
+          "eval_gap_ece": 0.001458000000000001,
+          "eval_gap_nll": 0.04192900000000002,
+          "eval_gap_brier": 0.02210999999999999,
+          "eval_gap_ace": 0.0053159999999999995,
+          "eval_gap_aurc": 0.004215000000000002
+        },
+        {
+          "input": "Source 1 paired gap SAM minus SGD, seed 1, epoch 5 (compressed), test set",
+          "output": "gap accuracy -0.01810; gap ECE +0.00772; gap NLL +0.04521",
+          "metadata_seed": "1",
+          "metadata_epoch": "5",
+          "metadata_schedule": "compressed",
+          "metadata_source": "dep1 full_method_out.json",
+          "eval_gap_accuracy": -0.018100000000000005,
+          "eval_gap_ece": 0.007721,
+          "eval_gap_nll": 0.045212,
+          "eval_gap_brier": 0.02287900000000001,
+          "eval_gap_ace": 0.005692,
+          "eval_gap_aurc": 0.004397000000000002
+        },
+        {
+          "input": "Source 1 paired gap SAM minus SGD, seed 2, epoch 5 (compressed), test set",
+          "output": "gap accuracy -0.02090; gap ECE +0.00907; gap NLL +0.04971",
+          "metadata_seed": "2",
+          "metadata_epoch": "5",
+          "metadata_schedule": "compressed",
+          "metadata_source": "dep1 full_method_out.json",
+          "eval_gap_accuracy": -0.02090000000000003,
+          "eval_gap_ece": 0.009066000000000001,
+          "eval_gap_nll": 0.049707,
+          "eval_gap_brier": 0.025326,
+          "eval_gap_ace": 0.008775999999999999,
+          "eval_gap_aurc": 0.004806000000000001
+        }
+      ]
+    },
+    {
+      "dataset": "source2_per_epoch_gaps_by_seed",
+      "examples": [
+        {
+          "input": "Source 2 per-epoch gap SAM minus SGD, seed 0, epoch 1, validation set",
+          "output": "gap val ECE -0.00599; gap val NLL +0.03807; train loss SGD 0.46128, SAM 0.52501",
+          "metadata_seed": "0",
+          "metadata_epoch": "1",
+          "metadata_source": "dep2 full_method_out.json",
+          "eval_gap_val_ece": -0.005992861350707281,
+          "eval_gap_val_nll": 0.03807121714797407,
+          "eval_train_loss_sgd": 0.461283046875,
+          "eval_train_loss_sam": 0.52501375
+        },
+        {
+          "input": "Source 2 per-epoch gap SAM minus SGD, seed 0, epoch 2, validation set",
+          "output": "gap val ECE +0.00077; gap val NLL +0.01675; train loss SGD 0.28468, SAM 0.31494",
+          "metadata_seed": "0",
+          "metadata_epoch": "2",
+          "metadata_source": "dep2 full_method_out.json",
+          "eval_gap_val_ece": 0.0007697021473918111,
+          "eval_gap_val_nll": 0.016752911255549896,
+          "eval_train_loss_sgd": 0.2846807421875,
+          "eval_train_loss_sam": 0.31494232421875
+        },
+        {
+          "input": "Source 2 per-epoch gap SAM minus SGD, seed 0, epoch 5, validation set",
+          "output": "gap val ECE +0.01580; gap val NLL +0.01645; train loss SGD 0.19294, SAM 0.22285",
+          "metadata_seed": "0",
+          "metadata_epoch": "5",
+          "metadata_source": "dep2 full_method_out.json",
+          "eval_gap_val_ece": 0.015799409198575302,
+          "eval_gap_val_nll": 0.01644736912820391,
+          "eval_train_loss_sgd": 0.19293818359375,
+          "eval_train_loss_sam": 0.22285291015625
+        }
+      ]
+    },
+    {
+      "dataset": "source2_test_endpoint_gaps",
+      "examples": [
+        {
+          "input": "Source 2 test endpoint gap SAM minus SGD, seed 0, epoch 5",
+          "output": "gap test ECE +0.00614; gap test NLL +0.01407; SAM minus TS-SGD ECE +0.00733",
+          "metadata_seed": "0",
+          "metadata_epoch": "5",
+          "metadata_source": "dep2 full_method_out.json",
+          "eval_gap_test_acc": -0.0040000000000000036,
+          "eval_gap_test_ece": 0.006137510908748135,
+          "eval_gap_test_nll": 0.014073224002399354,
+          "eval_gap_test_brier": 0.006735686425379139,
+          "eval_gap_test_ace": 0.008027166216603598,
+          "eval_gap_test_ece_minus_ts_sgd": 0.007332030807211993,
+          "eval_gap_test_nll_minus_ts_sgd": 0.014491822047966674,
+          "eval_gap_tsSAM_minus_tsSGD_ece": 0.00469432456855925,
+          "eval_gap_tsSAM_minus_tsSGD_nll": 0.011365813028510308
+        },
+        {
+          "input": "Source 2 test endpoint gap SAM minus SGD, seed 0, epoch 60",
+          "output": "gap test ECE -0.01837; gap test NLL -0.07813; SAM minus TS-SGD ECE +0.01944",
+          "metadata_seed": "0",
+          "metadata_epoch": "60",
+          "metadata_source": "dep2 full_method_out.json",
+          "eval_gap_test_acc": 0.0030000000000000027,
+          "eval_gap_test_ece": -0.0183729606212762,
+          "eval_gap_test_nll": -0.07812926376610002,
+          "eval_gap_test_brier": -0.010832018404913046,
+          "eval_gap_test_ace": -0.018363543647211586,
+          "eval_gap_test_ece_minus_ts_sgd": 0.01943963714867631,
+          "eval_gap_test_nll_minus_ts_sgd": 0.004083071195964683,
+          "eval_gap_tsSAM_minus_tsSGD_ece": -0.0017738304406657614,
+          "eval_gap_tsSAM_minus_tsSGD_nll": -0.017380246220860096
+        },
+        {
+          "input": "Source 2 test endpoint gap SAM minus SGD, seed 1, epoch 5",
+          "output": "gap test ECE -0.00756; gap test NLL -0.01653; SAM minus TS-SGD ECE -0.00432",
+          "metadata_seed": "1",
+          "metadata_epoch": "5",
+          "metadata_source": "dep2 full_method_out.json",
+          "eval_gap_test_acc": 0.00759999999999994,
+          "eval_gap_test_ece": -0.007558161350111994,
+          "eval_gap_test_nll": -0.016531939889349534,
+          "eval_gap_test_brier": -0.0110884738027629,
+          "eval_gap_test_ace": -0.005596461929496052,
+          "eval_gap_test_ece_minus_ts_sgd": -0.00431998358282925,
+          "eval_gap_test_nll_minus_ts_sgd": -0.015512919700174543,
+          "eval_gap_tsSAM_minus_tsSGD_ece": -0.0036280799296407786,
+          "eval_gap_tsSAM_minus_tsSGD_nll": -0.0157554838393284
+        }
+      ]
+    }
+  ]
+}

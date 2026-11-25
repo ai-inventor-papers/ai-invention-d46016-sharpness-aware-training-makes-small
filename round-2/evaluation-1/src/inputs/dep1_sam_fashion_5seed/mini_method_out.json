@@ -1,0 +1,833 @@
+{
+  "metadata": {
+    "method_name": "SAM vs SGD calibration on a small CNN (Fashion-MNIST)",
+    "description": "Plain SGD (momentum 0.9) and sharpness-aware minimisation (SAM) on the same base optimiser, matched architecture, data split, batch size, schedule and seeds. Hyperparameters chosen on validation only. Reports accuracy, ECE (15 bins), ACE, NLL, Brier, AURC, temperature-scaled SGD control, paired t-intervals over 5 seeds with Holm correction, and a compressed-schedule training-length check.",
+    "chosen_hparams": {
+      "selection_rule": "minimum validation NLL of the final-epoch model, seed 100",
+      "sgd": {
+        "lr": 0.01,
+        "val_nll_final": 0.26497
+      },
+      "sam": {
+        "lr": 0.01,
+        "rho": 0.1,
+        "val_nll_final": 0.18404
+      },
+      "grid": {
+        "lr": [
+          0.01,
+          0.03,
+          0.1
+        ],
+        "rho": [
+          0.05,
+          0.1,
+          0.2
+        ],
+        "compressed": true,
+        "decisions": [
+          "no cut: full grid fits the timing gate"
+        ],
+        "projected_total_h": 0.5861708631166341,
+        "t_sgd_epoch_s": 1.4025094159997025,
+        "t_sam_epoch_s": 2.304789625000012,
+        "projected_sam_40ep_run_s": 92.19158500000049
+      },
+      "tuning_table": "results/tuning_table.csv"
+    },
+    "split": "60k official training images: fixed 50k train / 10k validation (seed 0); 10k official test set used only in final evaluation",
+    "architecture": "Conv(1,32,3,p1)-BN-ReLU-Pool, Conv(32,64,3,p1)-BN-ReLU-Pool, FC 3136-128-10",
+    "training": {
+      "batch_size": 128,
+      "epochs": 40,
+      "compressed_epochs": [
+        5,
+        15
+      ],
+      "scheduler": "CosineAnnealingLR(T_max=E) stepped per epoch",
+      "momentum": 0.9,
+      "weight_decay": 0.0005,
+      "augmentation": "none",
+      "normalisation": "x/255 then train-split mean/std"
+    },
+    "timing_gate": {
+      "lr": [
+        0.01,
+        0.03,
+        0.1
+      ],
+      "rho": [
+        0.05,
+        0.1,
+        0.2
+      ],
+      "compressed": true,
+      "decisions": [
+        "no cut: full grid fits the timing gate"
+      ],
+      "projected_total_h": 0.5861708631166341,
+      "t_sgd_epoch_s": 1.4025094159997025,
+      "t_sam_epoch_s": 2.304789625000012,
+      "projected_sam_40ep_run_s": 92.19158500000049
+    },
+    "verdicts": {
+      "a_accuracy": {
+        "criterion": "SAM test accuracy differs from SGD at epoch 40 (paired, seeds 0-4)",
+        "verdict": "no detectable difference (CI includes zero)",
+        "mean_diff": 0.001460000000000039,
+        "ci95": [
+          -0.000707761856975732,
+          0.00362776185697581
+        ],
+        "holm_p": 0.13483865104196946
+      },
+      "b_calibration_vs_sgd": {
+        "criterion": "SAM ECE is lower than SGD ECE (paired, seeds 0-4)",
+        "verdict": "SAM lower: favours SAM (CI excludes zero)",
+        "mean_diff": -0.03778507472240959,
+        "ci95": [
+          -0.041445905732531846,
+          -0.03412424371228734
+        ],
+        "holm_p": 7.060005749967155e-05
+      },
+      "c_survives_temperature_scaling": {
+        "criterion": "SAM NLL is lower than temperature-scaled SGD NLL (paired, seeds 0-4)",
+        "verdict": "SAM lower: favours SAM (CI excludes zero)",
+        "mean_diff": -0.020883069078181736,
+        "ci95": [
+          -0.026623000852331637,
+          -0.015143137304031835
+        ],
+        "holm_p": 0.002702458211693069
+      },
+      "c2_ece_vs_temperature_scaling": {
+        "criterion": "SAM ECE is lower than temperature-scaled SGD ECE (paired, seeds 0-4)",
+        "verdict": "SAM lower: favours SAM (CI excludes zero)",
+        "mean_diff": -0.0030681669524288005,
+        "ci95": [
+          -0.005899961769089226,
+          -0.00023637213576837516
+        ],
+        "holm_p": 0.0792412563905608
+      },
+      "d_training_length": {
+        "criterion": "SGD-minus-SAM ECE advantage grows from E=5 to E=40",
+        "verdict": "advantage grows with training length (CI excludes zero)",
+        "mean_diff": 0.04352096112363404,
+        "ci95": [
+          0.037642255861703104,
+          0.04939966638556497
+        ]
+      }
+    },
+    "holm_family": [
+      "accuracy",
+      "ece",
+      "ace",
+      "nll",
+      "brier",
+      "aurc",
+      "sam_vs_tssgd_nll",
+      "sam_vs_tssgd_ece"
+    ],
+    "holm_adjusted_p": {
+      "ece": 7.060005749967155e-05,
+      "ace": 9.876613841043829e-05,
+      "nll": 0.00010325943807670906,
+      "sam_vs_tssgd_nll": 0.002702458211693069,
+      "brier": 0.0036680263287621057,
+      "aurc": 0.0063551311731228355,
+      "sam_vs_tssgd_ece": 0.0792412563905608,
+      "accuracy": 0.13483865104196946
+    },
+    "paired_tests": {
+      "accuracy": {
+        "description": "SAM - SGD, accuracy, epoch 40",
+        "d": [
+          -0.0005999999999999339,
+          0.0042000000000000925,
+          0.0014000000000000679,
+          0.0008000000000000229,
+          0.0014999999999999458
+        ],
+        "n": 5,
+        "df": 4,
+        "mean": 0.001460000000000039,
+        "sd": 0.0017458522274236294,
+        "ci95": [
+          -0.000707761856975732,
+          0.00362776185697581
+        ],
+        "t": 1.869951646461779,
+        "p": 0.13483865104196946,
+        "seed_bootstrap_ci95": [
+          0.00022000000000004237,
+          0.0029600000000000737
+        ],
+        "holm_p": 0.13483865104196946
+      },
+      "ece": {
+        "description": "SAM - SGD, ece, epoch 40",
+        "d": [
+          -0.03630702545818691,
+          -0.04284194506824635,
+          -0.03536874557302472,
+          -0.03670402297517761,
+          -0.037703634537412364
+        ],
+        "n": 5,
+        "df": 4,
+        "mean": -0.03778507472240959,
+        "sd": 0.0029483266128502933,
+        "ci95": [
+          -0.041445905732531846,
+          -0.03412424371228734
+        ],
+        "t": -28.656932120738205,
+        "p": 8.825007187458944e-06,
+        "seed_bootstrap_ci95": [
+          -0.040319643063035225,
+          -0.036011113007520176
+        ],
+        "holm_p": 7.060005749967155e-05
+      },
+      "ace": {
+        "description": "SAM - SGD, ace, epoch 40",
+        "d": [
+          -0.03519980238657403,
+          -0.04355461298942389,
+          -0.03619368304841424,
+          -0.03770612657048414,
+          -0.04040605109667417
+        ],
+        "n": 5,
+        "df": 4,
+        "mean": -0.038612055218314095,
+        "sd": 0.0033896901992348048,
+        "ci95": [
+          -0.0428209115037681,
+          -0.03440319893286009
+        ],
+        "t": -25.471112445206995,
+        "p": 1.4109448344348326e-05,
+        "seed_bootstrap_ci95": [
+          -0.041253938490303975,
+          -0.036098619488092135
+        ],
+        "holm_p": 9.876613841043829e-05
+      },
+      "nll": {
+        "description": "SAM - SGD, nll, epoch 40",
+        "d": [
+          -0.09233053066000976,
+          -0.11242401792013504,
+          -0.0960187491325517,
+          -0.08910560359769515,
+          -0.09991119385329364
+        ],
+        "n": 5,
+        "df": 4,
+        "mean": -0.09795801903273707,
+        "sd": 0.00903983777309319,
+        "ci95": [
+          -0.10918246014518937,
+          -0.08673357792028477
+        ],
+        "t": -24.23061065878712,
+        "p": 1.7209906346118176e-05,
+        "seed_bootstrap_ci95": [
+          -0.10525777024227878,
+          -0.09177820352959229
+        ],
+        "holm_p": 0.00010325943807670906
+      },
+      "brier": {
+        "description": "SAM - SGD, brier, epoch 40",
+        "d": [
+          -0.011762630948942879,
+          -0.019336959622296132,
+          -0.013724373438393167,
+          -0.010245314313068757,
+          -0.013049726876235485
+        ],
+        "n": 5,
+        "df": 4,
+        "mean": -0.013623801039787284,
+        "sd": 0.0034589732440126137,
+        "ci95": [
+          -0.01791868358762783,
+          -0.009328918491946739
+        ],
+        "t": -8.807164174984175,
+        "p": 0.0009170065821905264,
+        "seed_bootstrap_ci95": [
+          -0.01669957665084489,
+          -0.011367079338335449
+        ],
+        "holm_p": 0.0036680263287621057
+      },
+      "aurc": {
+        "description": "SAM - SGD, aurc, epoch 40",
+        "d": [
+          -0.0010326458636309207,
+          -0.0021843862018293553,
+          -0.0014559558334967214,
+          -0.0011178102478390847,
+          -0.001801733472203127
+        ],
+        "n": 5,
+        "df": 4,
+        "mean": -0.0015185063237998417,
+        "sd": 0.0004806620240460863,
+        "ci95": [
+          -0.002115327054361619,
+          -0.0009216855932380645
+        ],
+        "t": -7.064180639230594,
+        "p": 0.002118377057707612,
+        "seed_bootstrap_ci95": [
+          -0.0018930140544963017,
+          -0.0011513736112873465
+        ],
+        "holm_p": 0.0063551311731228355
+      },
+      "sam_vs_tssgd_nll": {
+        "description": "SAM - TS-SGD, nll, epoch 40 (SAM raw vs temperature-scaled SGD)",
+        "d": [
+          -0.018166698560079797,
+          -0.028680766399521884,
+          -0.020071839629518473,
+          -0.016808634100953457,
+          -0.020687406700835076
+        ],
+        "n": 5,
+        "df": 4,
+        "mean": -0.020883069078181736,
+        "sd": 0.004622773779745159,
+        "ci95": [
+          -0.026623000852331637,
+          -0.015143137304031835
+        ],
+        "t": -10.101286427261092,
+        "p": 0.0005404916423386138,
+        "seed_bootstrap_ci95": [
+          -0.024856167477632786,
+          -0.01789508566825453
+        ],
+        "holm_p": 0.002702458211693069
+      },
+      "sam_vs_tssgd_ece": {
+        "description": "SAM - TS-SGD, ece, epoch 40 (SAM raw vs temperature-scaled SGD)",
+        "d": [
+          -0.002284901084000904,
+          -0.006355223896678911,
+          -0.0004377419202976629,
+          -0.0020224383581751524,
+          -0.004240529502991374
+        ],
+        "n": 5,
+        "df": 4,
+        "mean": -0.0030681669524288005,
+        "sd": 0.0022806450221291765,
+        "ci95": [
+          -0.005899961769089226,
+          -0.00023637213576837516
+        ],
+        "t": -3.0081971571113595,
+        "p": 0.0396206281952804,
+        "seed_bootstrap_ci95": [
+          -0.004748788622665154,
+          -0.0014410523281893069
+        ],
+        "holm_p": 0.0792412563905608
+      },
+      "aurc_sam_vs_tssgd_extra": {
+        "description": "SAM - TS-SGD, AURC (ranking; not in Holm family)",
+        "d": [
+          -0.001070565330185156,
+          -0.002162391967317396,
+          -0.0013965730931482616,
+          -0.0011173815769713307,
+          -0.001791568357569162
+        ],
+        "n": 5,
+        "df": 4,
+        "mean": -0.0015076960650382612,
+        "sd": 0.00046502343939786283,
+        "ci95": [
+          -0.0020850989280594774,
+          -0.000930293202017045
+        ],
+        "t": -7.249765506873911,
+        "p": 0.0019216888743295315,
+        "seed_bootstrap_ci95": [
+          -0.001869861917941301,
+          -0.001154493381492247
+        ]
+      }
+    },
+    "training_length_contrast": {
+      "ece_adv40_minus_adv5": {
+        "description": "(ece: SGD - SAM) at E=40 minus at E=5; positive = advantage grows with length",
+        "adv_at_E": {
+          "5": [
+            -0.0014582326644340775,
+            -0.007720447793614046,
+            -0.009066525865095154,
+            -0.007076600457318212,
+            -0.003357625225660764
+          ],
+          "15": [
+            0.016263322408535626,
+            0.014580818962785208,
+            0.012023040505629733,
+            0.009737467211949862,
+            0.013237943179145593
+          ],
+          "40": [
+            0.03630702545818691,
+            0.04284194506824635,
+            0.03536874557302472,
+            0.03670402297517761,
+            0.037703634537412364
+          ]
+        },
+        "d": [
+          0.03776525812262099,
+          0.0505623928618604,
+          0.04443527143811987,
+          0.04378062343249582,
+          0.04106125976307313
+        ],
+        "n": 5,
+        "df": 4,
+        "mean": 0.04352096112363404,
+        "sd": 0.004734537902713842,
+        "ci95": [
+          0.037642255861703104,
+          0.04939966638556497
+        ],
+        "t": 20.554451040045496,
+        "p": 3.309067383000852e-05,
+        "seed_bootstrap_ci95": [
+          0.03975846111381119,
+          0.04743674195735484
+        ]
+      },
+      "ece_adv40_minus_adv15": {
+        "description": "(ece: SGD - SAM) at E=40 minus at E=15; positive = advantage grows with length",
+        "adv_at_E": {
+          "5": [
+            -0.0014582326644340775,
+            -0.007720447793614046,
+            -0.009066525865095154,
+            -0.007076600457318212,
+            -0.003357625225660764
+          ],
+          "15": [
+            0.016263322408535626,
+            0.014580818962785208,
+            0.012023040505629733,
+            0.009737467211949862,
+            0.013237943179145593
+          ],
+          "40": [
+            0.03630702545818691,
+            0.04284194506824635,
+            0.03536874557302472,
+            0.03670402297517761,
+            0.037703634537412364
+          ]
+        },
+        "d": [
+          0.020043703049651286,
+          0.028261126105461144,
+          0.023345705067394987,
+          0.026966555763227748,
+          0.02446569135826677
+        ],
+        "n": 5,
+        "df": 4,
+        "mean": 0.02461655626880039,
+        "sd": 0.003215361429113857,
+        "ci95": [
+          0.02062415774105671,
+          0.02860895479654407
+        ],
+        "t": 17.119161998580132,
+        "p": 6.82976784301647e-05,
+        "seed_bootstrap_ci95": [
+          0.022088673995915315,
+          0.02698421101912891
+        ]
+      },
+      "nll_adv40_minus_adv5": {
+        "description": "(nll: SGD - SAM) at E=40 minus at E=5; positive = advantage grows with length",
+        "adv_at_E": {
+          "5": [
+            -0.041929824049618564,
+            -0.04521196254165333,
+            -0.04970641258776884,
+            -0.049954030955917994,
+            -0.038908662817045775
+          ],
+          "15": [
+            -0.006385383377854131,
+            -0.0034821668046148,
+            -0.008853262133838052,
+            -0.009433941597354334,
+            -0.0043697599138325105
+          ],
+          "40": [
+            0.09233053066000976,
+            0.11242401792013504,
+            0.0960187491325517,
+            0.08910560359769515,
+            0.09991119385329364
+          ]
+        },
+        "d": [
+          0.13426035470962833,
+          0.15763598046178837,
+          0.14572516172032055,
+          0.13905963455361314,
+          0.13881985667033941
+        ],
+        "n": 5,
+        "df": 4,
+        "mean": 0.14310019762313794,
+        "sd": 0.009096286475403574,
+        "ci95": [
+          0.13180566618928152,
+          0.15439472905699436
+        ],
+        "t": 35.17718690415296,
+        "p": 3.897361442342875e-06,
+        "seed_bootstrap_ci95": [
+          0.1370440114627097,
+          0.1505786915630628
+        ]
+      },
+      "nll_adv40_minus_adv15": {
+        "description": "(nll: SGD - SAM) at E=40 minus at E=15; positive = advantage grows with length",
+        "adv_at_E": {
+          "5": [
+            -0.041929824049618564,
+            -0.04521196254165333,
+            -0.04970641258776884,
+            -0.049954030955917994,
+            -0.038908662817045775
+          ],
+          "15": [
+            -0.006385383377854131,
+            -0.0034821668046148,
+            -0.008853262133838052,
+            -0.009433941597354334,
+            -0.0043697599138325105
+          ],
+          "40": [
+            0.09233053066000976,
+            0.11242401792013504,
+            0.0960187491325517,
+            0.08910560359769515,
+            0.09991119385329364
+          ]
+        },
+        "d": [
+          0.0987159140378639,
+          0.11590618472474984,
+          0.10487201126638976,
+          0.09853954519504948,
+          0.10428095376712615
+        ],
+        "n": 5,
+        "df": 4,
+        "mean": 0.10446292179823584,
+        "sd": 0.007058031268412974,
+        "ci95": [
+          0.095699218474051,
+          0.11322662512242068
+        ],
+        "t": 33.0950920144652,
+        "p": 4.9711638231596374e-06,
+        "seed_bootstrap_ci95": [
+          0.09975837444659058,
+          0.11026129589570063
+        ]
+      }
+    },
+    "compressed_runs_present": true,
+    "deviations": [
+      "Post-epoch-40 extension to 60 epochs is not applied; the eval-mode training loss is recorded in each run's metrics.json (needs_extension_check) and reported as an under-convergence flag.",
+      "Holm correction is applied over the plan's family only; the training-length contrast and the AURC SAM vs TS-SGD contrast are reported uncorrected.",
+      "Seed bootstrap is a check only (5 seeds give 3125 unique resamples).",
+      "MPS kernels are not bit-deterministic; seeds fix initialisation and batch order, not floats."
+    ],
+    "limitations": [
+      "One dataset (Fashion-MNIST), one small CNN, no ImageNet-scale or CSAM runs (Tan et al. 2025 scope).",
+      "Five paired seeds: low power; a non-significant result is weak evidence of no difference.",
+      "Hyperparameters tuned on one seed (100) and the final-epoch validation NLL only."
+    ]
+  },
+  "datasets": [
+    {
+      "dataset": "fashion_mnist_test_predictions",
+      "examples": [
+        {
+          "input": "Fashion-MNIST official test image index 0 (10k test set)",
+          "output": "true class: Ankle boot",
+          "metadata_test_index": 0,
+          "metadata_true_label": 9,
+          "predict_sgd_seed0": "Ankle boot",
+          "predict_sgd_seed1": "Ankle boot",
+          "predict_sgd_seed2": "Ankle boot",
+          "predict_sgd_seed3": "Ankle boot",
+          "predict_sgd_seed4": "Ankle boot",
+          "predict_sam_seed0": "Ankle boot",
+          "predict_sam_seed1": "Ankle boot",
+          "predict_sam_seed2": "Ankle boot",
+          "predict_sam_seed3": "Ankle boot",
+          "predict_sam_seed4": "Ankle boot",
+          "predict_ts_sgd_seed0": "Ankle boot",
+          "predict_ts_sgd_seed1": "Ankle boot",
+          "predict_ts_sgd_seed2": "Ankle boot",
+          "predict_ts_sgd_seed3": "Ankle boot",
+          "predict_ts_sgd_seed4": "Ankle boot"
+        },
+        {
+          "input": "Fashion-MNIST official test image index 1 (10k test set)",
+          "output": "true class: Pullover",
+          "metadata_test_index": 1,
+          "metadata_true_label": 2,
+          "predict_sgd_seed0": "Pullover",
+          "predict_sgd_seed1": "Pullover",
+          "predict_sgd_seed2": "Pullover",
+          "predict_sgd_seed3": "Pullover",
+          "predict_sgd_seed4": "Pullover",
+          "predict_sam_seed0": "Pullover",
+          "predict_sam_seed1": "Pullover",
+          "predict_sam_seed2": "Pullover",
+          "predict_sam_seed3": "Pullover",
+          "predict_sam_seed4": "Pullover",
+          "predict_ts_sgd_seed0": "Pullover",
+          "predict_ts_sgd_seed1": "Pullover",
+          "predict_ts_sgd_seed2": "Pullover",
+          "predict_ts_sgd_seed3": "Pullover",
+          "predict_ts_sgd_seed4": "Pullover"
+        },
+        {
+          "input": "Fashion-MNIST official test image index 2 (10k test set)",
+          "output": "true class: Trouser",
+          "metadata_test_index": 2,
+          "metadata_true_label": 1,
+          "predict_sgd_seed0": "Trouser",
+          "predict_sgd_seed1": "Trouser",
+          "predict_sgd_seed2": "Trouser",
+          "predict_sgd_seed3": "Trouser",
+          "predict_sgd_seed4": "Trouser",
+          "predict_sam_seed0": "Trouser",
+          "predict_sam_seed1": "Trouser",
+          "predict_sam_seed2": "Trouser",
+          "predict_sam_seed3": "Trouser",
+          "predict_sam_seed4": "Trouser",
+          "predict_ts_sgd_seed0": "Trouser",
+          "predict_ts_sgd_seed1": "Trouser",
+          "predict_ts_sgd_seed2": "Trouser",
+          "predict_ts_sgd_seed3": "Trouser",
+          "predict_ts_sgd_seed4": "Trouser"
+        }
+      ]
+    },
+    {
+      "dataset": "fashion_mnist_test_per_model_run",
+      "examples": [
+        {
+          "input": "SAM evaluated on the 10k Fashion-MNIST test set; training schedule: 40-epoch run; checkpoint epoch 5; seed 0",
+          "output": "accuracy 0.8988 (95% CI 0.8930-0.9045); ECE 0.0093; ACE 0.0087; NLL 0.2722; Brier 0.1428; AURC 0.0154",
+          "metadata_model": "SAM",
+          "metadata_schedule": "40-epoch run",
+          "metadata_epoch": 5,
+          "metadata_seed": 0,
+          "metadata_metrics": {
+            "accuracy": 0.8988,
+            "ece": 0.00935,
+            "ace": 0.008658,
+            "nll": 0.272154,
+            "brier": 0.142823,
+            "aurc": 0.015428
+          },
+          "metadata_ci95": {
+            "accuracy": [
+              0.893,
+              0.9045
+            ],
+            "ece": [
+              0.007617,
+              0.015614
+            ],
+            "ace": [
+              0.00666,
+              0.014744
+            ],
+            "nll": [
+              0.259584,
+              0.28523
+            ],
+            "brier": [
+              0.136223,
+              0.149687
+            ],
+            "aurc": [
+              0.013908,
+              0.016956
+            ]
+          }
+        },
+        {
+          "input": "SAM evaluated on the 10k Fashion-MNIST test set; training schedule: 40-epoch run; checkpoint epoch 5; seed 1",
+          "output": "accuracy 0.9027 (95% CI 0.8971-0.9092); ECE 0.0166; ACE 0.0164; NLL 0.2728; Brier 0.1421; AURC 0.0151",
+          "metadata_model": "SAM",
+          "metadata_schedule": "40-epoch run",
+          "metadata_epoch": 5,
+          "metadata_seed": 1,
+          "metadata_metrics": {
+            "accuracy": 0.9027,
+            "ece": 0.016579,
+            "ace": 0.016433,
+            "nll": 0.272805,
+            "brier": 0.142099,
+            "aurc": 0.01513
+          },
+          "metadata_ci95": {
+            "accuracy": [
+              0.897097,
+              0.909205
+            ],
+            "ece": [
+              0.012821,
+              0.022322
+            ],
+            "ace": [
+              0.012371,
+              0.022186
+            ],
+            "nll": [
+              0.259806,
+              0.28507
+            ],
+            "brier": [
+              0.135272,
+              0.148369
+            ],
+            "aurc": [
+              0.01366,
+              0.016588
+            ]
+          }
+        },
+        {
+          "input": "SAM evaluated on the 10k Fashion-MNIST test set; training schedule: 40-epoch run; checkpoint epoch 5; seed 2",
+          "output": "accuracy 0.9015 (95% CI 0.8960-0.9074); ECE 0.0104; ACE 0.0087; NLL 0.2741; Brier 0.1433; AURC 0.0154",
+          "metadata_model": "SAM",
+          "metadata_schedule": "40-epoch run",
+          "metadata_epoch": 5,
+          "metadata_seed": 2,
+          "metadata_metrics": {
+            "accuracy": 0.9015,
+            "ece": 0.010393,
+            "ace": 0.008729,
+            "nll": 0.274139,
+            "brier": 0.143303,
+            "aurc": 0.015445
+          },
+          "metadata_ci95": {
+            "accuracy": [
+              0.895998,
+              0.9074
+            ],
+            "ece": [
+              0.008231,
+              0.016761
+            ],
+            "ace": [
+              0.006147,
+              0.01469
+            ],
+            "nll": [
+              0.261438,
+              0.287492
+            ],
+            "brier": [
+              0.136864,
+              0.150136
+            ],
+            "aurc": [
+              0.01405,
+              0.017019
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "dataset": "paired_contrasts_and_verdicts",
+      "examples": [
+        {
+          "input": "SAM - SGD, accuracy, epoch 40",
+          "output": "mean paired difference 0.00146, 95% t-interval [-0.00071, 0.00363] (df=4), p=0.1348, Holm-adjusted p=0.1348",
+          "metadata_contrast": "accuracy",
+          "metadata_mean_diff": 0.00146,
+          "metadata_ci95": [
+            -0.000708,
+            0.003628
+          ],
+          "metadata_p": 0.134839,
+          "metadata_per_seed_diff": [
+            -0.0006,
+            0.0042,
+            0.0014,
+            0.0008,
+            0.0015
+          ]
+        },
+        {
+          "input": "SAM - SGD, ece, epoch 40",
+          "output": "mean paired difference -0.03779, 95% t-interval [-0.04145, -0.03412] (df=4), p=0.0000, Holm-adjusted p=0.0001",
+          "metadata_contrast": "ece",
+          "metadata_mean_diff": -0.037785,
+          "metadata_ci95": [
+            -0.041446,
+            -0.034124
+          ],
+          "metadata_p": 9e-06,
+          "metadata_per_seed_diff": [
+            -0.036307,
+            -0.042842,
+            -0.035369,
+            -0.036704,
+            -0.037704
+          ]
+        },
+        {
+          "input": "SAM - SGD, ace, epoch 40",
+          "output": "mean paired difference -0.03861, 95% t-interval [-0.04282, -0.03440] (df=4), p=0.0000, Holm-adjusted p=0.0001",
+          "metadata_contrast": "ace",
+          "metadata_mean_diff": -0.038612,
+          "metadata_ci95": [
+            -0.042821,
+            -0.034403
+          ],
+          "metadata_p": 1.4e-05,
+          "metadata_per_seed_diff": [
+            -0.0352,
+            -0.043555,
+            -0.036194,
+            -0.037706,
+            -0.040406
+          ]
+        }
+      ]
+    }
+  ]
+}
