@@ -1,0 +1,1154 @@
+Published as a conference paper at ICLR 2026
+TOWARDS UNDERSTANDING THE CALIBRATION BENE-
+FITS OF SHARPNESS-AWARE MINIMIZATION
+Chengli Tan1,2, Yubo Zhou2,3, Haishan Ye2,3,∗, Guang Dai2, Junmin Liu2,3,∗
+Zengjie Song3, Jiangshe Zhang3, Zixiang Zhao4, Yunda Hao5, Yong Xu1
+1 Northwestern Polytechnical University
+2 SGIT AI Lab, State Grid Corporation of China
+3 Xi’an Jiaotong University
+4 ETH Zürich
+5 Chinese University of Hong Kong
+ABSTRACT
+Deep neural networks have been increasingly used in safety-critical applications
+such as medical diagnosis and autonomous driving. However, many studies suggest
+that they are prone to being poorly calibrated and have a propensity for overcon-
+fidence, which may have disastrous consequences. In this paper, unlike standard
+training such as stochastic gradient descent, we show that the recently proposed
+sharpness-aware minimization (SAM) counteracts this tendency towards overconfi-
+dence. The theoretical analysis suggests that SAM allows us to learn models that
+are already well-calibrated by implicitly maximizing the entropy of the predictive
+distribution. Inspired by this finding, we further propose a variant of SAM, coined
+as CSAM, to ameliorate model calibration. Extensive experiments on various
+datasets, including ImageNet-1K, demonstrate the benefits of SAM in reducing cal-
+ibration error. Meanwhile, CSAM performs even better than SAM and consistently
+achieves lower calibration error than other approaches.
+1
+INTRODUCTION
+While the relation between generalization and flatness is still in dispute (Dinh et al., 2017; Ramasinghe
+et al., 2023; Andriushchenko et al., 2023; Wen et al., 2024), it is empirically appreciated that under
+some constraints, the flatter solutions tend to generalize better (Hinton & van Camp, 1993; Keskar
+et al., 2017; Chaudhari et al., 2019; Kaddour et al., 2022). From this point of view, many approaches
+have been proposed to bias solutions toward flat regions of the loss landscape explicitly or implicitly
+(Huang et al., 2017a; Izmailov et al., 2018; Chaudhari et al., 2019; Zhang et al., 2019; Wang et al.,
+2021b; Bisla et al., 2022), amongst which SAM (Foret et al., 2021) has garnered increasing attention
+due to its surprising effectiveness on popular tasks such as image classification (Chen et al., 2022),
+language generation (Bahri et al., 2022), and even physical computation (Xu et al., 2024).
+Different from standard training like stochastic gradient descent (SGD), SAM minimizes a perturbed
+loss, and each iteration is composed of two consecutive steps,
+˜θt = θt + ρ
+∇LΩt(θt)
+∥∇LΩt(θt)∥2
+,
+θt+1 = θt −η∇LΩt(˜θt),
+where θt ∈Rd represents the learnable parameters of the neural network at t-th iteration, η is the
+learning rate, ρ is the perturbation radius, and LΩt(·) denotes the empirical loss on a mini-batch
+Ωt of the training set S. This scheme constantly penalizes the gradient norm (Zhao et al., 2022a;
+Wen et al., 2022; Compagnoni et al., 2023) and significantly promotes generalization. On the other
+hand, model calibration refers to how reliable the model predictions are. Ideally, when the model is
+confident about its predictions, the predictions are supposed to be as accurate as possible. This is
+particularly important for real-world applications such as autonomous driving (Chib & Singh, 2023)
+and medical diagnosis (Jiang et al., 2012). As an example, consider a self-driving car that uses deep
+neural networks to detect whether an obstruction is a pedestrian or not. For an ill-calibrated model,
+∗Corresponding authors (junminliu,yehaishan@mail.xjtu.edu.cn).
+1
+arXiv:2505.23866v2  [cs.LG]  24 Jun 2026
+
+Published as a conference paper at ICLR 2026
+0.00
+0.25
+0.50
+0.75
+1.00
+Conﬁdence
+0.0
+0.2
+0.4
+0.6
+0.8
+1.0
+Proportion of examples
+SGD
+Avg. Accuracy
+Avg. Confidence
+0.00
+0.25
+0.50
+0.75
+1.00
+Conﬁdence
+0.0
+0.2
+0.4
+0.6
+0.8
+1.0
+Proportion of examples
+SAM
+Avg. Accuracy
+Avg. Confidence
+0.00
+0.25
+0.50
+0.75
+1.00
+Conﬁdence
+0.0
+0.2
+0.4
+0.6
+0.8
+1.0
+Accuracy
+SGD
+Perfect Calibration
+Accuracy
+Gap
+0.00
+0.25
+0.50
+0.75
+1.00
+Conﬁdence
+0.0
+0.2
+0.4
+0.6
+0.8
+1.0
+Accuracy
+SAM
+Perfect Calibration
+Accuracy
+Gap
+Figure 1: Confidence and reliability histograms for a PyramidNet (Han et al., 2017) trained on
+CIFAR-100 (Krizhevsky et al., 2009) with different optimizers. For clarity, the term confidence here
+refers to the predicted probability, namely, the maximum output of the softmax layer.
+when its confidence is low, it may just pass through and will not trigger emergency braking, which
+could cause undesired consequences. In contrast, for a well-calibrated model, it is not certain whether
+the obstruction is a pedestrian or not when its confidence is low. As a result, a more cautious decision
+would be made by the car to avoid an accident.
+It is known that modern neural networks such as ResNets (He et al., 2016) and DenseNets (Huang
+et al., 2017b) often suffer from the miscalibration problem, and this issue appears to be more serious
+when the network starts to overfit the training data (Nguyen et al., 2015; Guo et al., 2017; Zhu
+et al., 2023). Since SAM is more effective in preventing overfitting (Foret et al., 2021), one could
+anticipate that neural networks optimized by SAM may be better calibrated than by base optimizers
+such as SGD and AdamW (Loshchilov & Hutter, 2019). This is illustrated in Figure 1, where a
+large PyramidNet (Han et al., 2017) is respectively trained on CIFAR-100 (Krizhevsky et al., 2009)
+with SGD and SAM. One can easily observe that the average confidence of SAM closely matches
+its accuracy, while the average confidence of SGD is substantially higher than its accuracy. This is
+further confirmed with a reliability diagram (Niculescu-Mizil & Caruana, 2005), where we plot the
+accuracy as a function of the confidence. The diagram indicates that SAM is better calibrated than
+SGD, as the accuracy almost overlaps with the confidence along the diagonal line.
+While previous studies (Zheng et al., 2021; Möllenhoff & Khan, 2023) have reported this phenomenon,
+the question of how SAM alleviates the miscalibration problem has not been formally investigated,
+and we attempt to fill this gap in this paper. In brief, our contributions are as follows:
+• We provide theoretical justification for the calibration benefits of SAM, which essentially
+performs an implicit regularization on the negative entropy of the predictive distribution.
+This is similar to focal loss (Mukhoti et al., 2020), but SAM calibrates models much better
+without compromising accuracy.
+• We investigate how SAM performs on model calibration under distribution shift and find that
+SAM allows models to remain well-calibrated under different types of corruption. Moreover,
+the trick of ensembling is also useful for SAM, and compared to SGD, the improvement is
+more pronounced on out-of-distribution data.
+• We develop a variant of SAM, termed CSAM, that attempts to improve model calibration
+further. By extensive experiments with a variety of network architectures and datasets, we
+observe that CSAM consistently performs better than SAM and surpasses other approaches
+that are focused on improving calibration.
+The remainder of the paper is organized as follows. We first review the related work in Section 2 and
+then introduce some backgrounds in Section 3. After presenting the theoretical analysis of SAM and
+the derivation of CSAM in Section 4, we further provide the experimental results in Section 5.
+2
+RELATED WORK
+In this section, we present the most relevant works on SAM and the miscalibration of deep neural
+networks.
+2
+
+Published as a conference paper at ICLR 2026
+Sharpness-aware minimization.
+Because SAM is particularly effective in improving the general-
+ization performance of realistic neural networks (Foret et al., 2021; Chen et al., 2022; Bahri et al.,
+2022), it has received a lot of attention in recent years, and there is a surge of research along this
+direction. For example, to reduce the computational overhead incurred by the additional backpropa-
+gation, some works choose to apply SAM and standard training alternatively (Liu et al., 2022b; Zhao
+et al., 2022b; Jiang et al., 2023; Tan et al., 2024a), while some other works focus on perturbing a
+fraction of parameters (Du et al., 2022; Mi et al., 2022) or examples (Ni et al., 2022). Concurrently,
+some researchers also attempt to further enhance the generalization performance of SAM (Zhang
+et al., 2022; Li & Giannakis, 2023; Yue et al., 2023; Zhou et al., 2023). For example, Kwon et al.
+(2021) propose ASAM to consolidate the correlation between sharpness and generalization, which
+might break up due to model reparameterization (Dinh et al., 2017). And Kim et al. (2022) further
+propose FisherSAM to enforce that the optimization occurs on the statistical manifold induced by the
+Fisher information matrix.
+On the theoretical aspect, Wen et al. (2022); Bartlett et al. (2023) prove that the largest eigenvalue
+of the Hessian decreases along the trajectory of SAM, a result which is quite similar to that of
+Compagnoni et al. (2023) though derived from the perspective of the stochastic differential equation.
+Andriushchenko & Flammarion (2022) propose to study the unnormalized SAM and demonstrate the
+implicit bias on simple diagonal neural networks. Based on uniform stability (Bousquet & Elisseeff,
+2002; Hardt et al., 2016), Tan et al. (2024b) prove that SAM generalizes better than SGD on strongly
+convex problems, and propose a renormalization trick to mitigate the instability issue near the saddle
+points (Compagnoni et al., 2023; Kim et al., 2023).
+Miscalibration of deep neural networks.
+In machine learning, calibration has been extensively
+studied (Platt et al., 1999; Gneiting et al., 2007; Futami & Fujisawa, 2024). Since popular classification
+losses like squared error and cross-entropy (CE) are proper scoring rules (Gneiting et al., 2007), they
+are guaranteed to produce perfectly calibrated models at their global minimum. However, as first
+disclosed by Guo et al. (2017), modern neural networks suffer from serious miscalibration due to
+overfitting and overparameterization (Lakshminarayanan et al., 2017; Thulasidasan et al., 2019; Wang
+et al., 2021a; Wang, 2023). While Minderer et al. (2021) argue that the most recent non-convolutional
+models like MLP-Mixer (Tolstikhin et al., 2021) and vision transformers (Dosovitskiy et al., 2021)
+are better calibrated, the issue of miscalibration is still prevalent in a wide spectrum of applications
+like data distillation (Zhu et al., 2023) and object detection (Kuzucu et al., 2025).
+A variety of approaches have been proposed to improve model calibration. In the training-time
+calibration, for example, an intuitive idea is to penalize overconfidence, either explicitly via entropy-
+based regularization (Pereyra et al., 2017) and label smoothing (Müller et al., 2019) or implicitly
+using focal loss (FL) (Mukhoti et al., 2020; Tao et al., 2023). However, as pointed out by previous
+works Wang et al. (2021a); Singh (2021), the penalty of confident outputs may suppress the potential
+improvement in the post-hoc calibration phase. On the other hand, post-hoc calibration addresses
+the miscalibration problem by appending a post-processing step to the training phase and typically
+requires a hold-out validation set for hyperparameter tuning. Popular post-hoc methods include
+non-parametric calibration methods—histogram binning (Zadrozny & Elkan, 2001) and isotonic
+regression (Zadrozny & Elkan, 2002), and parametric methods like Bayesian binning (Naeini et al.,
+2015) and Platt scaling (Platt et al., 1999). Out of them, Platt scaling-based approaches such as
+temperature scaling (Guo et al., 2017) and Dirichlet calibration (Kull et al., 2019) are more frequently
+used due to their low complexity and efficiency.
+3
+PRELIMINARIES
+In this section, we first introduce one measure of model calibration that we use throughout, and
+then briefly recap the difference between SAM and SGD. Without loss of generality, we consider
+the multi-class classification problem where a categorical variable Y ∈{1, . . . , K} is predicted
+when an input variable X is observed. And we further assume that the training set S contains n
+examples {zi = (xi, yi)}n
+i=1 that are i.i.d. sampled from an unknown data distribution D. For a
+deep neural network parameterized by θ ∈Rd, we naturally obtain a predictor fθ that maps the
+features X to a categorical distribution over K labels, which we denote it by fθ(X) that belongs to a
+(K −1)-dimensional simplex ∆= {p ∈[0, 1]K| PK
+y=1 py = 1}. Then, ˆy ≜arg max1≤y≤K py is
+the predicted label.
+3
+
+Published as a conference paper at ICLR 2026
+3.1
+EXPECTED CALIBRATION ERROR
+A model is well-calibrated if the confidence truthfully recovers the probability of correctness. That
+is, if we gather all data points for which the model predicts py = 0.8, we expect that 80% of them
+should take on the label y. Mathematically, we refer to a model as well-calibrated (Bröcker, 2009) if
+P(Y = y|fθ(X) = p) = py,
+∀p ∈∆.
+In practice, however, we will focus on the top-label calibration (Guo et al., 2017) that requires the
+above equation to hold only for the most likely label, namely,
+P(Y = ˆy| max
+1≤y≤K py = ˆp) = ˆp,
+∀ˆp ∈[0, 1].
+Expected calibration error (ECE) is the most commonly used metric to measure the degree of
+miscalibration, which quantifies the expected difference between two sides of the above equation as
+follows
+E
+ˆp −P(Y = ˆy| max
+1≤y≤K py = ˆp)
+
+
+.
+In practice, due to finite examples, it works by firstly grouping all examples, say, {zi = (xi, yi)}n
+i=1,
+into M bins B1, . . . , BM based on their top confidence scores. Next, we compute in each bin Bi the
+average confidence conf(Bi) = 1/|Bi| P
+zj∈Bi max fθ(xj) and the average accuracy acc(Bi) =
+1/|Bi| P
+zj∈Bi I[yj = arg max fθ(xj)], where I[·] is the indicator function. Then, we can obtain an
+estimator by averaging over the bins
+[
+ECE =
+M
+X
+i=1
+|Bi|
+n
+|acc(Bi) −conf(Bi)| .
+3.2
+SHARPNESS-AWARE MINIMIZATION
+The intuitive idea of SAM (Foret et al., 2021) is to improve generalization by constantly minimizing
+the solution sharpness during training. To this end, instead of minimizing the loss at the current point,
+it minimizes the worst-case loss within its neighborhood. Mathematically, it is equivalent to solving
+the following optimization problem,
+min
+θ∈Rd max
+∥ε∥2≤ρ LS(θ + ε),
+where ε ∈Rd is a perturbation vector whose norm is bounded by the perturbation radius ρ > 0. It
+is not easy to solve this minimax problem explicitly. But, after a simple Taylor approximation, we
+observe that
+ε∗≜arg max
+∥ε∥2≤ρ
+LS(θ + ε)
+≈arg max
+∥ε∥2≤ρ
+LS(θ) + εT ∇LS(θ) = ρ
+∇LS(θ)
+∥∇LS(θ)∥2
+.
+This suggests that, as opposed to SGD, we first need to do an extra gradient backpropagation to
+estimate the perturbed vector ε∗. Therefore, SAM actually consists of two consecutive steps at each
+iteration,
+˜θt = θt + ρ
+∇LΩt(θt)
+∥∇LΩt(θt)∥2
+,
+θt+1 = θt −η∇LΩt(˜θt),
+where Ωt denotes a random mini-batch of S. We note that the same Ωt is used for the ascent and
+descent steps, and a smaller Ωt is preferred in practice for better generalization (Foret et al., 2021;
+Andriushchenko & Flammarion, 2022).
+4
+METHODOLOGY
+In this section, we first show that SAM is bound to prevent deep neural networks from producing
+overconfident predictions. As in previous studies (Guo et al., 2017; Minderer et al., 2021; Wang
+et al., 2021a), we focus on the most widely used cross-entropy (CE) loss in the classification problem,
+which for an example z = (x, y) is defined as ℓθ(z) = −log py in one-hot encoding. The analysis is
+straightforward, and all proofs are deferred to Appendix A for clarity. Towards the end of this section,
+we also develop a variant of SAM to improve its calibration performance.
+4
+
+Published as a conference paper at ICLR 2026
+0
+50
+100
+150
+200
+Epoch
+−12
+−10
+−8
+−6
+−4
+−2
+Value
+−∥∇LΩ(θ)∥/ρ
+κmin(θ)
+κmin(˜θ)
+(a)
+0.0
+0.2
+0.4
+0.6
+0.8
+1.0
+t
+−7
+−6
+−5
+−4
+−3
+−2
+−1
+κmin
+50th epoch
+150th epoch
+200th epoch
+(b)
+0
+50
+100
+150
+200
+Epoch
+1
+2
+3
+4
+Value
+true λ
+lower bound λ0
+(c)
+Figure 2: To verify whether the boundedness assumption of κmin (see Lemmas 1 and 2) holds for
+realistic neural networks, we trained a ResNet-56 on CIFAR-10 using a constant ρ = 0.05. (a)
+compares the value of κmin at the two endpoints θ and ˜θ throughout the training process. (b) further
+illustrates how κmin evolves along the path from θ(t = 0) to ˜θ(t = 1) at 50th, 150th, and 200th
+epoch, respectively. (c) records how the true coefficient λ and its lower bound λ0 (see Equation 2)
+vary during training. Notice that similar results for the realistic ImageNet-1K dataset can be found in
+Figure S4.
+4.1
+THEORETICAL ANALYSIS
+Let py = [fθ(x)]y and ˜py = [f˜θ(x)]y denote the confidence on the true label y conditioned on the
+current weight θ and the perturbed weight ˜θ, respectively. When the mini-batch is 1, namely, every
+step we sample one example only to estimate the true gradient, the following lemma suggests that ˜py
+can be consistently smaller than py during training.
+Lemma 1 (1-SAM version). Assume that at each step, the gradient ∇θℓ(z)̸ = 0 and there always
+exists some ρ > 0 such that the smallest eigenvalue of the Hessian κmin(∇2ℓθ′(z)) ≥−∥∇θℓ(z)∥/ρ
+holds for all θ′ = (1 −t)θ + t˜θ, t ∈[0, 1]. Then, given py, ˜py defined as above, we have
+˜py ≤e−ρ∥∇θℓ(z)∥/2py.
+Actually, the boundedness of κmin at θ can be easily verified along the optimization trajectory (Zhou
+et al., 2021, Section 6.2). However, it should be noted that the inequality does not necessarily hold
+for all θ′. But if we vary ρ accordingly at each step (ρ →0 in the worst case), the validity of the
+inequality can be assured because we are always ascending along the gradient direction. This lemma
+shows that ˜py, the probability of the perturbed network assigned to the true label, exponentially
+decays with the perturbation radius ρ and the gradient norm ∥∇θℓ(z)∥.
+Remark 1. A similar result for the mini-batch SAM is also developed in Lemma 2. Notice that
+varying ρ at every step is quite different from the practical setting, in which we often use a constant ρ
+instead. Luckily, as Figure 2(a) suggests, the boundedness assumption of κmin can be validated for
+the constant ρ over mini-batch SAM. Surprisingly, we also find that κmin linearly decreases along θ
+to ˜θ (see Figure 2(b)), suggesting that the boundedness assumption can be simplified to requiring
+κmin(∇2ℓ˜θ(z)) ≥−∥∇θℓ(z)∥/ρ only. This finding further reveals why a large value of ρ is not
+preferred because the boundedness assumption can be easily violated in that case.
+Remark 2. It should be highlighted that the gradient norm ∥∇θℓ(z)∥also plays a critical role in
+determining ˜py. Lemma 1 indicates that the SAM optimizer is more effective for larger gradient
+norm, while simultaneously allowing us to choose a relatively large ρ. This finding is aligned with the
+observation that SAM is particularly effective in training ViT models with AdamW, which eventually
+improves more than 5% accuracy on ImageNet-1K using a large ρ (Chen et al., 2022).
+Under Lemma 1, we show that minimizing the perturbed loss ℓ˜θ(z) has the same effect as adding a
+maximum-entropy regularizer to ℓθ(z) as focal loss (FL) (Mukhoti et al., 2020, Section 4).
+Theorem 1 (1-SAM version). Let λ = (1 −˜py)/(1 −py), the following inequality holds
+ℓ˜θ(z) ≥ℓθ(z) −λH(py) + H(˜py),
+(1)
+where H(p) = −p log p −(1 −p) log(1 −p) is the binary entropy function.
+5
+
+Published as a conference paper at ICLR 2026
+According to Lemma 1, we know that the coefficient λ is larger than 1, which implies that minimizing
+ℓ˜θ(z) implicitly puts more emphasis on maximizing H(py) in contrast to minimizing H(˜py). That
+is, SAM forces py to be smaller when it approaches 1 and to be larger when it is near 0. Moreover,
+when replacing py with eρ∥∇θℓ(z)∥/2˜py, we have
+λ ≥λ0 =
+1 −˜py
+1 −eρ∥∇θℓ(z)∥/2˜py
+.
+(2)
+We note that the penalty on maximizing H(py) is stronger at the terminal phase of training than at
+the initial phase (see Figure 2(c)). Since model architecture is also a major determinant of model
+calibration (Minderer et al., 2021), it suggests that SAM could calibrate better for model architectures
+that are seriously overconfident.
+In practice, as suggested by (Foret et al., 2021; Andriushchenko & Flammarion, 2022), we attempt to
+minimize the so-called m-sharpness to achieve the largest performance increment. Different from
+1-SAM, in every step we determine the ascent direction using the gradient averaged over a mini-batch
+Ωof m examples. As a result, the gradient corresponding to one example ∇ℓθ(z) is not promised
+to align well with the mini-batch gradient ∇LΩ(θ) ≜1/m Pm
+i=1 ∇ℓθ(zi). Therefore, the relation
+˜pyi ≤pyi does not necessarily hold for all zi ∈Ω. However, when both of them are taken into
+account, we do have a result similar to Lemma 1 as follows.
+Lemma 2 (m-SAM version). Assume that at each step, the gradient ∇LΩ(θ)̸ = 0 and there
+always exists some ρ > 0 such that the smallest eigenvalue of the Hessian κmin(∇2LΩ(θ′)) ≥
+−∥∇LΩ(θ)∥/ρ holds for all θ′ = (1 −t)θ + t˜θ, t ∈[0, 1]. Denote py = (Qm
+i=1 pyi)1/m and
+˜py = (Qm
+i=1 ˜pyi)1/m, respectively. Then, we have ˜py ≤e−ρ∥LΩ(θ)∥/2py.
+The proof is straightforward, and accordingly, we have the following result.
+Theorem 2 (m-SAM version). Let py and ˜py defined as above. Then, it follows that
+LΩ(˜θ) ≥LΩ(θ) −λH(py) + H(˜py),
+(3)
+where λ = (1 −˜py)/(1 −py).
+This theorem is similar to Theorem 1, albeit py is the geometric mean of the predicted probabilities.
+But it is enough to make sure that m-SAM prevents models from producing overconfident predictions
+as well.
+4.2
+IMPROVING SAM TOWARDS BETTER CALIBRATION
+As shown in Figure 2(c), we notice that SAM primarily starts to penalize the predictive distribution at
+the late stages of training where ˜py is high. Therefore, we propose to suppress the contribution of the
+over-confident examples so that their predictive probability ˜py is virtually higher. That is, we can
+redefine the per-example loss function for the outer loop of SAM as follows:
+˜ℓ˜θ(z) =
+−log ˜py,
+if ˜py ≤1/2,
+−(1 + ˜py)−γ log ˜py,
+otherwise,
+(4)
+where 0 ≤γ ≤2 is a hyperparameter. It is trivial to recover the standard SAM when γ = 0. Actually,
+the following result suggests that the modified loss function ˜ℓ˜θ(z) enforces SAM to penalize the
+predictive distribution of over-confident examples.
+Theorem 3. Let Lemma 1 hold and λ = (1 −˜py)/(1 −py), for all ˜py > 1/2, the following
+inequality holds
+˜ℓ˜θ(z) ≥ℓθ(z) −λH(py) + (1 −γ/2)H(˜py),
+(5)
+where H(p) = −p log p −(1 −p) log(1 −p) is the binary entropy function.
+Slightly different from Theorem 1, here it brings a coefficient before H(˜py), which suggests that
+the implicit penalty on H(py) is stronger if (1 −γ/2) > 0. Meanwhile, we also require that γ ≤2
+so that the optimization process is always biased towards decreasing ℓ˜θ(z) as in SAM. Note that
+this argument is also valid for m-SAM as it increases the geometric mean as well. For notational
+convenience, we will refer to this variant of SAM as Calibrated SAM (CSAM) in the sequel, and its
+pseudocode is summarized in Algorithm 1 (see Appendix A).
+6
+
+Published as a conference paper at ICLR 2026
+ResNet-20
+ResNet-56
+ResNext-29-32x4d WRN-28-10
+PyramidNet-110
+0.0
+0.5
+1.0
+1.5
+2.0
+2.5
+3.0
+3.5
+4.0
+ECE (%)
+Uncalibrated CE
+Temperature Scaling
+Logistic Calibration
+Histogram Binning
+Isotonic Regression
+Uncalibrated SAM
+(a) CIFAR-10
+ResNet-20
+ResNet-56
+ResNext-29-32x4d WRN-28-10
+PyramidNet-110
+0
+2
+4
+6
+8
+10
+12
+14
+ECE (%)
+Uncalibrated CE
+Temperature Scaling
+Logistic Calibration
+Histogram Binning
+Isotonic Regression
+Uncalibrated SAM
+(b) CIFAR-100
+Epoch
+1
+2
+3
+4
+5
+6
+ECE (%)
+SGD
+SAM
+(c) ECE evolution
+Epoch
+0.5
+1.0
+1.5
+2.0
+2.5
+3.0
+3.5
+TCE (%)
+SGD
+SAM
+(d) TCE evolution
+Figure 3: (a)-(b) display the calibration performance of SAM and SGD (after various post-hoc
+processing) on CIFAR-10/100 datasets. (c)-(d) report the variation of ECE and TCE (namely, ECE
+after temperature scaling) during training.
+5
+EXPERIMENTS
+In this section, we present the experimental results. We begin with the standard benchmarks showing
+that SAM significantly calibrates better than SGD. We further demonstrate on datasets including
+ImageNet-1K (Deng et al., 2009) that this calibration benefit is not limited to the in-distribution (ID)
+data, but also translates to the out-of-distribution (OOD) data. At last, we compare the proposed
+CSAM and SAM against a variety of baselines that attempt to reduce miscalibration. The results
+suggest that SAM is competitive and even superior to these approaches in many cases. More
+surprisingly, our proposed CSAM consistently outperforms SAM and achieves the lowest calibration
+error out of all baselines without deteriorating the generalization performance.
+5.1
+SAM ATTAINS A LOWER CALIBRATION ERROR THAN SGD
+As a starting point, we first evaluate how SAM differs from SGD on the classical benchmarks
+for classification. The loss function defaults to be the standard cross-entropy (CE) loss, and we
+train several neural networks, including ResNets (He et al., 2016), Wide ResNets (Zagoruyko &
+Komodakis, 2016), and PyramidNets (Han et al., 2017) to classify CIFAR-10/100 (Krizhevsky et al.,
+2009). As in common practice, we split the data into the train, validation, and test subsets so that the
+same validation subset is used for hyperparameter tuning and post-hoc calibration. Without further
+specification, the optimizer is SGD with momentum 0.9, and the learning rate is scheduled in a cosine
+decay (Loshchilov & Hutter, 2017). To conduct a fair comparison, we first make a grid search of
+learning rate and weight decay coefficient on the model trained with SGD, and then apply them to
+SAM. The perturbation radius ρ is 0.05 for CIFAR-10 and 0.2 for CIFAR-100 (see Appendix B for
+more discussion on the effect of ρ on calibration).
+As illustrated in Figure 3(a)-(b), the ECE of SGD (red bar) is always much higher than the ECE
+of SAM (purple bar). This is more pronounced for ResNet-56 on CIFAR-10/100, where the ECE
+of SGD is approximately six times larger than the ECE of SAM. More surprisingly, we further
+observe that the uncalibrated ECE of SAM is generally smaller than the calibrated ECE of SGD by
+calibration methods such as temperature scaling (Guo et al., 2017) and isotonic regression (Zadrozny
+& Elkan, 2002). This indicates that SAM by itself tends to generate accurate and reliable predictions.
+Furthermore, as shown in Figure 3(c)-(d), the superiority of SAM is persistent across the full training
+process. And the reduction of ECE is more pronounced than TCE since SAM has already suppressed
+the over-confident outputs during training, and temperature scaling is thus not as effective as in SGD.
+5.2
+MODEL CALIBRATION UNDER DISTRIBUTION SHIFT
+It is important for safety-critical applications that the model not only produces reliable predictions
+for the in-distribution data but also is robust enough when there exists a distribution shift between
+the training data and the test data. For this purpose, we first train ResNet-18 on CIFAR-10 using
+vanilla SGD and SAM, and then evaluate its performance on other datasets, including SVHN (Netzer
+et al., 2011), CIFAR-10/100-C (Hendrycks & Dietterich, 2019). To enhance model uncertainty, we
+further encapsulate them with MC-Dropout (Gal & Ghahramani, 2016) and Ensemble (Ovadia et al.,
+2019). Table 1 shows that model ensembling and MC-Dropout both can reduce ECE for SGD, SAM,
+and CSAM, but their gap is still significant—ECE of SGD approximately remains two times larger
+than ECE of SAM. This is different from their behavior on test accuracy, for example, SGD almost
+7
+
+Published as a conference paper at ICLR 2026
+Table 1: Model performance on OOD data. The base model is ResNet-18 trained on CIFAR-10. The
+size of MC-Dropout and Ensemble is 5.
+ID Metrics
+OOD AUROC ↑
+Test Acc ↑
+ECE ↓
+SVHN
+CIFAR10-C
+CIFAR100-C
+Vanilla
+89.18 ± 0.26
+5.76 ± 0.43
+83.94 ± 0.96
+62.26 ± 4.46
+83.26 ± 0.71
+SGD
+MC-Dropout
+89.13 ± 0.18
+4.39 ± 0.27
+84.11 ± 0.69
+57.09 ± 2.81
+82.11 ± 0.82
+Ensemble
+90.88 ± 0.11
+1.84 ± 0.22
+86.41 ± 0.36
+63.39 ± 4.72
+85.81 ± 0.17
+Vanilla
+90.01 ± 0.23
+3.24 ± 0.39
+86.38 ± 0.39
+63.32 ± 4.77
+84.83 ± 0.83
+SAM
+MC-Dropout
+89.49 ± 0.33
+2.21 ± 0.41
+83.02 ± 0.35
+56.11 ± 2.50
+80.96 ± 0.55
+Ensemble
+91.16 ± 0.14
+1.09 ± 0.22
+88.05 ± 0.21
+64.03 ± 4.95
+86.84 ± 0.75
+Vanilla
+89.95 ± 0.16
+2.55 ± 0.24
+85.98 ± 0.42
+63.49 ± 4.74
+84.87 ± 0.86
+CSAM
+MC-Dropout
+89.57 ± 0.21
+1.52 ± 0.21
+82.82 ± 0.31
+56.05 ± 2.48
+80.70 ± 0.55
+Ensemble
+91.22 ± 0.17
+0.86 ± 0.17
+88.21 ± 0.12
+64.17 ± 4.91
+86.92 ± 0.70
+Table 2: Results on the ImageNet-1K dataset. Slightly different from the custom setting, we reserve
+20% of the ImageNet-1K validation set as a new validation set for early stopping and temperature
+scaling, and the remaining images therefore constitute a test set. Both metrics (TCE is short for ECE
+calibrated by temperature scaling, and AdaECE is adaptive ECE) are evaluated on the test set.
+ID Metrics
+OOD Metrics
+Test Acc ↑
+ECE ↓
+TCE ↓
+AdaECE ↓
+AUROC ↑
+Test Acc (1/2/3) ↑
+ECE (1/2/3) ↓
+ResNet-50
+SGD
+76.97
+3.39
+1.80
+3.31
+94.01
+36.89
+35.81
+24.99
+7.97
+4.23
+17.29
+SAM
+77.32
+1.52
+1.54
+1.44
+94.35
+37.45
+36.35
+27.85
+4.91
+3.74
+6.92
+CSAM
+77.95
+1.18
+1.09
+1.19
+94.67
+38.29
+37.11
+28.69
+3.28
+3.02
+5.47
+ViT-S/32
+AdamW
+65.03
+9.11
+2.63
+9.11
+88.63
+33.53
+32.87
+26.48
+14.73
+12.28
+19.57
+SAM
+69.21
+3.04
+1.18
+3.05
+91.01
+37.95
+36.09
+33.36
+3.35
+6.27
+7.89
+CSAM
+70.01
+2.88
+0.92
+2.78
+91.54
+38.88
+36.94
+34.16
+3.01
+5.76
+5.41
+ViT-S/16
+AdamW
+71.35
+9.72
+3.66
+9.72
+90.61
+37.40
+35.54
+24.26
+14.14
+12.27
+18.63
+SAM
+75.42
+1.76
+1.66
+1.73
+93.27
+43.36
+39.15
+28.93
+2.92
+3.58
+5.02
+CSAM
+75.91
+1.58
+1.34
+1.54
+93.66
+44.01
+39.82
+29.57
+2.81
+3.24
+4.75
+generalizes as well as SAM with Ensemble. On the other hand, it should be highlighted that SAM
+generalizes much better than SGD on OOD data. And Ensemble also works well under this scenario.
+An unexpected finding is that MC-Dropout hurts both optimizers’ performance on OOD data and is
+more evident for SAM. One possible explanation is that the fusion of Dropout and SAM adversely
+increases model uncertainty, which, as a result, impedes generalization.
+Next, we train models on the clean ImageNet-1K dataset and then assess the calibration performance
+of SAM on the ImageNet-C (Hendrycks & Dietterich, 2019) dataset, which consists of images
+that have been modified with several synthetic corruptions at five different severities. Following
+Minderer et al. (2021), we reserve 20% of the ImageNet-1K validation set for early stopping and
+temperature scaling. Moreover, we also exclude the corresponding corrupted images in ImageNet-C
+that are created from ImageNet-1K at the evaluation phase. We train one ResNet and two vision
+transformers (ViTs) (Dosovitskiy et al., 2021) on ImageNet-1K for 100 epochs and 300 epochs. The
+base optimizers are SGD and AdamW, and a cosine learning rate scheduler is used in all runs. As in
+previous studies (Foret et al., 2021; Chen et al., 2022), the perturbation radius ρ for ResNet and ViT
+is 0.05 and 0.2.
+As shown in Table 2, SAM and CSAM consistently improve the test accuracy on ImageNet-1K
+validation set, though being more pronounced for ViTs (∼4%). Meanwhile, ViTs are generally
+less calibrated than ResNet, which is somewhat inconsistent with the findings of (Minderer et al.,
+2021). One explanation might be that their comparison is based on the pretrained neural networks
+rather than training them from scratch. But when models are trained by SAM, both of them achieve
+a much lower calibration error, and their gap becomes negligible. For ImageNet-C, we consider
+three kinds of corruption: 1–motion blur, 2–defocus blur, and 3–impulse noise. For each kind of
+corruption, we further average the accuracy and ECE across the five different severities. Consistent
+with previous findings, Table 2 also indicates that SAM generalizes better than SGD and that ViTs
+trained by AdamW also tend to be less calibrated on ImageNet-C. Interestingly, however, we observe
+8
+
+Published as a conference paper at ICLR 2026
+Table 3: Performance comparison between different methods on CIFAR-10. The results are averaged
+over 3 random seeds, with standard deviation displayed as well.
+Test Acc ↑
+ECE ↓
+ClasswiseECE ↓
+AdaECE ↓
+TCE ↓
+AUROC ↑
+CE
+95.83 ± 0.21
+2.36 ± 0.11
+0.52 ± 0.01
+2.04 ± 0.11
+1.06 ± 0.19
+98.68 ± 0.04
+Focal Loss (FL)
+95.91 ± 0.02
+1.16 ± 0.13
+0.38± 0.01
+1.42 ± 0.09
+1.01 ± 0.28
+99.04 ± 0.01
+DualFocal
+95.73 ± 0.10
+1.74 ± 0.09
+0.48 ± 0.02
+1.64 ± 0.07
+1.00 ± 0.09
+99.26 ± 0.02
+AdaFocal
+95.78 ± 0.06
+0.91 ± 0.14
+0.35 ± 0.01
+0.65 ± 0.04
+0.97 ± 0.08
+99.10 ± 0.04
+Mixup
+96.34 ± 0.10
+2.21 ± 1.11
+0.45 ± 0.21
+1.63 ± 1.04
+1.33 ± 0.25
+99.12 ± 0.02
+MIT-L
+96.56 ± 0.16
+1.05 ± 0.02
+0.31 ± 0.01
+1.05 ± 0.05
+0.57 ± 0.11
+99.12 ± 0.03
+MMCE
+95.94 ± 0.02
+2.47 ± 0.04
+0.54 ± 0.02
+2.42 ± 0.04
+1.15 ± 0.18
+98.65 ± 0.05
+BatchEnsemble
+95.92 ± 0.11
+1.91 ± 0.06
+0.45 ± 0.01
+1.85 ± 0.03
+0.41 ± 0.01
+98.96 ± 0.01
+Rank1-BNN
+95.50 ± 0.14
+1.92 ± 0.29
+0.45 ± 0.06
+1.94 ± 0.29
+0.51 ± 0.03
+98.81 ± 0.12
+VI
+94.33 ± 0.10
+3.14 ± 0.12
+0.69 ± 0.03
+3.06 ± 0.15
+0.76 ± 0.08
+98.28 ± 0.07
+MIMO
+95.96 ± 0.06
+0.88 ± 0.06
+0.33 ± 0.01
+0.73 ± 0.08
+0.74 ± 0.20
+99.16 ± 0.01
+ACLS
+95.91 ± 0.08
+2.48 ± 0.07
+0.55 ± 0.01
+2.45 ± 0.07
+1.09 ± 0.08
+98.62 ± 0.01
+BalCAL
+96.23 ± 0.09
+1.89 ± 0.07
+0.42 ± 0.01
+1.93 ± 0.01
+0.79 ± 0.05
+98.77 ± 0.44
+bSAM
+96.45 ± 0.03
+1.82 ± 0.10
+0.43 ± 0.02
+1.78 ± 0.10
+0.70 ± 0.23
+98.95 ± 0.06
+SAM
+96.91 ± 0.14
+0.86 ± 0.13
+0.26 ± 0.02
+0.84 ± 0.14
+0.52 ± 0.09
+99.30 ± 0.02
+CSAM
+96.97 ± 0.05
+0.50 ± 0.03
+0.23 ± 0.01
+0.48 ± 0.03
+0.47 ± 0.05
+99.53 ± 0.02
+that while ViT-S/16-SAM generalizes and calibrates worse than ResNet-50-SAM, it performs much
+better than the latter. This might arise from the different implicit biases of SGD and AdamW.
+5.3
+CSAM EVEN CALIBRATES BETTER THAN SAM
+In this section, we attempt to compare CSAM and SAM against other popular baselines, including:
+focal loss (Mukhoti et al., 2020) that implicitly penalizes the gradient norms of confident examples
+and its two variants—DualFocal (Tao et al., 2023) and AdaFocal (Ghosh et al., 2022), mixup (Zhang,
+2018) that implicitly performs label smoothing (Carratino et al., 2022) to avoid the overconfidence
+issue, MMCE (Kumar et al., 2018) that acts as a continuous and differentiable calibration error
+regulariser, MIT-L (Wang et al., 2023) that involves mixup inference in training, BatchEnsemble
+(Wen et al., 2020), ACLS (Park et al., 2023), BalCAL (Ni et al., 2025), and several probabilistic
+approaches—Rank1-BNN (Dusenberry et al., 2020), VI (Ovadia et al., 2019), MIMO (Havasi et al.,
+2021), and bSAM (Möllenhoff & Khan, 2023). The backbone is WideResNet-20-10 (Zagoruyko &
+Komodakis, 2016), and we generally follow the recommended setting to reproduce the results of each
+baseline. The perturbation radius ρ of SAM and CSAM is 0.2 for CIFAR-10/100, and we vary the
+hyper-parameter γ of CSAM in {0.5, 1.0, 2.0}.
+From Tables 3 and S5, we can observe that while focal loss generally hurts generalization, it does
+reduce the calibration error. This observation also applies to the probabilistic approaches, such as
+Rank1-BNN and MIMO. As a comparison, SAM significantly reduces the calibration error and
+is competitive, even superior to other baselines in many cases. Note that the Bayesian variant,
+bSAM, does not perform better than SAM. The reason might be that it additionally introduces
+several hyperparameters, making it more difficult to tune and apply. In contrast, the proposed CSAM
+further decreases the calibration error while simultaneously achieving a competitive generalization
+performance to SAM. And when compared to other baselines, CSAM always achieves the lowest
+error, showing its versatility in generalization and calibration. While our current study is limited to
+the cross-entropy loss, preliminary studies (see Table S15) indicate that SAM/CSAM can be further
+integrated with other training losses. More results, such as sensitivity analysis of the hyperparameters
+and comparison to other variants of SAM, can be found in Appendices B and C.
+6
+CONCLUSION
+Besides its well-known generalization benefits, we showed that SAM also excels at calibrating deep
+neural networks. We proved that SAM achieves this goal by imposing an implicit regularization on
+the negative entropy of the predictive distribution during training (see Equation 1), which is similar
+to focal loss (Mukhoti et al., 2020). We further proposed a variant of SAM to improve calibration and
+validated its superiority across a number of networks and datasets.
+9
+
+Published as a conference paper at ICLR 2026
+ACKNOWLEDGMENTS
+This work was supported in part by the National Natural Science Foundation of China under Grants
+12501710, 12301656, 62276208, 12326607 and 12371512, in part by the Natural Science Basic
+Research Program of Shaanxi Province under Grant 2024JC-JCQN-02, and in part by Fundamental
+Research Funds for the Central Universities.
+DISCLOSURE OF THE USE OF LARGE LANGUAGE MODELS
+The authors use large language models to assist with copyediting and to improve the overall readability
+of the text. The authors review and edit the manuscript and assume full responsibility for its final
+content.
+REFERENCES
+Maksym Andriushchenko and Nicolas Flammarion. Towards understanding sharpness-aware mini-
+mization. In ICML, pp. 639–668, 2022.
+Maksym Andriushchenko, Francesco Croce, Maximilian Müller, Matthias Hein, and Nicolas Flam-
+marion. A modern look at the relationship between sharpness and generalization. In ICML, pp.
+840–902, 2023.
+Dara Bahri, Hossein Mobahi, and Yi Tay. Sharpness-aware minimization improves language model
+generalization. In ACL, pp. 7360–7371, 2022.
+Peter L Bartlett, Philip M Long, and Olivier Bousquet. The dynamics of sharpness-aware minimiza-
+tion: Bouncing across ravines and drifting towards wide minima. Journal of Machine Learning
+Research, 24(316):1–36, 2023.
+Devansh Bisla, Jing Wang, and Anna Choromanska. Low-pass filtering SGD for recovering flat
+optima in the deep learning optimization landscape. In AISTATS, pp. 8299–8339, 2022.
+Olivier Bousquet and André Elisseeff. Stability and generalization. Journal of Machine Learning
+Research, 2:499–526, 2002.
+Jochen Bröcker. Reliability, sufficiency, and the decomposition of proper scores. Quarterly Journal
+of the Royal Meteorological Society, 135(643):1512–1519, 2009.
+Luigi Carratino, Moustapha Cissé, Rodolphe Jenatton, and Jean-Philippe Vert. On mixup regulariza-
+tion. Journal of Machine Learning Research, 23(325):1–31, 2022.
+Pratik Chaudhari, Anna Choromanska, Stefano Soatto, Yann LeCun, Carlo Baldassi, Christian Borgs,
+Jennifer Chayes, Levent Sagun, and Riccardo Zecchina. Entropy-SGD: Biasing gradient descent
+into wide valleys. Journal of Statistical Mechanics: Theory and Experiment, 2019(12):124018,
+2019.
+Xiangning Chen, Cho-Jui Hsieh, and Boqing Gong. When vision Transformers outperform Resnets
+without pretraining or strong data augmentations. In ICLR, pp. 1–20, 2022.
+Jiacheng Cheng and Nuno Vasconcelos. Calibrating deep neural networks by pairwise constraints. In
+CVPR, pp. 13709–13718, 2022.
+Pranav Singh Chib and Pravendra Singh. Recent advancements in end-to-end autonomous driving
+using deep learning: A survey. IEEE Transactions on Intelligent Vehicles, pp. 103–118, 2023.
+Enea Monzio Compagnoni, Luca Biggio, Antonio Orvieto, Frank Norbert Proske, Hans Kersting, and
+Aurelien Lucchi. An SDE for modeling SAM: Theory and insights. In ICML, pp. 25209–25253,
+2023.
+Jia Deng, Wei Dong, Richard Socher, Li-Jia Li, Kai Li, and Li Fei-Fei. ImageNet: A large-scale
+hierarchical image database. In CVPR, pp. 248–255, 2009.
+10
+
+Published as a conference paper at ICLR 2026
+Laurent Dinh, Razvan Pascanu, Samy Bengio, and Yoshua Bengio. Sharp minima can generalize for
+deep nets. In ICML, pp. 1019–1028, 2017.
+Alexey Dosovitskiy, Lucas Beyer, Alexander Kolesnikov, Dirk Weissenborn, Xiaohua Zhai, Thomas
+Unterthiner, Mostafa Dehghani, Matthias Minderer, Georg Heigold, Sylvain Gelly, Jakob Uszkoreit,
+and Neil Houlsby. An image is worth 16x16 words: Transformers for image recognition at scale.
+In ICLR, pp. 1–21, 2021.
+Jiawei Du, Hanshu Yan, Jiashi Feng, Joey Tianyi Zhou, Liangli Zhen, Rick Siow Mong Goh, and
+Vincent Tan. Efficient sharpness-aware minimization for improved training of neural networks. In
+ICLR, pp. 1–18, 2022.
+Michael Dusenberry, Ghassen Jerfel, Yeming Wen, Yian Ma, Jasper Snoek, Katherine Heller, Balaji
+Lakshminarayanan, and Dustin Tran. Efficient and scalable Bayesian neural nets with rank-1
+factors. In ICML, pp. 2782–2792, 2020.
+Pierre Foret, Ariel Kleiner, Hossein Mobahi, and Behnam Neyshabur. Sharpness-aware minimization
+for efficiently improving generalization. In ICLR, pp. 1–20, 2021.
+Futoshi Futami and Masahiro Fujisawa. Information-theoretic generalization analysis for expected
+calibration error. In NeurIPS, pp. 1–52, 2024.
+Yarin Gal and Zoubin Ghahramani. Dropout as a Bayesian approximation: Representing model
+uncertainty in deep learning. In ICML, pp. 1050–1059, 2016.
+Arindam Ghosh, Thomas Schaaf, and Matthew Gormley. Adafocal: Calibration-aware adaptive focal
+loss. In NeurIPS, pp. 1583–1595, 2022.
+Tilmann Gneiting, Fadoua Balabdaoui, and Adrian E Raftery. Probabilistic forecasts, calibration
+and sharpness. Journal of the Royal Statistical Society Series B: Statistical Methodology, 69(2):
+243–268, 2007.
+Chuan Guo, Geoff Pleiss, Yu Sun, and Kilian Q Weinberger. On calibration of modern neural
+networks. In ICML, pp. 1321–1330, 2017.
+Dongyoon Han, Jiwhan Kim, and Junmo Kim. Deep pyramidal residual networks. In CVPR, pp.
+5927–5935, 2017.
+Moritz Hardt, Ben Recht, and Yoram Singer. Train faster, generalize better: Stability of stochastic
+gradient descent. In ICML, pp. 1225–1234, 2016.
+Marton Havasi, Rodolphe Jenatton, Stanislav Fort, Jeremiah Zhe Liu, Jasper Snoek, Balaji Lakshmi-
+narayanan, Andrew Mingbo Dai, and Dustin Tran. Training independent subnetworks for robust
+prediction. In ICLR, pp. 1–13, 2021.
+Kaiming He, Xiangyu Zhang, Shaoqing Ren, and Jian Sun. Deep residual learning for image
+recognition. In CVPR, pp. 770–778, 2016.
+Ramya Hebbalaguppe, Jatin Prakash, Neelabh Madan, and Chetan Arora. A stitch in time saves nine:
+A train-time regularizing loss for improved neural network calibration. In CVPR, pp. 16081–16090,
+2022.
+Dan Hendrycks and Thomas Dietterich. Benchmarking neural network robustness to common
+corruptions and perturbations. In ICLR, pp. 1–16, 2019.
+Geoffrey E Hinton and Drew van Camp. Keeping neural networks simple. In IJCNN, pp. 11–18,
+1993.
+Gao Huang, Yixuan Li, Geoff Pleiss, Zhuang Liu, John E Hopcroft, and Kilian Q Weinberger.
+Snapshot ensembles: Train 1, get m for free. In ICLR, pp. 1–14, 2017a.
+Gao Huang, Zhuang Liu, Laurens Van Der Maaten, and Kilian Q Weinberger. Densely connected
+convolutional networks. In CVPR, pp. 4700–4708, 2017b.
+11
+
+Published as a conference paper at ICLR 2026
+Pavel Izmailov, Dmitrii Podoprikhin, Timur Garipov, Dmitry Vetrov, and Andrew Gordon Wilson.
+Averaging weights leads to wider optima and better generalization. In UAI, pp. 1–10, 2018.
+Weisen Jiang, Hansi Yang, Yu Zhang, and James Kwok. An adaptive policy to employ sharpness-
+aware minimization. In ICLR, pp. 1–19, 2023.
+Xiaoqian Jiang, Melanie Osl, Jihoon Kim, and Lucila Ohno-Machado.
+Calibrating predictive
+model estimates to support personalized medicine. Journal of the American Medical Informatics
+Association, 19(2):263–274, 2012.
+Jean Kaddour, Linqing Liu, Ricardo Silva, and Matt J Kusner. When do flat minima optimizers work?
+In NeurIPS, pp. 16577–16595, 2022.
+Nitish Shirish Keskar, Dheevatsa Mudigere, Jorge Nocedal, Mikhail Smelyanskiy, and Ping Tak Peter
+Tang. On large-batch training for deep learning: Generalization gap and sharp minima. In ICLR,
+pp. 1–16, 2017.
+Hoki Kim, Jinseong Park, Yujin Choi, and Jaewook Lee. Stability analysis of sharpness-aware
+minimization. arXiv preprint arXiv:2301.06308, 2023.
+Minyoung Kim, Da Li, Shell X Hu, and Timothy Hospedales. Fisher SAM: Information geometry
+and sharpness aware minimisation. In ICML, pp. 11148–11161, 2022.
+Alex Krizhevsky, Geoffrey Hinton, et al. Learning multiple layers of features from tiny images.
+Technical report, University of Toronto, 2009.
+Meelis Kull, Miquel Perello Nieto, Markus Kängsepp, Telmo Silva Filho, Hao Song, and Peter Flach.
+Beyond temperature scaling: Obtaining well-calibrated multi-class probabilities with dirichlet
+calibration. In NeurIPS, pp. 1–11, 2019.
+Aviral Kumar, Sunita Sarawagi, and Ujjwal Jain. Trainable calibration measures for neural networks
+from kernel mean embeddings. In ICML, pp. 2805–2814, 2018.
+Selim Kuzucu, Kemal Oksuz, Jonathan Sadeghi, and Puneet K Dokania. On calibration of object
+detectors: Pitfalls, evaluation and baselines. In ECCV, pp. 185–204, 2025.
+Jungmin Kwon, Jeongseop Kim, Hyunseo Park, and In Kwon Choi. ASAM: Adaptive sharpness-
+aware minimization for scale-invariant learning of deep neural networks. In ICML, pp. 5905–5914,
+2021.
+Balaji Lakshminarayanan, Alexander Pritzel, and Charles Blundell. Simple and scalable predictive
+uncertainty estimation using deep ensembles. In NeurIPS, pp. 1–12, 2017.
+Bingcong Li and Georgios B Giannakis. Enhancing sharpness-aware optimization through variance
+suppression. In NeurIPS, pp. 1–19, 2023.
+Bingyuan Liu, Ismail Ben Ayed, Adrian Galdran, and Jose Dolz. The devil is in the margin: Margin-
+based label smoothing for network calibration. In CVPR, pp. 80–88, 2022a.
+Yong Liu, Siqi Mai, Xiangning Chen, Cho-Jui Hsieh, and Yang You. Towards efficient and scalable
+sharpness-aware minimization. In CVPR, pp. 12360–12370, 2022b.
+Ilya Loshchilov and Frank Hutter. SGDR: Stochastic gradient descent with warm restarts. In ICLR,
+pp. 1–16, 2017.
+Ilya Loshchilov and Frank Hutter. Decoupled weight decay regularization. In ICLR, pp. 1–18, 2019.
+Peng Mi, Li Shen, Tianhe Ren, Yiyi Zhou, Xiaoshuai Sun, Rongrong Ji, and Dacheng Tao. Make
+sharpness-aware minimization stronger: A sparsified perturbation approach. In NeurIPS, pp.
+30950–30962, 2022.
+Matthias Minderer, Josip Djolonga, Rob Romijnders, Frances Hubis, Xiaohua Zhai, Neil Houlsby,
+Dustin Tran, and Mario Lucic. Revisiting the calibration of modern neural networks. In NeurIPS,
+pp. 15682–15694, 2021.
+12
+
+Published as a conference paper at ICLR 2026
+Thomas Möllenhoff and Mohammad Emtiyaz Khan. SAM as an optimal relaxation of Bayes. In
+ICLR, pp. 1–25, 2023.
+Jooyoung Moon, Jihyo Kim, Younghak Shin, and Sangheum Hwang. Confidence-aware learning for
+deep neural networks. In ICML, pp. 7034–7044, 2020.
+Jishnu Mukhoti, Viveka Kulharia, Amartya Sanyal, Stuart Golodetz, Philip Torr, and Puneet Dokania.
+Calibrating deep neural networks using focal loss. In NeurIPS, pp. 15288–15299, 2020.
+Rafael Müller, Simon Kornblith, and Geoffrey E Hinton. When does label smoothing help? In
+NeurIPS, pp. 1–10, 2019.
+Mahdi Pakdaman Naeini, Gregory Cooper, and Milos Hauskrecht. Obtaining well calibrated proba-
+bilities using Bayesian binning. In AAAI, pp. 1–7, 2015.
+Yuval Netzer, Tao Wang, Adam Coates, Alessandro Bissacco, Bo Wu, and Andrew Y Ng. Reading
+digits in natural images with unsupervised feature learning. In NeurIPS Workshop, pp. 1–9, 2011.
+Anh Nguyen, Jason Yosinski, and Jeff Clune. Deep neural networks are easily fooled: High confidence
+predictions for unrecognizable images. In CVPR, pp. 427–436, 2015.
+Jiani Ni, He Zhao, Jintong Gao, Dandan Guo, and Hongyuan Zha. Balancing two classifiers via a
+simplex etf structure for model calibration. In CVPR, pp. 30712–30721, 2025.
+Renkun Ni, Ping-yeh Chiang, Jonas Geiping, Micah Goldblum, Andrew Gordon Wilson, and
+Tom Goldstein. K-SAM: Sharpness-aware minimization at the speed of SGD. arXiv preprint
+arXiv:2210.12864, 2022.
+Alexandru Niculescu-Mizil and Rich Caruana. Predicting good probabilities with supervised learning.
+In ICML, pp. 625–632, 2005.
+Yaniv Ovadia, Emily Fertig, Jie Ren, Zachary Nado, David Sculley, Sebastian Nowozin, Joshua
+Dillon, Balaji Lakshminarayanan, and Jasper Snoek. Can you trust your model’s uncertainty?
+evaluating predictive uncertainty under dataset shift. In NeurIPS, pp. 1–12, 2019.
+Hyekang Park, Jongyoun Noh, Youngmin Oh, Donghyeon Baek, and Bumsub Ham. Acls: Adaptive
+and conditional label smoothing for network calibration. In ICCV, pp. 3936–3945, 2023.
+Gabriel Pereyra, George Tucker, Jan Chorowski, Lukasz Kaiser, and Geoffrey Hinton. Regularizing
+neural networks by penalizing confident output distributions. In ICLR Workshop, pp. 1–11, 2017.
+John Platt et al. Probabilistic outputs for support vector machines and comparisons to regularized
+likelihood methods. Advances in Large Margin Classifiers, 10(3):61–74, 1999.
+Sameera Ramasinghe, Lachlan Ewen MacDonald, Moshiur Farazi, Hemanth Saratchandran, and
+Simon Lucey. How much does initialization affect generalization? In ICML, pp. 28637–28655,
+2023.
+Aditya Singh. On deep neural network calibration by regularization and its impact on refinement. In
+ICLR, pp. 1–15, 2021.
+Chengli Tan, Jiangshe Zhang, Junmin Liu, and Yihong Gong. Sharpness-aware Lookahead for
+accelerating convergence and improving generalization. IEEE Transactions on Pattern Analysis
+and Machine Intelligence, pp. 1–14, 2024a.
+Chengli Tan, Jiangshe Zhang, Junmin Liu, Yicheng Wang, and Yunda Hao. Stabilizing sharpness-
+aware minimization through a simple renormalization strategy. arXiv preprint arXiv:2401.07250,
+2024b.
+Linwei Tao, Minjing Dong, and Chang Xu. Dual focal loss for calibration. In ICML, pp. 33833–33849,
+2023.
+Sunil Thulasidasan, Gopinath Chennupati, Jeff A Bilmes, Tanmoy Bhattacharya, and Sarah Michalak.
+On mixup training: Improved calibration and predictive uncertainty for deep neural networks. In
+NeurIPS, pp. 1–12, 2019.
+13
+
+Published as a conference paper at ICLR 2026
+Ilya O Tolstikhin, Neil Houlsby, Alexander Kolesnikov, Lucas Beyer, Xiaohua Zhai, Thomas Un-
+terthiner, Jessica Yung, Andreas Steiner, Daniel Keysers, Jakob Uszkoreit, et al. Mlp-mixer: An
+all-mlp architecture for vision. In NeurIPS, pp. 24261–24272, 2021.
+Cheng Wang.
+Calibration in deep learning: A survey of the state-of-the-art.
+arXiv preprint
+arXiv:2308.01222, 

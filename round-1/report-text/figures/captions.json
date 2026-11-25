@@ -1,0 +1,10 @@
+{
+  "fig1": {
+    "title": "SAM minus SGD paired differences",
+    "caption": "Paired differences, SAM minus the comparator, at epoch 40 over five seeds. Points are mean differences and bars are 95% t-intervals (df = 4), in x100 metric units: percentage points for accuracy, ECE, ACE, Brier and AURC, and x100 nats for NLL. Left: against SGD. Right: against temperature-scaled SGD. The accuracy interval crosses zero, and the NLL gap against temperature-scaled SGD excludes zero."
+  },
+  "fig2": {
+    "title": "Test ECE and NLL at epoch 60",
+    "caption": "Test ECE (left) and test NLL (right) at epoch 60 for SGD and SAM, with and without temperature scaling. Bars are means over three seeds and error bars are sample standard deviations across seeds. The scaled SAM and SGD ECE values are close, and the NLL advantage for SAM remains after scaling."
+  }
+}

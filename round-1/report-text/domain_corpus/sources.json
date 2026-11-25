@@ -1,0 +1,58 @@
+[
+ {
+  "files": [
+   "tan2025.txt"
+  ],
+  "url": "https://arxiv.org/abs/2505.23866",
+  "title": "Towards Understanding The Calibration Benefits of Sharpness-Aware Minimization"
+ },
+ {
+  "files": [
+   "guo2017.txt"
+  ],
+  "url": "https://arxiv.org/abs/1706.04599",
+  "title": "On Calibration of Modern Neural Networks"
+ },
+ {
+  "files": [
+   "nixon2019.txt"
+  ],
+  "url": "https://arxiv.org/abs/1904.01685",
+  "title": "Measuring Calibration in Deep Learning"
+ },
+ {
+  "files": [
+   "foret2021.txt"
+  ],
+  "url": "https://arxiv.org/abs/2010.01412",
+  "title": "Sharpness-Aware Minimization for Efficiently Improving Generalization"
+ },
+ {
+  "files": [
+   "morosini2026.txt"
+  ],
+  "url": "https://arxiv.org/abs/2604.20614",
+  "title": "Too Sharp, Too Sure: When Calibration Follows Curvature"
+ },
+ {
+  "files": [
+   "mukhoti2020.txt"
+  ],
+  "url": "https://arxiv.org/abs/2002.09437",
+  "title": "Calibrating Deep Neural Networks using Focal Loss"
+ },
+ {
+  "files": [
+   "minderer2021.txt"
+  ],
+  "url": "https://arxiv.org/abs/2106.07998",
+  "title": "Revisiting the Calibration of Modern Neural Networks"
+ },
+ {
+  "files": [
+   "andriushchenko2022.txt"
+  ],
+  "url": "https://arxiv.org/abs/2206.06232",
+  "title": "Towards Understanding Sharpness-Aware Minimization"
+ }
+]

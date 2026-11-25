@@ -1,0 +1,10 @@
+{"type": "panel", "ncols": 2, "aspect": "16:9", "panels": [
+ {"type": "forest", "title": "Epoch 40, SAM minus SGD", "null_line": 0.0,
+  "xlabel": "Paired difference (x100 units)",
+  "categories": ["Accuracy (pp)", "ECE (pp)", "ACE (pp)", "Brier (pp)", "AURC (x100)", "NLL (x100 nats)"],
+  "series": [{"label": "Paired difference, 95% CI", "values": [0.146, -3.7785, -3.8612, -1.3624, -0.15185, -9.7958], "errors": [0.21678, 0.36608, 0.42089, 0.42949, 0.05968, 1.12244]}]},
+ {"type": "forest", "title": "Epoch 40, SAM minus temperature-scaled SGD", "null_line": 0.0,
+  "xlabel": "Paired difference (x100 units)",
+  "categories": ["ECE (pp)", "NLL (x100 nats)"],
+  "series": [{"label": "Paired difference, 95% CI", "values": [-0.30682, -2.08831], "errors": [0.28318, 0.57399]}]}
+]}

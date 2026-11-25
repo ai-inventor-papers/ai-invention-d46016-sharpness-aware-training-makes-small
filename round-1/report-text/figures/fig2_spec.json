@@ -1,0 +1,16 @@
+{"type": "panel", "ncols": 2, "aspect": "16:9", "panels": [
+ {"type": "bar", "title": "Test ECE, epoch 60 (n = 3 seeds)",
+  "xlabel": "Optimiser", "ylabel": "Test ECE (15 bins)",
+  "categories": ["SGD", "SAM"],
+  "series": [
+   {"label": "Unscaled", "values": [0.044579480592298736, 0.027481479855623773], "errors": [0.0017953777166147614, 0.0014844005832279662]},
+   {"label": "Temperature-scaled", "values": [0.009423207591949282, 0.007030563855274189], "errors": [0.0008242276201149723, 0.0018260487380944322]}
+  ]},
+ {"type": "bar", "title": "Test NLL, epoch 60 (n = 3 seeds)",
+  "xlabel": "Optimiser", "ylabel": "Test NLL (nats)",
+  "categories": ["SGD", "SAM"],
+  "series": [
+   {"label": "Unscaled", "values": [0.3151122994749307, 0.238984286582809], "errors": [0.004176969817929105, 0.0034938259966960754]},
+   {"label": "Temperature-scaled", "values": [0.2355680407068534, 0.2191583160842279], "errors": [0.002258143908606346, 0.003220188072914522]}
+  ]}
+]}
