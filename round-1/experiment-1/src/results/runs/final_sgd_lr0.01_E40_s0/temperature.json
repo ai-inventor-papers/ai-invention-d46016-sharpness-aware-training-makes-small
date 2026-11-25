@@ -1,0 +1,13 @@
+{
+  "seed": 0,
+  "condition": "sgd",
+  "temperature": 1.8178711999897268,
+  "val_nll_at_T": 0.2010940586445416,
+  "val_nll_at_bounds": {
+    "0.05": 4.274408575384636,
+    "20.0": 1.6038219167952528
+  },
+  "grid_best_T": 1.8096617945196267,
+  "grid_best_val_nll": 0.201097508596608,
+  "at_bound": false
+}

@@ -1,0 +1,12 @@
+entries:
+  - path: scratch/
+    delete: redownloadable
+    source: "torchvision.datasets.FashionMNIST(root='scratch/data', download=True), HF mirror zalando-datasets/fashion_mnist; scratch/smoke and timing runs are rebuilt by: .venv/bin/python method.py smoke"
+  - path: .venv/
+    delete: regenerable
+    source: "uv venv .venv --python=3.12 && uv pip install --python .venv/bin/python -r pyproject.toml"
+  - path: __pycache__/
+    delete: regenerable
+    source: "uv run method.py (Python recreates the bytecode cache on import)"
+  - path: results/checkpoints/
+    keep: ten final-run state_dicts (about 1.7 MB each) for paired re-evaluation without retraining; stays on the run volume

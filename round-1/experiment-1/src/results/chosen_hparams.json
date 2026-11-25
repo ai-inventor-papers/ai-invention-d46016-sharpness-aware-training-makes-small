@@ -1,0 +1,33 @@
+{
+  "selection_rule": "minimum validation NLL of the final-epoch model, seed 100",
+  "sgd": {
+    "lr": 0.01,
+    "val_nll_final": 0.26497
+  },
+  "sam": {
+    "lr": 0.01,
+    "rho": 0.1,
+    "val_nll_final": 0.18404
+  },
+  "grid": {
+    "lr": [
+      0.01,
+      0.03,
+      0.1
+    ],
+    "rho": [
+      0.05,
+      0.1,
+      0.2
+    ],
+    "compressed": true,
+    "decisions": [
+      "no cut: full grid fits the timing gate"
+    ],
+    "projected_total_h": 0.5861708631166341,
+    "t_sgd_epoch_s": 1.4025094159997025,
+    "t_sam_epoch_s": 2.304789625000012,
+    "projected_sam_40ep_run_s": 92.19158500000049
+  },
+  "tuning_table": "results/tuning_table.csv"
+}

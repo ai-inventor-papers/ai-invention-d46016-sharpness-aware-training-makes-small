@@ -1,0 +1,31 @@
+{
+  "name": "compressed_sgd_lr0.01_E5_s3",
+  "condition": "sgd",
+  "lr": 0.01,
+  "rho": null,
+  "seed": 3,
+  "epochs": 5,
+  "batch": 128,
+  "momentum": 0.9,
+  "weight_decay": 0.0005,
+  "saved": {
+    "5": {
+      "epoch": 5,
+      "train_loss_eval": 0.16847599914550782,
+      "val_acc": 0.9245,
+      "val_nll": 0.2058975139590868,
+      "test_acc": 0.9139
+    }
+  },
+  "final_train_loss_eval": 0.16847599914550782,
+  "needs_extension_check": true,
+  "epoch_times_s": [
+    1.4574222080000254,
+    1.5565385830004743,
+    1.5778328749993307,
+    1.4229192909997437,
+    1.5077837079998062
+  ],
+  "mean_epoch_time_s": 1.5044993329998761,
+  "device": "mps"
+}

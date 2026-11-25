@@ -1,0 +1,7 @@
+kind,condition,name,seconds,note
+epoch_timing,sgd,timing_sgd,2.225,1-epoch measurement
+epoch_timing,sam,timing_sam,2.404,1-epoch measurement
+epoch_timing,sgd,timing_sgd,1.403,1-epoch measurement
+epoch_timing,sam,timing_sam,2.305,1-epoch measurement
+gate_decision,,,2110.2,no cut: full grid fits the timing gate
+projection,,,2110.2,"projected total GPU seconds; lr=[0.01, 0.03, 0.1] rho=[0.05, 0.1, 0.2] compressed=True"

@@ -1,0 +1,72 @@
+05:24:11|INFO   |metrics ('SGD', '40-epoch run', 5, 0): acc=0.8951 ece=0.0282 nll=0.2854
+05:24:12|INFO   |metrics ('SGD', '40-epoch run', 15, 0): acc=0.9179 ece=0.0306 nll=0.2664
+05:24:14|INFO   |metrics ('SGD', '40-epoch run', 40, 0): acc=0.9227 ece=0.0442 nll=0.3036
+05:24:16|INFO   |metrics ('TS-SGD', '40-epoch run', 40, 0): acc=0.9227 ece=0.0101 nll=0.2294
+05:24:17|INFO   |metrics ('SGD', 'compressed', 5, 0): acc=0.9141 ece=0.0108 nll=0.2398
+05:24:19|INFO   |metrics ('SGD', 'compressed', 15, 0): acc=0.9227 ece=0.0241 nll=0.2315
+05:24:21|INFO   |metrics ('SAM', '40-epoch run', 5, 0): acc=0.8988 ece=0.0093 nll=0.2722
+05:24:22|INFO   |metrics ('SAM', '40-epoch run', 15, 0): acc=0.9166 ece=0.0090 nll=0.2255
+05:24:24|INFO   |metrics ('SAM', '40-epoch run', 40, 0): acc=0.9221 ece=0.0079 nll=0.2112
+05:24:26|INFO   |metrics ('TS-SAM', '40-epoch run', 40, 0): acc=0.9221 ece=0.0121 nll=0.2127
+05:24:27|INFO   |metrics ('SAM', 'compressed', 5, 0): acc=0.8961 ece=0.0122 nll=0.2817
+05:24:29|INFO   |metrics ('SAM', 'compressed', 15, 0): acc=0.9129 ece=0.0078 nll=0.2378
+05:24:31|INFO   |metrics ('SGD', '40-epoch run', 5, 1): acc=0.8900 ece=0.0241 nll=0.3004
+05:24:32|INFO   |metrics ('SGD', '40-epoch run', 15, 1): acc=0.9194 ece=0.0354 nll=0.2685
+05:24:38|INFO   |metrics ('SGD', '40-epoch run', 40, 1): acc=0.9208 ece=0.0464 nll=0.3202
+05:24:43|INFO   |metrics ('TS-SGD', '40-epoch run', 40, 1): acc=0.9208 ece=0.0099 nll=0.2365
+05:24:49|INFO   |metrics ('SGD', 'compressed', 5, 1): acc=0.9151 ece=0.0076 nll=0.2388
+05:24:53|INFO   |metrics ('SGD', 'compressed', 15, 1): acc=0.9211 ece=0.0247 nll=0.2331
+05:24:57|INFO   |metrics ('SAM', '40-epoch run', 5, 1): acc=0.9027 ece=0.0166 nll=0.2728
+05:25:02|INFO   |metrics ('SAM', '40-epoch run', 15, 1): acc=0.9187 ece=0.0054 nll=0.2249
+05:25:07|INFO   |metrics ('SAM', '40-epoch run', 40, 1): acc=0.9250 ece=0.0036 nll=0.2078
+05:25:11|INFO   |metrics ('TS-SAM', '40-epoch run', 40, 1): acc=0.9250 ece=0.0062 nll=0.2086
+05:25:15|INFO   |metrics ('SAM', 'compressed', 5, 1): acc=0.8970 ece=0.0153 nll=0.2840
+05:25:20|INFO   |metrics ('SAM', 'compressed', 15, 1): acc=0.9147 ece=0.0101 nll=0.2365
+05:25:23|INFO   |metrics ('SGD', '40-epoch run', 5, 2): acc=0.9030 ece=0.0200 nll=0.2644
+05:25:29|INFO   |metrics ('SGD', '40-epoch run', 15, 2): acc=0.9150 ece=0.0329 nll=0.2631
+05:25:33|INFO   |metrics ('SGD', '40-epoch run', 40, 2): acc=0.9215 ece=0.0439 nll=0.3085
+05:25:37|INFO   |metrics ('TS-SGD', '40-epoch run', 40, 2): acc=0.9215 ece=0.0089 nll=0.2326
+05:25:42|INFO   |metrics ('SGD', 'compressed', 5, 2): acc=0.9151 ece=0.0077 nll=0.2354
+05:25:45|INFO   |metrics ('SGD', 'compressed', 15, 2): acc=0.9225 ece=0.0212 nll=0.2295
+05:25:48|INFO   |metrics ('SAM', '40-epoch run', 5, 2): acc=0.9015 ece=0.0104 nll=0.2741
+05:25:54|INFO   |metrics ('SAM', '40-epoch run', 15, 2): acc=0.9146 ece=0.0068 nll=0.2280
+05:25:57|INFO   |metrics ('SAM', '40-epoch run', 40, 2): acc=0.9229 ece=0.0085 nll=0.2125
+05:26:01|INFO   |metrics ('TS-SAM', '40-epoch run', 40, 2): acc=0.9229 ece=0.0120 nll=0.2137
+05:26:05|INFO   |metrics ('SAM', 'compressed', 5, 2): acc=0.8942 ece=0.0167 nll=0.2851
+05:26:09|INFO   |metrics ('SAM', 'compressed', 15, 2): acc=0.9125 ece=0.0092 nll=0.2384
+05:26:12|INFO   |metrics ('SGD', '40-epoch run', 5, 3): acc=0.8968 ece=0.0183 nll=0.2793
+05:26:13|INFO   |metrics ('SGD', '40-epoch run', 15, 3): acc=0.9132 ece=0.0372 nll=0.2755
+05:26:15|INFO   |metrics ('SGD', '40-epoch run', 40, 3): acc=0.9235 ece=0.0413 nll=0.3021
+05:26:16|INFO   |metrics ('TS-SGD', '40-epoch run', 40, 3): acc=0.9235 ece=0.0067 nll=0.2298
+05:26:18|INFO   |metrics ('SGD', 'compressed', 5, 3): acc=0.9139 ece=0.0091 nll=0.2394
+05:26:20|INFO   |metrics ('SGD', 'compressed', 15, 3): acc=0.9231 ece=0.0209 nll=0.2307
+05:26:21|INFO   |metrics ('SAM', '40-epoch run', 5, 3): acc=0.8966 ece=0.0096 nll=0.2793
+05:26:23|INFO   |metrics ('SAM', '40-epoch run', 15, 3): acc=0.9174 ece=0.0054 nll=0.2296
+05:26:25|INFO   |metrics ('SAM', '40-epoch run', 40, 3): acc=0.9243 ece=0.0046 nll=0.2130
+05:26:26|INFO   |metrics ('TS-SAM', '40-epoch run', 40, 3): acc=0.9243 ece=0.0088 nll=0.2143
+05:26:28|INFO   |metrics ('SAM', 'compressed', 5, 3): acc=0.8967 ece=0.0162 nll=0.2894
+05:26:30|INFO   |metrics ('SAM', 'compressed', 15, 3): acc=0.9112 ece=0.0111 nll=0.2402
+05:26:31|INFO   |metrics ('SGD', '40-epoch run', 5, 4): acc=0.8919 ece=0.0367 nll=0.3075
+05:26:33|INFO   |metrics ('SGD', '40-epoch run', 15, 4): acc=0.9134 ece=0.0406 nll=0.2888
+05:26:35|INFO   |metrics ('SGD', '40-epoch run', 40, 4): acc=0.9223 ece=0.0448 nll=0.3129
+05:26:36|INFO   |metrics ('TS-SGD', '40-epoch run', 40, 4): acc=0.9223 ece=0.0113 nll=0.2337
+05:26:38|INFO   |metrics ('SGD', 'compressed', 5, 4): acc=0.9123 ece=0.0107 nll=0.2445
+05:26:39|INFO   |metrics ('SGD', 'compressed', 15, 4): acc=0.9247 ece=0.0227 nll=0.2331
+05:26:41|INFO   |metrics ('SAM', '40-epoch run', 5, 4): acc=0.8944 ece=0.0147 nll=0.2865
+05:26:43|INFO   |metrics ('SAM', '40-epoch run', 15, 4): acc=0.9164 ece=0.0051 nll=0.2318
+05:26:44|INFO   |metrics ('SAM', '40-epoch run', 40, 4): acc=0.9238 ece=0.0071 nll=0.2130
+05:26:46|INFO   |metrics ('TS-SAM', '40-epoch run', 40, 4): acc=0.9238 ece=0.0106 nll=0.2145
+05:26:48|INFO   |metrics ('SAM', 'compressed', 5, 4): acc=0.8950 ece=0.0141 nll=0.2834
+05:26:49|INFO   |metrics ('SAM', 'compressed', 15, 4): acc=0.9139 ece=0.0095 nll=0.2374
+05:26:49|INFO   |compressed runs present for both conditions: True
+05:26:50|INFO   |Holm-adjusted p-values: accuracy=0.1348, ece=0.0001, ace=0.0001, nll=0.0001, brier=0.0037, aurc=0.0064, sam_vs_tssgd_nll=0.0027, sam_vs_tssgd_ece=0.0792
+05:26:50|INFO   |render: /Volumes/aii-s20015/work/run_S_3Y_l0tX7Xe/round-1/experiment-1/src/.venv/bin/python /Volumes/aii-s20015/.claude/skills/aii-data-fig-gen/scripts/chart_gen.py --spec /Volumes/aii-s20015/work/run_S_3Y_l0tX7Xe/round-1/experiment-1/src/results/figure_specs/fig_reliability_diagrams.json --out /Volumes/aii-s20015/work/run_S_3Y_l0tX7Xe/round-1/experiment-1/src/figures/fig_reliability_diagrams
+05:26:51|INFO   |{"ok": true, "written": ["/Volumes/aii-s20015/work/run_S_3Y_l0tX7Xe/round-1/experiment-1/src/figures/fig_reliability_diagrams.pdf", "/Volumes/aii-s20015/work/run_S_3Y_l0tX7Xe/round-1/experiment-1/src/figures/fig_reliability_diagrams.png"]}
+05:26:51|INFO   |render: /Volumes/aii-s20015/work/run_S_3Y_l0tX7Xe/round-1/experiment-1/src/.venv/bin/python /Volumes/aii-s20015/.claude/skills/aii-data-fig-gen/scripts/chart_gen.py --spec /Volumes/aii-s20015/work/run_S_3Y_l0tX7Xe/round-1/experiment-1/src/results/figure_specs/fig_confidence_histograms.json --out /Volumes/aii-s20015/work/run_S_3Y_l0tX7Xe/round-1/experiment-1/src/figures/fig_confidence_histograms
+05:26:53|INFO   |{"ok": true, "written": ["/Volumes/aii-s20015/work/run_S_3Y_l0tX7Xe/round-1/experiment-1/src/figures/fig_confidence_histograms.pdf", "/Volumes/aii-s20015/work/run_S_3Y_l0tX7Xe/round-1/experiment-1/src/figures/fig_confidence_histograms.png"]}
+05:26:53|INFO   |Wrote results/method_out.json (60 run examples)
+05:26:53|INFO   |VERDICT a_accuracy: no detectable difference (CI includes zero) mean_diff=0.001460000000000039 ci95=[np.float64(-0.000707761856975732), np.float64(0.00362776185697581)]
+05:26:53|INFO   |VERDICT b_calibration_vs_sgd: SAM lower: favours SAM (CI excludes zero) mean_diff=-0.03778507472240959 ci95=[np.float64(-0.041445905732531846), np.float64(-0.03412424371228734)]
+05:26:53|INFO   |VERDICT c_survives_temperature_scaling: SAM lower: favours SAM (CI excludes zero) mean_diff=-0.020883069078181736 ci95=[np.float64(-0.026623000852331637), np.float64(-0.015143137304031835)]
+05:26:53|INFO   |VERDICT c2_ece_vs_temperature_scaling: SAM lower: favours SAM (CI excludes zero) mean_diff=-0.0030681669524288005 ci95=[np.float64(-0.005899961769089226), np.float64(-0.00023637213576837516)]
+05:26:53|INFO   |VERDICT d_training_length: advantage grows with training length (CI excludes zero) mean_diff=0.04352096112363404 ci95=[np.float64(0.037642255861703104), np.float64(0.04939966638556497)]

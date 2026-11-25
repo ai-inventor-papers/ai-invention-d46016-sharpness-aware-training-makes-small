@@ -1,0 +1,164 @@
+warning: `VIRTUAL_ENV=/opt/aii/venv` does not match the project environment path `.venv` and will be ignored; use `--active` to target the active environment instead
+05:36:05|INFO   |method.py mode= device=mps torch=2.16.0.dev20261116
+05:36:05|INFO   |Train-split normalisation: mean=0.2862 std=0.3531
+05:36:06|INFO   |Data: train=(50000, 1, 28, 28) val=(10000, 1, 28, 28) test=(10000, 1, 28, 28) device=mps
+05:36:06|INFO   |Skipping tune_sgd_lr0.01_E40_s100: metrics.json exists
+05:36:06|INFO   |tune sgd lr=0.01 rho=None: val_nll=0.2650 val_acc=0.9286
+05:36:06|INFO   |Skipping tune_sgd_lr0.03_E40_s100: metrics.json exists
+05:36:06|INFO   |tune sgd lr=0.03 rho=None: val_nll=0.2707 val_acc=0.9326
+05:36:06|INFO   |Skipping tune_sgd_lr0.1_E40_s100: metrics.json exists
+05:36:06|INFO   |tune sgd lr=0.1 rho=None: val_nll=0.2740 val_acc=0.9290
+05:36:06|INFO   |Skipping tune_sam_lr0.01_rho0.05_E40_s100: metrics.json exists
+05:36:06|INFO   |tune sam lr=0.01 rho=0.05: val_nll=0.1905 val_acc=0.9330
+05:36:06|INFO   |Skipping tune_sam_lr0.01_rho0.1_E40_s100: metrics.json exists
+05:36:06|INFO   |tune sam lr=0.01 rho=0.1: val_nll=0.1840 val_acc=0.9320
+05:36:06|INFO   |Skipping tune_sam_lr0.01_rho0.2_E40_s100: metrics.json exists
+05:36:06|INFO   |tune sam lr=0.01 rho=0.2: val_nll=0.2173 val_acc=0.9218
+05:36:06|INFO   |Skipping tune_sam_lr0.03_rho0.05_E40_s100: metrics.json exists
+05:36:06|INFO   |tune sam lr=0.03 rho=0.05: val_nll=0.2115 val_acc=0.9309
+05:36:06|INFO   |Skipping tune_sam_lr0.03_rho0.1_E40_s100: metrics.json exists
+05:36:06|INFO   |tune sam lr=0.03 rho=0.1: val_nll=0.1876 val_acc=0.9319
+05:36:06|INFO   |Skipping tune_sam_lr0.03_rho0.2_E40_s100: metrics.json exists
+05:36:06|INFO   |tune sam lr=0.03 rho=0.2: val_nll=2.3020 val_acc=0.1305
+05:36:06|INFO   |Skipping tune_sam_lr0.1_rho0.05_E40_s100: metrics.json exists
+05:36:06|INFO   |tune sam lr=0.1 rho=0.05: val_nll=0.2096 val_acc=0.9321
+05:36:06|INFO   |Skipping tune_sam_lr0.1_rho0.1_E40_s100: metrics.json exists
+05:36:06|INFO   |tune sam lr=0.1 rho=0.1: val_nll=0.1932 val_acc=0.9303
+05:36:06|INFO   |Skipping tune_sam_lr0.1_rho0.2_E40_s100: metrics.json exists
+05:36:06|INFO   |tune sam lr=0.1 rho=0.2: val_nll=0.2082 val_acc=0.9234
+05:36:06|INFO   |Chosen: SGD lr=0.01; SAM lr=0.01 rho=0.1
+05:36:06|INFO   |Skipping final_sgd_lr0.01_E40_s0: metrics.json exists
+05:36:07|INFO   |final sgd_lr0.01_E40_s0: T=1.8179 at_bound=False final_train_loss=0.00817 test_acc@40=0.9227
+05:36:07|INFO   |Skipping final_sam_lr0.01_rho0.1_E40_s0: metrics.json exists
+05:36:07|INFO   |final sam_lr0.01_rho0.1_E40_s0: T=0.9349 at_bound=False final_train_loss=0.10647 test_acc@40=0.9221
+05:36:07|WARNING|final sam_lr0.01_rho0.1_E40_s0: eval train loss 0.10647 > 0.01; recorded, not extended
+05:36:07|INFO   |Skipping final_sgd_lr0.01_E40_s1: metrics.json exists
+05:36:08|INFO   |final sgd_lr0.01_E40_s1: T=1.8753 at_bound=False final_train_loss=0.00744 test_acc@40=0.9208
+05:36:08|INFO   |Skipping final_sam_lr0.01_rho0.1_E40_s1: metrics.json exists
+05:36:08|INFO   |final sam_lr0.01_rho0.1_E40_s1: T=0.9539 at_bound=False final_train_loss=0.10722 test_acc@40=0.9250
+05:36:08|WARNING|final sam_lr0.01_rho0.1_E40_s1: eval train loss 0.10722 > 0.01; recorded, not extended
+05:36:08|INFO   |Skipping final_sgd_lr0.01_E40_s2: metrics.json exists
+05:36:09|INFO   |final sgd_lr0.01_E40_s2: T=1.8501 at_bound=False final_train_loss=0.00813 test_acc@40=0.9215
+05:36:09|INFO   |Skipping final_sam_lr0.01_rho0.1_E40_s2: metrics.json exists
+05:36:10|INFO   |final sam_lr0.01_rho0.1_E40_s2: T=0.9429 at_bound=False final_train_loss=0.10910 test_acc@40=0.9229
+05:36:10|WARNING|final sam_lr0.01_rho0.1_E40_s2: eval train loss 0.10910 > 0.01; recorded, not extended
+05:36:10|INFO   |Skipping final_sgd_lr0.01_E40_s3: metrics.json exists
+05:36:10|INFO   |final sgd_lr0.01_E40_s3: T=1.8538 at_bound=False final_train_loss=0.00811 test_acc@40=0.9235
+05:36:10|INFO   |Skipping final_sam_lr0.01_rho0.1_E40_s3: metrics.json exists
+05:36:11|INFO   |final sam_lr0.01_rho0.1_E40_s3: T=0.9372 at_bound=False final_train_loss=0.10868 test_acc@40=0.9243
+05:36:11|WARNING|final sam_lr0.01_rho0.1_E40_s3: eval train loss 0.10868 > 0.01; recorded, not extended
+05:36:11|INFO   |Skipping final_sgd_lr0.01_E40_s4: metrics.json exists
+05:36:11|INFO   |final sgd_lr0.01_E40_s4: T=1.8604 at_bound=False final_train_loss=0.00751 test_acc@40=0.9223
+05:36:11|INFO   |Skipping final_sam_lr0.01_rho0.1_E40_s4: metrics.json exists
+05:36:12|INFO   |final sam_lr0.01_rho0.1_E40_s4: T=0.9422 at_bound=False final_train_loss=0.10473 test_acc@40=0.9238
+05:36:12|WARNING|final sam_lr0.01_rho0.1_E40_s4: eval train loss 0.10473 > 0.01; recorded, not extended
+05:36:12|INFO   |Skipping compressed_sgd_lr0.01_E5_s0: metrics.json exists
+05:36:12|INFO   |compressed done: sgd_lr0.01_E5_s0
+05:36:12|INFO   |Skipping compressed_sam_lr0.01_rho0.1_E5_s0: metrics.json exists
+05:36:12|INFO   |compressed done: sam_lr0.01_rho0.1_E5_s0
+05:36:12|INFO   |Skipping compressed_sgd_lr0.01_E15_s0: metrics.json exists
+05:36:12|INFO   |compressed done: sgd_lr0.01_E15_s0
+05:36:12|INFO   |Skipping compressed_sam_lr0.01_rho0.1_E15_s0: metrics.json exists
+05:36:12|INFO   |compressed done: sam_lr0.01_rho0.1_E15_s0
+05:36:12|INFO   |Skipping compressed_sgd_lr0.01_E5_s1: metrics.json exists
+05:36:12|INFO   |compressed done: sgd_lr0.01_E5_s1
+05:36:12|INFO   |Skipping compressed_sam_lr0.01_rho0.1_E5_s1: metrics.json exists
+05:36:12|INFO   |compressed done: sam_lr0.01_rho0.1_E5_s1
+05:36:12|INFO   |Skipping compressed_sgd_lr0.01_E15_s1: metrics.json exists
+05:36:12|INFO   |compressed done: sgd_lr0.01_E15_s1
+05:36:12|INFO   |Skipping compressed_sam_lr0.01_rho0.1_E15_s1: metrics.json exists
+05:36:12|INFO   |compressed done: sam_lr0.01_rho0.1_E15_s1
+05:36:12|INFO   |Skipping compressed_sgd_lr0.01_E5_s2: metrics.json exists
+05:36:12|INFO   |compressed done: sgd_lr0.01_E5_s2
+05:36:12|INFO   |Skipping compressed_sam_lr0.01_rho0.1_E5_s2: metrics.json exists
+05:36:12|INFO   |compressed done: sam_lr0.01_rho0.1_E5_s2
+05:36:12|INFO   |Skipping compressed_sgd_lr0.01_E15_s2: metrics.json exists
+05:36:12|INFO   |compressed done: sgd_lr0.01_E15_s2
+05:36:12|INFO   |Skipping compressed_sam_lr0.01_rho0.1_E15_s2: metrics.json exists
+05:36:12|INFO   |compressed done: sam_lr0.01_rho0.1_E15_s2
+05:36:12|INFO   |Skipping compressed_sgd_lr0.01_E5_s3: metrics.json exists
+05:36:12|INFO   |compressed done: sgd_lr0.01_E5_s3
+05:36:12|INFO   |Skipping compressed_sam_lr0.01_rho0.1_E5_s3: metrics.json exists
+05:36:12|INFO   |compressed done: sam_lr0.01_rho0.1_E5_s3
+05:36:12|INFO   |Skipping compressed_sgd_lr0.01_E15_s3: metrics.json exists
+05:36:12|INFO   |compressed done: sgd_lr0.01_E15_s3
+05:36:12|INFO   |Skipping compressed_sam_lr0.01_rho0.1_E15_s3: metrics.json exists
+05:36:12|INFO   |compressed done: sam_lr0.01_rho0.1_E15_s3
+05:36:12|INFO   |Skipping compressed_sgd_lr0.01_E5_s4: metrics.json exists
+05:36:12|INFO   |compressed done: sgd_lr0.01_E5_s4
+05:36:12|INFO   |Skipping compressed_sam_lr0.01_rho0.1_E5_s4: metrics.json exists
+05:36:12|INFO   |compressed done: sam_lr0.01_rho0.1_E5_s4
+05:36:12|INFO   |Skipping compressed_sgd_lr0.01_E15_s4: metrics.json exists
+05:36:12|INFO   |compressed done: sgd_lr0.01_E15_s4
+05:36:12|INFO   |Skipping compressed_sam_lr0.01_rho0.1_E15_s4: metrics.json exists
+05:36:12|INFO   |compressed done: sam_lr0.01_rho0.1_E15_s4
+05:36:14|INFO   |metrics ('SGD', '40-epoch run', 5, 0): acc=0.8951 ece=0.0282 nll=0.2854
+05:36:15|INFO   |metrics ('SGD', '40-epoch run', 15, 0): acc=0.9179 ece=0.0306 nll=0.2664
+05:36:17|INFO   |metrics ('SGD', '40-epoch run', 40, 0): acc=0.9227 ece=0.0442 nll=0.3036
+05:36:19|INFO   |metrics ('TS-SGD', '40-epoch run', 40, 0): acc=0.9227 ece=0.0101 nll=0.2294
+05:36:20|INFO   |metrics ('SGD', 'compressed', 5, 0): acc=0.9141 ece=0.0108 nll=0.2398
+05:36:22|INFO   |metrics ('SGD', 'compressed', 15, 0): acc=0.9227 ece=0.0241 nll=0.2315
+05:36:23|INFO   |metrics ('SAM', '40-epoch run', 5, 0): acc=0.8988 ece=0.0093 nll=0.2722
+05:36:25|INFO   |metrics ('SAM', '40-epoch run', 15, 0): acc=0.9166 ece=0.0090 nll=0.2255
+05:36:27|INFO   |metrics ('SAM', '40-epoch run', 40, 0): acc=0.9221 ece=0.0079 nll=0.2112
+05:36:28|INFO   |metrics ('TS-SAM', '40-epoch run', 40, 0): acc=0.9221 ece=0.0121 nll=0.2127
+05:36:30|INFO   |metrics ('SAM', 'compressed', 5, 0): acc=0.8961 ece=0.0122 nll=0.2817
+05:36:32|INFO   |metrics ('SAM', 'compressed', 15, 0): acc=0.9129 ece=0.0078 nll=0.2378
+05:36:33|INFO   |metrics ('SGD', '40-epoch run', 5, 1): acc=0.8900 ece=0.0241 nll=0.3004
+05:36:35|INFO   |metrics ('SGD', '40-epoch run', 15, 1): acc=0.9194 ece=0.0354 nll=0.2685
+05:36:37|INFO   |metrics ('SGD', '40-epoch run', 40, 1): acc=0.9208 ece=0.0464 nll=0.3202
+05:36:38|INFO   |metrics ('TS-SGD', '40-epoch run', 40, 1): acc=0.9208 ece=0.0099 nll=0.2365
+05:36:40|INFO   |metrics ('SGD', 'compressed', 5, 1): acc=0.9151 ece=0.0076 nll=0.2388
+05:36:42|INFO   |metrics ('SGD', 'compressed', 15, 1): acc=0.9211 ece=0.0247 nll=0.2331
+05:36:43|INFO   |metrics ('SAM', '40-epoch run', 5, 1): acc=0.9027 ece=0.0166 nll=0.2728
+05:36:45|INFO   |metrics ('SAM', '40-epoch run', 15, 1): acc=0.9187 ece=0.0054 nll=0.2249
+05:36:46|INFO   |metrics ('SAM', '40-epoch run', 40, 1): acc=0.9250 ece=0.0036 nll=0.2078
+05:36:48|INFO   |metrics ('TS-SAM', '40-epoch run', 40, 1): acc=0.9250 ece=0.0062 nll=0.2086
+05:36:50|INFO   |metrics ('SAM', 'compressed', 5, 1): acc=0.8970 ece=0.0153 nll=0.2840
+05:36:51|INFO   |metrics ('SAM', 'compressed', 15, 1): acc=0.9147 ece=0.0101 nll=0.2365
+05:36:53|INFO   |metrics ('SGD', '40-epoch run', 5, 2): acc=0.9030 ece=0.0200 nll=0.2644
+05:36:55|INFO   |metrics ('SGD', '40-epoch run', 15, 2): acc=0.9150 ece=0.0329 nll=0.2631
+05:36:56|INFO   |metrics ('SGD', '40-epoch run', 40, 2): acc=0.9215 ece=0.0439 nll=0.3085
+05:36:58|INFO   |metrics ('TS-SGD', '40-epoch run', 40, 2): acc=0.9215 ece=0.0089 nll=0.2326
+05:37:00|INFO   |metrics ('SGD', 'compressed', 5, 2): acc=0.9151 ece=0.0077 nll=0.2354
+05:37:01|INFO   |metrics ('SGD', 'compressed', 15, 2): acc=0.9225 ece=0.0212 nll=0.2295
+05:37:03|INFO   |metrics ('SAM', '40-epoch run', 5, 2): acc=0.9015 ece=0.0104 nll=0.2741
+05:37:04|INFO   |metrics ('SAM', '40-epoch run', 15, 2): acc=0.9146 ece=0.0068 nll=0.2280
+05:37:06|INFO   |metrics ('SAM', '40-epoch run', 40, 2): acc=0.9229 ece=0.0085 nll=0.2125
+05:37:08|INFO   |metrics ('TS-SAM', '40-epoch run', 40, 2): acc=0.9229 ece=0.0120 nll=0.2137
+05:37:09|INFO   |metrics ('SAM', 'compressed', 5, 2): acc=0.8942 ece=0.0167 nll=0.2851
+05:37:11|INFO   |metrics ('SAM', 'compressed', 15, 2): acc=0.9125 ece=0.0092 nll=0.2384
+05:37:13|INFO   |metrics ('SGD', '40-epoch run', 5, 3): acc=0.8968 ece=0.0183 nll=0.2793
+05:37:14|INFO   |metrics ('SGD', '40-epoch run', 15, 3): acc=0.9132 ece=0.0372 nll=0.2755
+05:37:16|INFO   |metrics ('SGD', '40-epoch run', 40, 3): acc=0.9235 ece=0.0413 nll=0.3021
+05:37:17|INFO   |metrics ('TS-SGD', '40-epoch run', 40, 3): acc=0.9235 ece=0.0067 nll=0.2298
+05:37:19|INFO   |metrics ('SGD', 'compressed', 5, 3): acc=0.9139 ece=0.0091 nll=0.2394
+05:37:21|INFO   |metrics ('SGD', 'compressed', 15, 3): acc=0.9231 ece=0.0209 nll=0.2307
+05:37:22|INFO   |metrics ('SAM', '40-epoch run', 5, 3): acc=0.8966 ece=0.0096 nll=0.2793
+05:37:24|INFO   |metrics ('SAM', '40-epoch run', 15, 3): acc=0.9174 ece=0.0054 nll=0.2296
+05:37:26|INFO   |metrics ('SAM', '40-epoch run', 40, 3): acc=0.9243 ece=0.0046 nll=0.2130
+05:37:27|INFO   |metrics ('TS-SAM', '40-epoch run', 40, 3): acc=0.9243 ece=0.0088 nll=0.2143
+05:37:29|INFO   |metrics ('SAM', 'compressed', 5, 3): acc=0.8967 ece=0.0162 nll=0.2894
+05:37:31|INFO   |metrics ('SAM', 'compressed', 15, 3): acc=0.9112 ece=0.0111 nll=0.2402
+05:37:32|INFO   |metrics ('SGD', '40-epoch run', 5, 4): acc=0.8919 ece=0.0367 nll=0.3075
+05:37:34|INFO   |metrics ('SGD', '40-epoch run', 15, 4): acc=0.9134 ece=0.0406 nll=0.2888
+05:37:35|INFO   |metrics ('SGD', '40-epoch run', 40, 4): acc=0.9223 ece=0.0448 nll=0.3129
+05:37:37|INFO   |metrics ('TS-SGD', '40-epoch run', 40, 4): acc=0.9223 ece=0.0113 nll=0.2337
+05:37:39|INFO   |metrics ('SGD', 'compressed', 5, 4): acc=0.9123 ece=0.0107 nll=0.2445
+05:37:40|INFO   |metrics ('SGD', 'compressed', 15, 4): acc=0.9247 ece=0.0227 nll=0.2331
+05:37:42|INFO   |metrics ('SAM', '40-epoch run', 5, 4): acc=0.8944 ece=0.0147 nll=0.2865
+05:37:43|INFO   |metrics ('SAM', '40-epoch run', 15, 4): acc=0.9164 ece=0.0051 nll=0.2318
+05:37:45|INFO   |metrics ('SAM', '40-epoch run', 40, 4): acc=0.9238 ece=0.0071 nll=0.2130
+05:37:47|INFO   |metrics ('TS-SAM', '40-epoch run', 40, 4): acc=0.9238 ece=0.0106 nll=0.2145
+05:37:48|INFO   |metrics ('SAM', 'compressed', 5, 4): acc=0.8950 ece=0.0141 nll=0.2834
+05:37:50|INFO   |metrics ('SAM', 'compressed', 15, 4): acc=0.9139 ece=0.0095 nll=0.2374
+05:37:50|INFO   |compressed runs present for both conditions: True
+05:37:50|INFO   |Holm-adjusted p-values: accuracy=0.1348, ece=0.0001, ace=0.0001, nll=0.0001, brier=0.0037, aurc=0.0064, sam_vs_tssgd_nll=0.0027, sam_vs_tssgd_ece=0.0792
+05:37:50|WARNING|chart renderer not found at chart_gen.py (set AII_CHART_GEN); fig_reliability_diagrams not re-rendered, spec written to /Volumes/aii-s20015/work/run_S_3Y_l0tX7Xe/round-1/experiment-1/src/results/figure_specs/fig_reliability_diagrams.json
+05:37:50|WARNING|chart renderer not found at chart_gen.py (set AII_CHART_GEN); fig_confidence_histograms not re-rendered, spec written to /Volumes/aii-s20015/work/run_S_3Y_l0tX7Xe/round-1/experiment-1/src/results/figure_specs/fig_confidence_histograms.json
+05:37:51|INFO   |Wrote method_out.json and variants (10000 run examples)
+05:37:51|INFO   |VERDICT a_accuracy: no detectable difference (CI includes zero) mean_diff=0.001460000000000039 ci95=[np.float64(-0.000707761856975732), np.float64(0.00362776185697581)]
+05:37:51|INFO   |VERDICT b_calibration_vs_sgd: SAM lower: favours SAM (CI excludes zero) mean_diff=-0.03778507472240959 ci95=[np.float64(-0.041445905732531846), np.float64(-0.03412424371228734)]
+05:37:51|INFO   |VERDICT c_survives_temperature_scaling: SAM lower: favours SAM (CI excludes zero) mean_diff=-0.020883069078181736 ci95=[np.float64(-0.026623000852331637), np.float64(-0.015143137304031835)]
+05:37:51|INFO   |VERDICT c2_ece_vs_temperature_scaling: SAM lower: favours SAM (CI excludes zero) mean_diff=-0.0030681669524288005 ci95=[np.float64(-0.005899961769089226), np.float64(-0.00023637213576837516)]
+05:37:51|INFO   |VERDICT d_training_length: advantage grows with training length (CI excludes zero) mean_diff=0.04352096112363404 ci95=[np.float64(0.037642255861703104), np.float64(0.04939966638556497)]

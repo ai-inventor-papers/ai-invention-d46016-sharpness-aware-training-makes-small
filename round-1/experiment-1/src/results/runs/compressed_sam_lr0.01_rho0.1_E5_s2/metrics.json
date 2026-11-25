@@ -1,0 +1,31 @@
+{
+  "name": "compressed_sam_lr0.01_rho0.1_E5_s2",
+  "condition": "sam",
+  "lr": 0.01,
+  "rho": 0.1,
+  "seed": 2,
+  "epochs": 5,
+  "batch": 128,
+  "momentum": 0.9,
+  "weight_decay": 0.0005,
+  "saved": {
+    "5": {
+      "epoch": 5,
+      "train_loss_eval": 0.24959468322753905,
+      "val_acc": 0.9064,
+      "val_nll": 0.25369778622359773,
+      "test_acc": 0.8942
+    }
+  },
+  "final_train_loss_eval": 0.24959468322753905,
+  "needs_extension_check": true,
+  "epoch_times_s": [
+    2.267147667000245,
+    2.257182709000517,
+    2.2527098340005978,
+    2.358357709000302,
+    2.361893584000427
+  ],
+  "mean_epoch_time_s": 2.299458300600418,
+  "device": "mps"
+}

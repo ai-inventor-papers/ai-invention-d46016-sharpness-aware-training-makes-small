@@ -1,0 +1,20 @@
+{
+  "lr": [
+    0.01,
+    0.03,
+    0.1
+  ],
+  "rho": [
+    0.05,
+    0.1,
+    0.2
+  ],
+  "compressed": true,
+  "decisions": [
+    "no cut: full grid fits the timing gate"
+  ],
+  "projected_total_h": 0.5861708631166341,
+  "t_sgd_epoch_s": 1.4025094159997025,
+  "t_sam_epoch_s": 2.304789625000012,
+  "projected_sam_40ep_run_s": 92.19158500000049
+}

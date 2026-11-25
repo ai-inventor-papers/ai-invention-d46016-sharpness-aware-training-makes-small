@@ -1,0 +1,1389 @@
+=== mode: timing ===
+04:39:04|INFO   |method.py mode=timing device=mps torch=2.16.0.dev20261116
+04:39:04|INFO   |Train-split normalisation: mean=0.2862 std=0.3531
+04:39:04|INFO   |Data: train=(50000, 1, 28, 28) val=(10000, 1, 28, 28) test=(10000, 1, 28, 28) device=mps
+04:39:04|INFO   |TIMING: warm-up epoch (SGD, discarded), then timed SGD and SAM epochs
+04:39:04|INFO   |START timing_sgd: condition=sgd lr=0.1 rho=None seed=0 epochs=1 save=(1,) include_test=False
+04:39:06|INFO   |epoch 1/1 lr=0.10000 batch_loss_mean=0.5744 time=2.23s
+04:39:07|INFO   |EVAL ep=1 train_loss=0.33913 val_acc=0.8705 val_nll=0.3465 (no test logits)
+04:39:07|INFO   |DONE timing_sgd: final_train_loss=0.33913 mean_epoch_time=2.23s
+04:39:07|INFO   |START timing_sam: condition=sam lr=0.1 rho=0.1 seed=0 epochs=1 save=(1,) include_test=False
+04:39:09|INFO   |epoch 1/1 lr=0.10000 batch_loss_mean=0.6385 time=2.40s
+04:39:09|INFO   |EVAL ep=1 train_loss=0.36272 val_acc=0.8714 val_nll=0.3654 (no test logits)
+04:39:09|INFO   |DONE timing_sam: final_train_loss=0.36272 mean_epoch_time=2.40s
+04:39:10|INFO   |START timing_sgd: condition=sgd lr=0.1 rho=None seed=0 epochs=1 save=(1,) include_test=False
+04:39:11|INFO   |epoch 1/1 lr=0.10000 batch_loss_mean=0.5744 time=1.40s
+04:39:11|INFO   |EVAL ep=1 train_loss=0.33913 val_acc=0.8705 val_nll=0.3465 (no test logits)
+04:39:11|INFO   |DONE timing_sgd: final_train_loss=0.33913 mean_epoch_time=1.40s
+04:39:11|INFO   |START timing_sam: condition=sam lr=0.1 rho=0.1 seed=0 epochs=1 save=(1,) include_test=False
+04:39:14|INFO   |epoch 1/1 lr=0.10000 batch_loss_mean=0.6385 time=2.30s
+04:39:14|INFO   |EVAL ep=1 train_loss=0.36272 val_acc=0.8714 val_nll=0.3654 (no test logits)
+04:39:14|INFO   |DONE timing_sam: final_train_loss=0.36272 mean_epoch_time=2.30s
+04:39:14|INFO   |Per-epoch time: SGD=1.40s SAM=2.30s (after warm-up)
+04:39:14|INFO   |Timing gate: ['no cut: full grid fits the timing gate'] projected total 0.59 h
+=== mode: tune ===
+04:39:16|INFO   |method.py mode=tune device=mps torch=2.16.0.dev20261116
+04:39:16|INFO   |Train-split normalisation: mean=0.2862 std=0.3531
+04:39:16|INFO   |Data: train=(50000, 1, 28, 28) val=(10000, 1, 28, 28) test=(10000, 1, 28, 28) device=mps
+04:39:16|INFO   |START tune_sgd_lr0.01_E40_s100: condition=sgd lr=0.01 rho=None seed=100 epochs=40 save=(40,) include_test=False
+04:39:19|INFO   |epoch 1/40 lr=0.01000 batch_loss_mean=0.4493 time=2.32s
+04:39:21|INFO   |epoch 2/40 lr=0.00998 batch_loss_mean=0.2919 time=1.74s
+04:39:22|INFO   |epoch 3/40 lr=0.00994 batch_loss_mean=0.2557 time=1.49s
+04:39:24|INFO   |epoch 4/40 lr=0.00986 batch_loss_mean=0.2272 time=1.47s
+04:39:25|INFO   |epoch 5/40 lr=0.00976 batch_loss_mean=0.2035 time=1.60s
+04:39:27|INFO   |epoch 6/40 lr=0.00962 batch_loss_mean=0.1846 time=1.44s
+04:39:28|INFO   |epoch 7/40 lr=0.00946 batch_loss_mean=0.1684 time=1.66s
+04:39:30|INFO   |epoch 8/40 lr=0.00926 batch_loss_mean=0.1556 time=1.80s
+04:39:32|INFO   |epoch 9/40 lr=0.00905 batch_loss_mean=0.1454 time=1.78s
+04:39:33|INFO   |epoch 10/40 lr=0.00880 batch_loss_mean=0.1304 time=1.64s
+04:39:35|INFO   |epoch 11/40 lr=0.00854 batch_loss_mean=0.1180 time=1.62s
+04:39:37|INFO   |epoch 12/40 lr=0.00825 batch_loss_mean=0.1097 time=1.58s
+04:39:38|INFO   |epoch 13/40 lr=0.00794 batch_loss_mean=0.0960 time=1.52s
+04:39:40|INFO   |epoch 14/40 lr=0.00761 batch_loss_mean=0.0889 time=1.75s
+04:39:41|INFO   |epoch 15/40 lr=0.00727 batch_loss_mean=0.0772 time=1.58s
+04:39:43|INFO   |epoch 16/40 lr=0.00691 batch_loss_mean=0.0697 time=1.61s
+04:39:45|INFO   |epoch 17/40 lr=0.00655 batch_loss_mean=0.0589 time=1.58s
+04:39:46|INFO   |epoch 18/40 lr=0.00617 batch_loss_mean=0.0531 time=1.50s
+04:39:48|INFO   |epoch 19/40 lr=0.00578 batch_loss_mean=0.0459 time=1.59s
+04:39:49|INFO   |epoch 20/40 lr=0.00539 batch_loss_mean=0.0407 time=1.57s
+04:39:51|INFO   |epoch 21/40 lr=0.00500 batch_loss_mean=0.0330 time=1.70s
+04:39:53|INFO   |epoch 22/40 lr=0.00461 batch_loss_mean=0.0290 time=1.66s
+04:39:54|INFO   |epoch 23/40 lr=0.00422 batch_loss_mean=0.0240 time=1.71s
+04:39:56|INFO   |epoch 24/40 lr=0.00383 batch_loss_mean=0.0204 time=1.68s
+04:39:58|INFO   |epoch 25/40 lr=0.00345 batch_loss_mean=0.0183 time=1.60s
+04:39:59|INFO   |epoch 26/40 lr=0.00309 batch_loss_mean=0.0158 time=1.57s
+04:40:01|INFO   |epoch 27/40 lr=0.00273 batch_loss_mean=0.0143 time=1.65s
+04:40:03|INFO   |epoch 28/40 lr=0.00239 batch_loss_mean=0.0128 time=1.75s
+04:40:04|INFO   |epoch 29/40 lr=0.00206 batch_loss_mean=0.0119 time=1.80s
+04:40:06|INFO   |epoch 30/40 lr=0.00175 batch_loss_mean=0.0110 time=1.50s
+04:40:08|INFO   |epoch 31/40 lr=0.00146 batch_loss_mean=0.0105 time=1.56s
+04:40:09|INFO   |epoch 32/40 lr=0.00120 batch_loss_mean=0.0101 time=1.69s
+04:40:11|INFO   |epoch 33/40 lr=0.00095 batch_loss_mean=0.0097 time=1.67s
+04:40:13|INFO   |epoch 34/40 lr=0.00074 batch_loss_mean=0.0094 time=1.75s
+04:40:14|INFO   |epoch 35/40 lr=0.00054 batch_loss_mean=0.0093 time=1.68s
+04:40:16|INFO   |epoch 36/40 lr=0.00038 batch_loss_mean=0.0091 time=1.46s
+04:40:17|INFO   |epoch 37/40 lr=0.00024 batch_loss_mean=0.0090 time=1.66s
+04:40:19|INFO   |epoch 38/40 lr=0.00014 batch_loss_mean=0.0089 time=1.61s
+04:40:21|INFO   |epoch 39/40 lr=0.00006 batch_loss_mean=0.0089 time=1.66s
+04:40:22|INFO   |epoch 40/40 lr=0.00002 batch_loss_mean=0.0088 time=1.67s
+04:40:23|INFO   |EVAL ep=40 train_loss=0.00886 val_acc=0.9286 val_nll=0.2650 (no test logits)
+04:40:23|INFO   |DONE tune_sgd_lr0.01_E40_s100: final_train_loss=0.00886 mean_epoch_time=1.65s
+04:40:23|INFO   |tune sgd lr=0.01 rho=None: val_nll=0.2650 val_acc=0.9286
+04:40:23|INFO   |START tune_sgd_lr0.03_E40_s100: condition=sgd lr=0.03 rho=None seed=100 epochs=40 save=(40,) include_test=False
+04:40:24|INFO   |epoch 1/40 lr=0.03000 batch_loss_mean=0.4610 time=1.48s
+04:40:26|INFO   |epoch 2/40 lr=0.02995 batch_loss_mean=0.2921 time=1.57s
+04:40:27|INFO   |epoch 3/40 lr=0.02982 batch_loss_mean=0.2546 time=1.64s
+04:40:29|INFO   |epoch 4/40 lr=0.02959 batch_loss_mean=0.2242 time=1.51s
+04:40:30|INFO   |epoch 5/40 lr=0.02927 batch_loss_mean=0.2017 time=1.57s
+04:40:32|INFO   |epoch 6/40 lr=0.02886 batch_loss_mean=0.1823 time=1.64s
+04:40:34|INFO   |epoch 7/40 lr=0.02837 batch_loss_mean=0.1696 time=1.68s
+04:40:36|INFO   |epoch 8/40 lr=0.02779 batch_loss_mean=0.1557 time=2.01s
+04:40:40|INFO   |epoch 9/40 lr=0.02714 batch_loss_mean=0.1432 time=4.31s
+04:40:42|INFO   |epoch 10/40 lr=0.02641 batch_loss_mean=0.1323 time=1.56s
+04:40:43|INFO   |epoch 11/40 lr=0.02561 batch_loss_mean=0.1216 time=1.65s
+04:40:45|INFO   |epoch 12/40 lr=0.02474 batch_loss_mean=0.1110 time=1.60s
+04:40:47|INFO   |epoch 13/40 lr=0.02382 batch_loss_mean=0.1024 time=1.59s
+04:40:48|INFO   |epoch 14/40 lr=0.02284 batch_loss_mean=0.0922 time=1.49s
+04:40:50|INFO   |epoch 15/40 lr=0.02181 batch_loss_mean=0.0843 time=1.54s
+04:40:51|INFO   |epoch 16/40 lr=0.02074 batch_loss_mean=0.0752 time=1.59s
+04:40:53|INFO   |epoch 17/40 lr=0.01964 batch_loss_mean=0.0662 time=1.64s
+04:40:54|INFO   |epoch 18/40 lr=0.01850 batch_loss_mean=0.0608 time=1.70s
+04:40:56|INFO   |epoch 19/40 lr=0.01735 batch_loss_mean=0.0537 time=1.63s
+04:40:58|INFO   |epoch 20/40 lr=0.01618 batch_loss_mean=0.0440 time=1.65s
+04:40:59|INFO   |epoch 21/40 lr=0.01500 batch_loss_mean=0.0412 time=1.49s
+04:41:01|INFO   |epoch 22/40 lr=0.01382 batch_loss_mean=0.0354 time=1.55s
+04:41:03|INFO   |epoch 23/40 lr=0.01265 batch_loss_mean=0.0270 time=1.72s
+04:41:04|INFO   |epoch 24/40 lr=0.01150 batch_loss_mean=0.0198 time=1.52s
+04:41:06|INFO   |epoch 25/40 lr=0.01036 batch_loss_mean=0.0180 time=1.50s
+04:41:07|INFO   |epoch 26/40 lr=0.00926 batch_loss_mean=0.0149 time=1.68s
+04:41:09|INFO   |epoch 27/40 lr=0.00819 batch_loss_mean=0.0106 time=1.67s
+04:41:11|INFO   |epoch 28/40 lr=0.00716 batch_loss_mean=0.0090 time=1.75s
+04:41:12|INFO   |epoch 29/40 lr=0.00618 batch_loss_mean=0.0080 time=1.70s
+04:41:14|INFO   |epoch 30/40 lr=0.00526 batch_loss_mean=0.0070 time=1.35s
+04:41:15|INFO   |epoch 31/40 lr=0.00439 batch_loss_mean=0.0066 time=1.54s
+04:41:17|INFO   |epoch 32/40 lr=0.00359 batch_loss_mean=0.0063 time=1.57s
+04:41:18|INFO   |epoch 33/40 lr=0.00286 batch_loss_mean=0.0060 time=1.62s
+04:41:20|INFO   |epoch 34/40 lr=0.00221 batch_loss_mean=0.0059 time=1.56s
+04:41:22|INFO   |epoch 35/40 lr=0.00163 batch_loss_mean=0.0057 time=1.59s
+04:41:23|INFO   |epoch 36/40 lr=0.00114 batch_loss_mean=0.0056 time=1.87s
+04:41:25|INFO   |epoch 37/40 lr=0.00073 batch_loss_mean=0.0055 time=1.86s
+04:41:27|INFO   |epoch 38/40 lr=0.00041 batch_loss_mean=0.0055 time=1.82s
+04:41:30|INFO   |epoch 39/40 lr=0.00018 batch_loss_mean=0.0055 time=2.39s
+04:41:32|INFO   |epoch 40/40 lr=0.00005 batch_loss_mean=0.0054 time=2.40s
+04:41:32|INFO   |EVAL ep=40 train_loss=0.00545 val_acc=0.9326 val_nll=0.2707 (no test logits)
+04:41:32|INFO   |DONE tune_sgd_lr0.03_E40_s100: final_train_loss=0.00545 mean_epoch_time=1.73s
+04:41:32|INFO   |tune sgd lr=0.03 rho=None: val_nll=0.2707 val_acc=0.9326
+04:41:32|INFO   |START tune_sgd_lr0.1_E40_s100: condition=sgd lr=0.1 rho=None seed=100 epochs=40 save=(40,) include_test=False
+04:41:35|INFO   |epoch 1/40 lr=0.10000 batch_loss_mean=0.5540 time=2.47s
+04:41:37|INFO   |epoch 2/40 lr=0.09985 batch_loss_mean=0.3192 time=2.23s
+04:41:39|INFO   |epoch 3/40 lr=0.09938 batch_loss_mean=0.2910 time=1.76s
+04:41:40|INFO   |epoch 4/40 lr=0.09862 batch_loss_mean=0.2644 time=1.42s
+04:41:42|INFO   |epoch 5/40 lr=0.09755 batch_loss_mean=0.2531 time=1.57s
+04:41:44|INFO   |epoch 6/40 lr=0.09619 batch_loss_mean=0.2422 time=1.82s
+04:41:45|INFO   |epoch 7/40 lr=0.09455 batch_loss_mean=0.2216 time=1.77s
+04:41:47|INFO   |epoch 8/40 lr=0.09263 batch_loss_mean=0.2174 time=1.80s
+04:41:49|INFO   |epoch 9/40 lr=0.09045 batch_loss_mean=0.2114 time=1.70s
+04:41:51|INFO   |epoch 10/40 lr=0.08802 batch_loss_mean=0.2050 time=1.79s
+04:41:53|INFO   |epoch 11/40 lr=0.08536 batch_loss_mean=0.1962 time=1.85s
+04:41:55|INFO   |epoch 12/40 lr=0.08247 batch_loss_mean=0.1905 time=2.00s
+04:41:56|INFO   |epoch 13/40 lr=0.07939 batch_loss_mean=0.1824 time=1.97s
+04:41:59|INFO   |epoch 14/40 lr=0.07612 batch_loss_mean=0.1775 time=2.33s
+04:42:01|INFO   |epoch 15/40 lr=0.07270 batch_loss_mean=0.1703 time=2.04s
+04:42:03|INFO   |epoch 16/40 lr=0.06913 batch_loss_mean=0.1578 time=2.15s
+04:42:05|INFO   |epoch 17/40 lr=0.06545 batch_loss_mean=0.1507 time=2.27s
+04:42:07|INFO   |epoch 18/40 lr=0.06167 batch_loss_mean=0.1449 time=2.17s
+04:42:10|INFO   |epoch 19/40 lr=0.05782 batch_loss_mean=0.1403 time=2.20s
+04:42:13|INFO   |epoch 20/40 lr=0.05392 batch_loss_mean=0.1325 time=3.07s
+04:42:17|INFO   |epoch 21/40 lr=0.05000 batch_loss_mean=0.1196 time=4.08s
+04:42:21|INFO   |epoch 22/40 lr=0.04608 batch_loss_mean=0.1162 time=4.08s
+04:42:26|INFO   |epoch 23/40 lr=0.04218 batch_loss_mean=0.1027 time=4.74s
+04:42:29|INFO   |epoch 24/40 lr=0.03833 batch_loss_mean=0.0990 time=3.70s
+04:42:33|INFO   |epoch 25/40 lr=0.03455 batch_loss_mean=0.0873 time=3.67s
+04:42:37|INFO   |epoch 26/40 lr=0.03087 batch_loss_mean=0.0802 time=3.54s
+04:42:40|INFO   |epoch 27/40 lr=0.02730 batch_loss_mean=0.0714 time=3.27s
+04:42:43|INFO   |epoch 28/40 lr=0.02388 batch_loss_mean=0.0610 time=3.54s
+04:42:47|INFO   |epoch 29/40 lr=0.02061 batch_loss_mean=0.0500 time=3.51s
+04:42:50|INFO   |epoch 30/40 lr=0.01753 batch_loss_mean=0.0421 time=3.00s
+04:42:54|INFO   |epoch 31/40 lr=0.01464 batch_loss_mean=0.0356 time=3.77s
+04:42:57|INFO   |epoch 32/40 lr=0.01198 batch_loss_mean=0.0263 time=3.46s
+04:43:00|INFO   |epoch 33/40 lr=0.00955 batch_loss_mean=0.0211 time=2.79s
+04:43:03|INFO   |epoch 34/40 lr=0.00737 batch_loss_mean=0.0169 time=2.93s
+04:43:06|INFO   |epoch 35/40 lr=0.00545 batch_loss_mean=0.0142 time=3.17s
+04:43:09|INFO   |epoch 36/40 lr=0.00381 batch_loss_mean=0.0125 time=3.39s
+04:43:13|INFO   |epoch 37/40 lr=0.00245 batch_loss_mean=0.0113 time=3.34s
+04:43:16|INFO   |epoch 38/40 lr=0.00138 batch_loss_mean=0.0107 time=3.18s
+04:43:20|INFO   |epoch 39/40 lr=0.00062 batch_loss_mean=0.0103 time=3.86s
+04:43:23|INFO   |epoch 40/40 lr=0.00015 batch_loss_mean=0.0101 time=3.66s
+04:43:24|INFO   |EVAL ep=40 train_loss=0.00990 val_acc=0.9290 val_nll=0.2740 (no test logits)
+04:43:24|INFO   |DONE tune_sgd_lr0.1_E40_s100: final_train_loss=0.00990 mean_epoch_time=2.78s
+04:43:24|INFO   |tune sgd lr=0.1 rho=None: val_nll=0.2740 val_acc=0.9290
+04:43:24|INFO   |START tune_sam_lr0.01_rho0.05_E40_s100: condition=sam lr=0.01 rho=0.05 seed=100 epochs=40 save=(40,) include_test=False
+04:43:29|INFO   |epoch 1/40 lr=0.01000 batch_loss_mean=0.4936 time=4.85s
+04:43:33|INFO   |epoch 2/40 lr=0.00998 batch_loss_mean=0.3077 time=4.74s
+04:43:38|INFO   |epoch 3/40 lr=0.00994 batch_loss_mean=0.2701 time=4.61s
+04:43:43|INFO   |epoch 4/40 lr=0.00986 batch_loss_mean=0.2441 time=5.26s
+04:43:48|INFO   |epoch 5/40 lr=0.00976 batch_loss_mean=0.2248 time=5.18s
+04:43:53|INFO   |epoch 6/40 lr=0.00962 batch_loss_mean=0.2107 time=4.87s
+04:43:58|INFO   |epoch 7/40 lr=0.00946 batch_loss_mean=0.1975 time=4.89s
+04:44:03|INFO   |epoch 8/40 lr=0.00926 batch_loss_mean=0.1854 time=4.64s
+04:44:08|INFO   |epoch 9/40 lr=0.00905 batch_loss_mean=0.1751 time=5.13s
+04:44:14|INFO   |epoch 10/40 lr=0.00880 batch_loss_mean=0.1642 time=6.55s
+04:44:21|INFO   |epoch 11/40 lr=0.00854 batch_loss_mean=0.1566 time=6.42s
+04:44:27|INFO   |epoch 12/40 lr=0.00825 batch_loss_mean=0.1489 time=6.42s
+04:44:34|INFO   |epoch 13/40 lr=0.00794 batch_loss_mean=0.1398 time=6.71s
+04:44:41|INFO   |epoch 14/40 lr=0.00761 batch_loss_mean=0.1328 time=6.65s
+04:44:47|INFO   |epoch 15/40 lr=0.00727 batch_loss_mean=0.1246 time=6.61s
+04:44:54|INFO   |epoch 16/40 lr=0.00691 batch_loss_mean=0.1189 time=6.56s
+04:45:00|INFO   |epoch 17/40 lr=0.00655 batch_loss_mean=0.1116 time=5.94s
+04:45:06|INFO   |epoch 18/40 lr=0.00617 batch_loss_mean=0.1073 time=5.84s
+04:45:11|INFO   |epoch 19/40 lr=0.00578 batch_loss_mean=0.1019 time=5.78s
+04:45:18|INFO   |epoch 20/40 lr=0.00539 batch_loss_mean=0.0956 time=6.81s
+04:45:22|INFO   |epoch 21/40 lr=0.00500 batch_loss_mean=0.0906 time=4.06s
+04:45:25|INFO   |epoch 22/40 lr=0.00461 batch_loss_mean=0.0873 time=3.11s
+04:45:28|INFO   |epoch 23/40 lr=0.00422 batch_loss_mean=0.0819 time=2.78s
+04:45:31|INFO   |epoch 24/40 lr=0.00383 batch_loss_mean=0.0784 time=3.29s
+04:45:34|INFO   |epoch 25/40 lr=0.00345 batch_loss_mean=0.0750 time=2.93s
+04:45:37|INFO   |epoch 26/40 lr=0.00309 batch_loss_mean=0.0712 time=2.92s
+04:45:40|INFO   |epoch 27/40 lr=0.00273 batch_loss_mean=0.0682 time=2.82s
+04:45:43|INFO   |epoch 28/40 lr=0.00239 batch_loss_mean=0.0656 time=2.85s
+04:45:46|INFO   |epoch 29/40 lr=0.00206 batch_loss_mean=0.0629 time=2.75s
+04:45:49|INFO   |epoch 30/40 lr=0.00175 batch_loss_mean=0.0608 time=3.77s
+04:45:52|INFO   |epoch 31/40 lr=0.00146 batch_loss_mean=0.0592 time=2.84s
+04:45:55|INFO   |epoch 32/40 lr=0.00120 batch_loss_mean=0.0573 time=2.92s
+04:45:58|INFO   |epoch 33/40 lr=0.00095 batch_loss_mean=0.0560 time=2.77s
+04:46:01|INFO   |epoch 34/40 lr=0.00074 batch_loss_mean=0.0548 time=2.91s
+04:46:04|INFO   |epoch 35/40 lr=0.00054 batch_loss_mean=0.0537 time=2.70s
+04:46:06|INFO   |epoch 36/40 lr=0.00038 batch_loss_mean=0.0531 time=2.63s
+04:46:09|INFO   |epoch 37/40 lr=0.00024 batch_loss_mean=0.0526 time=2.66s
+04:46:11|INFO   |epoch 38/40 lr=0.00014 batch_loss_mean=0.0522 time=2.57s
+04:46:14|INFO   |epoch 39/40 lr=0.00006 batch_loss_mean=0.0519 time=2.62s
+04:46:17|INFO   |epoch 40/40 lr=0.00002 batch_loss_mean=0.0518 time=2.60s
+04:46:17|INFO   |EVAL ep=40 train_loss=0.05186 val_acc=0.9330 val_nll=0.1905 (no test logits)
+04:46:17|INFO   |DONE tune_sam_lr0.01_rho0.05_E40_s100: final_train_loss=0.05186 mean_epoch_time=4.32s
+04:46:17|INFO   |tune sam lr=0.01 rho=0.05: val_nll=0.1905 val_acc=0.9330
+04:46:17|INFO   |START tune_sam_lr0.01_rho0.1_E40_s100: condition=sam lr=0.01 rho=0.1 seed=100 epochs=40 save=(40,) include_test=False
+04:46:20|INFO   |epoch 1/40 lr=0.01000 batch_loss_mean=0.5824 time=2.57s
+04:46:22|INFO   |epoch 2/40 lr=0.00998 batch_loss_mean=0.3491 time=2.60s
+04:46:25|INFO   |epoch 3/40 lr=0.00994 batch_loss_mean=0.3036 time=2.73s
+04:46:28|INFO   |epoch 4/40 lr=0.00986 batch_loss_mean=0.2737 time=2.56s
+04:46:30|INFO   |epoch 5/40 lr=0.00976 batch_loss_mean=0.2547 time=2.63s
+04:46:33|INFO   |epoch 6/40 lr=0.00962 batch_loss_mean=0.2386 time=2.62s
+04:46:35|INFO   |epoch 7/40 lr=0.00946 batch_loss_mean=0.2267 time=2.56s
+04:46:38|INFO   |epoch 8/40 lr=0.00926 batch_loss_mean=0.2160 time=2.70s
+04:46:41|INFO   |epoch 9/40 lr=0.00905 batch_loss_mean=0.2089 time=3.23s
+04:46:44|INFO   |epoch 10/40 lr=0.00880 batch_loss_mean=0.2004 time=3.07s
+04:46:47|INFO   |epoch 11/40 lr=0.00854 batch_loss_mean=0.1936 time=3.00s
+04:46:50|INFO   |epoch 12/40 lr=0.00825 batch_loss_mean=0.1878 time=3.15s
+04:46:54|INFO   |epoch 13/40 lr=0.00794 batch_loss_mean=0.1813 time=3.78s
+04:46:58|INFO   |epoch 14/40 lr=0.00761 batch_loss_mean=0.1753 time=3.24s
+04:47:00|INFO   |epoch 15/40 lr=0.00727 batch_loss_mean=0.1690 time=2.64s
+04:47:03|INFO   |epoch 16/40 lr=0.00691 batch_loss_mean=0.1648 time=2.65s
+04:47:05|INFO   |epoch 17/40 lr=0.00655 batch_loss_mean=0.1605 time=2.56s
+04:47:08|INFO   |epoch 18/40 lr=0.00617 batch_loss_mean=0.1567 time=2.55s
+04:47:11|INFO   |epoch 19/40 lr=0.00578 batch_loss_mean=0.1529 time=2.59s
+04:47:13|INFO   |epoch 20/40 lr=0.00539 batch_loss_mean=0.1484 time=2.64s
+04:47:16|INFO   |epoch 21/40 lr=0.00500 batch_loss_mean=0.1454 time=2.58s
+04:47:18|INFO   |epoch 22/40 lr=0.00461 batch_loss_mean=0.1427 time=2.50s
+04:47:21|INFO   |epoch 23/40 lr=0.00422 batch_loss_mean=0.1388 time=2.62s
+04:47:23|INFO   |epoch 24/40 lr=0.00383 batch_loss_mean=0.1363 time=2.61s
+04:47:26|INFO   |epoch 25/40 lr=0.00345 batch_loss_mean=0.1343 time=2.69s
+04:47:29|INFO   |epoch 26/40 lr=0.00309 batch_loss_mean=0.1318 time=2.45s
+04:47:31|INFO   |epoch 27/40 lr=0.00273 batch_loss_mean=0.1294 time=2.36s
+04:47:33|INFO   |epoch 28/40 lr=0.00239 batch_loss_mean=0.1278 time=2.37s
+04:47:36|INFO   |epoch 29/40 lr=0.00206 batch_loss_mean=0.1257 time=2.37s
+04:47:38|INFO   |epoch 30/40 lr=0.00175 batch_loss_mean=0.1244 time=2.31s
+04:47:40|INFO   |epoch 31/40 lr=0.00146 batch_loss_mean=0.1231 time=2.41s
+04:47:43|INFO   |epoch 32/40 lr=0.00120 batch_loss_mean=0.1217 time=2.41s
+04:47:45|INFO   |epoch 33/40 lr=0.00095 batch_loss_mean=0.1206 time=2.42s
+04:47:48|INFO   |epoch 34/40 lr=0.00074 batch_loss_mean=0.1196 time=2.35s
+04:47:50|INFO   |epoch 35/40 lr=0.00054 batch_loss_mean=0.1190 time=2.48s
+04:47:53|INFO   |epoch 36/40 lr=0.00038 batch_loss_mean=0.1185 time=2.72s
+04:47:55|INFO   |epoch 37/40 lr=0.00024 batch_loss_mean=0.1182 time=2.64s
+04:47:58|INFO   |epoch 38/40 lr=0.00014 batch_loss_mean=0.1178 time=2.48s
+04:48:00|INFO   |epoch 39/40 lr=0.00006 batch_loss_mean=0.1176 time=2.47s
+04:48:03|INFO   |epoch 40/40 lr=0.00002 batch_loss_mean=0.1175 time=2.65s
+04:48:03|INFO   |EVAL ep=40 train_loss=0.11747 val_acc=0.9320 val_nll=0.1840 (no test logits)
+04:48:03|INFO   |DONE tune_sam_lr0.01_rho0.1_E40_s100: final_train_loss=0.11747 mean_epoch_time=2.65s
+04:48:03|INFO   |tune sam lr=0.01 rho=0.1: val_nll=0.1840 val_acc=0.9320
+04:48:03|INFO   |START tune_sam_lr0.01_rho0.2_E40_s100: condition=sam lr=0.01 rho=0.2 seed=100 epochs=40 save=(40,) include_test=False
+04:48:07|INFO   |epoch 1/40 lr=0.01000 batch_loss_mean=1.9271 time=3.41s
+04:48:10|INFO   |epoch 2/40 lr=0.00998 batch_loss_mean=0.6342 time=2.91s
+04:48:12|INFO   |epoch 3/40 lr=0.00994 batch_loss_mean=0.4787 time=2.57s
+04:48:15|INFO   |epoch 4/40 lr=0.00986 batch_loss_mean=0.4065 time=2.51s
+04:48:17|INFO   |epoch 5/40 lr=0.00976 batch_loss_mean=0.3588 time=2.47s
+04:48:20|INFO   |epoch 6/40 lr=0.00962 batch_loss_mean=0.3258 time=2.53s
+04:48:22|INFO   |epoch 7/40 lr=0.00946 batch_loss_mean=0.3028 time=2.53s
+04:48:25|INFO   |epoch 8/40 lr=0.00926 batch_loss_mean=0.2866 time=2.50s
+04:48:27|INFO   |epoch 9/40 lr=0.00905 batch_loss_mean=0.2764 time=2.50s
+04:48:30|INFO   |epoch 10/40 lr=0.00880 batch_loss_mean=0.2678 time=2.44s
+04:48:32|INFO   |epoch 11/40 lr=0.00854 batch_loss_mean=0.2611 time=2.72s
+04:48:35|INFO   |epoch 12/40 lr=0.00825 batch_loss_mean=0.2539 time=2.95s
+04:48:38|INFO   |epoch 13/40 lr=0.00794 batch_loss_mean=0.2478 time=2.90s
+04:48:41|INFO   |epoch 14/40 lr=0.00761 batch_loss_mean=0.2434 time=2.96s
+04:48:44|INFO   |epoch 15/40 lr=0.00727 batch_loss_mean=0.2384 time=2.84s
+04:48:47|INFO   |epoch 16/40 lr=0.00691 batch_loss_mean=0.2345 time=2.76s
+04:48:50|INFO   |epoch 17/40 lr=0.00655 batch_loss_mean=0.2312 time=2.70s
+04:48:52|INFO   |epoch 18/40 lr=0.00617 batch_loss_mean=0.2279 time=2.61s
+04:48:55|INFO   |epoch 19/40 lr=0.00578 batch_loss_mean=0.2250 time=2.75s
+04:48:57|INFO   |epoch 20/40 lr=0.00539 batch_loss_mean=0.2222 time=2.50s
+04:49:00|INFO   |epoch 21/40 lr=0.00500 batch_loss_mean=0.2199 time=2.63s
+04:49:03|INFO   |epoch 22/40 lr=0.00461 batch_loss_mean=0.2181 time=2.89s
+04:49:06|INFO   |epoch 23/40 lr=0.00422 batch_loss_mean=0.2152 time=2.72s
+04:49:09|INFO   |epoch 24/40 lr=0.00383 batch_loss_mean=0.2136 time=2.86s
+04:49:11|INFO   |epoch 25/40 lr=0.00345 batch_loss_mean=0.2124 time=2.81s
+04:49:14|INFO   |epoch 26/40 lr=0.00309 batch_loss_mean=0.2101 time=2.72s
+04:49:17|INFO   |epoch 27/40 lr=0.00273 batch_loss_mean=0.2088 time=2.68s
+04:49:19|INFO   |epoch 28/40 lr=0.00239 batch_loss_mean=0.2080 time=2.58s
+04:49:22|INFO   |epoch 29/40 lr=0.00206 batch_loss_mean=0.2068 time=2.60s
+04:49:25|INFO   |epoch 30/40 lr=0.00175 batch_loss_mean=0.2059 time=2.68s
+04:49:27|INFO   |epoch 31/40 lr=0.00146 batch_loss_mean=0.2052 time=2.71s
+04:49:30|INFO   |epoch 32/40 lr=0.00120 batch_loss_mean=0.2041 time=2.72s
+04:49:33|INFO   |epoch 33/40 lr=0.00095 batch_loss_mean=0.2037 time=2.80s
+04:49:36|INFO   |epoch 34/40 lr=0.00074 batch_loss_mean=0.2026 time=2.67s
+04:49:38|INFO   |epoch 35/40 lr=0.00054 batch_loss_mean=0.2026 time=2.75s
+04:49:41|INFO   |epoch 36/40 lr=0.00038 batch_loss_mean=0.2020 time=2.79s
+04:49:44|INFO   |epoch 37/40 lr=0.00024 batch_loss_mean=0.2018 time=2.69s
+04:49:46|INFO   |epoch 38/40 lr=0.00014 batch_loss_mean=0.2017 time=2.72s
+04:49:49|INFO   |epoch 39/40 lr=0.00006 batch_loss_mean=0.2017 time=2.70s
+04:49:52|INFO   |epoch 40/40 lr=0.00002 batch_loss_mean=0.2014 time=2.69s
+04:49:52|INFO   |EVAL ep=40 train_loss=0.20113 val_acc=0.9218 val_nll=0.2173 (no test logits)
+04:49:52|INFO   |DONE tune_sam_lr0.01_rho0.2_E40_s100: final_train_loss=0.20113 mean_epoch_time=2.71s
+04:49:52|INFO   |tune sam lr=0.01 rho=0.2: val_nll=0.2173 val_acc=0.9218
+04:49:52|INFO   |START tune_sam_lr0.03_rho0.05_E40_s100: condition=sam lr=0.03 rho=0.05 seed=100 epochs=40 save=(40,) include_test=False
+04:49:55|INFO   |epoch 1/40 lr=0.03000 batch_loss_mean=0.5004 time=2.85s
+04:49:58|INFO   |epoch 2/40 lr=0.02995 batch_loss_mean=0.3030 time=2.63s
+04:50:01|INFO   |epoch 3/40 lr=0.02982 batch_loss_mean=0.2624 time=2.80s
+04:50:03|INFO   |epoch 4/40 lr=0.02959 batch_loss_mean=0.2318 time=2.73s
+04:50:06|INFO   |epoch 5/40 lr=0.02927 batch_loss_mean=0.2137 time=2.66s
+04:50:09|INFO   |epoch 6/40 lr=0.02886 batch_loss_mean=0.1996 time=2.76s
+04:50:11|INFO   |epoch 7/40 lr=0.02837 batch_loss_mean=0.1884 time=2.74s
+04:50:14|INFO   |epoch 8/40 lr=0.02779 batch_loss_mean=0.1754 time=2.69s
+04:50:17|INFO   |epoch 9/40 lr=0.02714 batch_loss_mean=0.1645 time=2.72s
+04:50:19|INFO   |epoch 10/40 lr=0.02641 batch_loss_mean=0.1554 time=2.62s
+04:50:22|INFO   |epoch 11/40 lr=0.02561 batch_loss_mean=0.1484 time=2.63s
+04:50:25|INFO   |epoch 12/40 lr=0.02474 batch_loss_mean=0.1381 time=2.67s
+04:50:27|INFO   |epoch 13/40 lr=0.02382 batch_loss_mean=0.1295 time=2.59s
+04:50:30|INFO   |epoch 14/40 lr=0.02284 batch_loss_mean=0.1236 time=2.53s
+04:50:33|INFO   |epoch 15/40 lr=0.02181 batch_loss_mean=0.1158 time=2.62s
+04:50:35|INFO   |epoch 16/40 lr=0.02074 batch_loss_mean=0.1087 time=2.65s
+04:50:38|INFO   |epoch 17/40 lr=0.01964 batch_loss_mean=0.1012 time=2.60s
+04:50:40|INFO   |epoch 18/40 lr=0.01850 batch_loss_mean=0.0950 time=2.66s
+04:50:43|INFO   |epoch 19/40 lr=0.01735 batch_loss_mean=0.0910 time=2.67s
+04:50:46|INFO   |epoch 20/40 lr=0.01618 batch_loss_mean=0.0845 time=2.58s
+04:50:48|INFO   |epoch 21/40 lr=0.01500 batch_loss_mean=0.0782 time=2.65s
+04:50:51|INFO   |epoch 22/40 lr=0.01382 batch_loss_mean=0.0751 time=2.71s
+04:50:54|INFO   |epoch 23/40 lr=0.01265 batch_loss_mean=0.0678 time=2.65s
+04:50:56|INFO   |epoch 24/40 lr=0.01150 batch_loss_mean=0.0629 time=2.63s
+04:50:59|INFO   |epoch 25/40 lr=0.01036 batch_loss_mean=0.0590 time=2.71s
+04:51:02|INFO   |epoch 26/40 lr=0.00926 batch_loss_mean=0.0544 time=2.67s
+04:51:04|INFO   |epoch 27/40 lr=0.00819 batch_loss_mean=0.0500 time=2.57s
+04:51:07|INFO   |epoch 28/40 lr=0.00716 batch_loss_mean=0.0462 time=2.67s
+04:51:10|INFO   |epoch 29/40 lr=0.00618 batch_loss_mean=0.0420 time=2.56s
+04:51:12|INFO   |epoch 30/40 lr=0.00526 batch_loss_mean=0.0395 time=2.50s
+04:51:14|INFO   |epoch 31/40 lr=0.00439 batch_loss_mean=0.0372 time=2.33s
+04:51:17|INFO   |epoch 32/40 lr=0.00359 batch_loss_mean=0.0347 time=2.30s
+04:51:19|INFO   |epoch 33/40 lr=0.00286 batch_loss_mean=0.0329 time=2.33s
+04:51:21|INFO   |epoch 34/40 lr=0.00221 batch_loss_mean=0.0314 time=2.30s
+04:51:24|INFO   |epoch 35/40 lr=0.00163 batch_loss_mean=0.0299 time=2.29s
+04:51:26|INFO   |epoch 36/40 lr=0.00114 batch_loss_mean=0.0291 time=2.33s
+04:51:28|INFO   |epoch 37/40 lr=0.00073 batch_loss_mean=0.0282 time=2.57s
+04:51:36|INFO   |epoch 38/40 lr=0.00041 batch_loss_mean=0.0277 time=7.64s
+04:51:43|INFO   |epoch 39/40 lr=0.00018 batch_loss_mean=0.0274 time=7.28s
+04:51:50|INFO   |epoch 40/40 lr=0.00005 batch_loss_mean=0.0272 time=6.92s
+04:51:51|INFO   |EVAL ep=40 train_loss=0.02717 val_acc=0.9309 val_nll=0.2115 (no test logits)
+04:51:51|INFO   |DONE tune_sam_lr0.03_rho0.05_E40_s100: final_train_loss=0.02717 mean_epoch_time=2.95s
+04:51:51|INFO   |tune sam lr=0.03 rho=0.05: val_nll=0.2115 val_acc=0.9309
+04:51:51|INFO   |START tune_sam_lr0.03_rho0.1_E40_s100: condition=sam lr=0.03 rho=0.1 seed=100 epochs=40 save=(40,) include_test=False
+04:51:59|INFO   |epoch 1/40 lr=0.03000 batch_loss_mean=0.5532 time=8.26s
+04:52:04|INFO   |epoch 2/40 lr=0.02995 batch_loss_mean=0.3225 time=5.12s
+04:52:08|INFO   |epoch 3/40 lr=0.02982 batch_loss_mean=0.2776 time=3.96s
+04:52:12|INFO   |epoch 4/40 lr=0.02959 batch_loss_mean=0.2496 time=3.95s
+04:52:17|INFO   |epoch 5/40 lr=0.02927 batch_loss_mean=0.2326 time=4.18s
+04:52:21|INFO   |epoch 6/40 lr=0.02886 batch_loss_mean=0.2194 time=4.33s
+04:52:25|INFO   |epoch 7/40 lr=0.02837 batch_loss_mean=0.2083 time=4.22s
+04:52:29|INFO   |epoch 8/40 lr=0.02779 batch_loss_mean=0.1977 time=3.77s
+04:52:33|INFO   |epoch 9/40 lr=0.02714 batch_loss_mean=0.1903 time=3.86s
+04:52:37|INFO   |epoch 10/40 lr=0.02641 batch_loss_mean=0.1815 time=4.43s
+04:52:41|INFO   |epoch 11/40 lr=0.02561 batch_loss_mean=0.1754 time=3.97s
+04:52:45|INFO   |epoch 12/40 lr=0.02474 batch_loss_mean=0.1681 time=3.93s
+04:52:49|INFO   |epoch 13/40 lr=0.02382 batch_loss_mean=0.1611 time=4.01s
+04:52:53|INFO   |epoch 14/40 lr=0.02284 batch_loss_mean=0.1557 time=3.72s
+04:52:56|INFO   |epoch 15/40 lr=0.02181 batch_loss_mean=0.1485 time=3.22s
+04:52:59|INFO   |epoch 16/40 lr=0.02074 batch_loss_mean=0.1434 time=3.00s
+04:53:02|INFO   |epoch 17/40 lr=0.01964 batch_loss_mean=0.1389 time=2.99s
+04:53:05|INFO   |epoch 18/40 lr=0.01850 batch_loss_mean=0.1341 time=3.05s
+04:53:08|INFO   |epoch 19/40 lr=0.01735 batch_loss_mean=0.1294 time=3.29s
+04:53:12|INFO   |epoch 20/40 lr=0.01618 batch_loss_mean=0.1240 time=3.37s
+04:53:15|INFO   |epoch 21/40 lr=0.01500 batch_loss_mean=0.1192 time=3.11s
+04:53:17|INFO   |epoch 22/40 lr=0.01382 batch_loss_mean=0.1164 time=2.42s
+04:53:20|INFO   |epoch 23/40 lr=0.01265 batch_loss_mean=0.1107 time=2.39s
+04:53:22|INFO   |epoch 24/40 lr=0.01150 batch_loss_mean=0.1068 time=2.32s
+04:53:24|INFO   |epoch 25/40 lr=0.01036 batch_loss_mean=0.1043 time=2.32s
+04:53:27|INFO   |epoch 26/40 lr=0.00926 batch_loss_mean=0.1001 time=2.31s
+04:53:29|INFO   |epoch 27/40 lr=0.00819 batch_loss_mean=0.0961 time=2.39s
+04:53:31|INFO   |epoch 28/40 lr=0.00716 batch_loss_mean=0.0927 time=2.33s
+04:53:34|INFO   |epoch 29/40 lr=0.00618 batch_loss_mean=0.0890 time=2.30s
+04:53:36|INFO   |epoch 30/40 lr=0.00526 batch_loss_mean=0.0870 time=2.31s
+04:53:38|INFO   |epoch 31/40 lr=0.00439 batch_loss_mean=0.0844 time=2.35s
+04:53:41|INFO   |epoch 32/40 lr=0.00359 batch_loss_mean=0.0822 time=2.31s
+04:53:43|INFO   |epoch 33/40 lr=0.00286 batch_loss_mean=0.0801 time=2.60s
+04:53:46|INFO   |epoch 34/40 lr=0.00221 batch_loss_mean=0.0785 time=2.36s
+04:53:48|INFO   |epoch 35/40 lr=0.00163 batch_loss_mean=0.0770 time=2.33s
+04:53:50|INFO   |epoch 36/40 lr=0.00114 batch_loss_mean=0.0761 time=2.37s
+04:53:53|INFO   |epoch 37/40 lr=0.00073 batch_loss_mean=0.0752 time=2.28s
+04:53:55|INFO   |epoch 38/40 lr=0.00041 batch_loss_mean=0.0745 time=2.96s
+04:53:58|INFO   |epoch 39/40 lr=0.00018 batch_loss_mean=0.0741 time=2.45s
+04:54:00|INFO   |epoch 40/40 lr=0.00005 batch_loss_mean=0.0738 time=2.44s
+04:54:01|INFO   |EVAL ep=40 train_loss=0.07371 val_acc=0.9319 val_nll=0.1876 (no test logits)
+04:54:01|INFO   |DONE tune_sam_lr0.03_rho0.1_E40_s100: final_train_loss=0.07371 mean_epoch_time=3.23s
+04:54:01|INFO   |tune sam lr=0.03 rho=0.1: val_nll=0.1876 val_acc=0.9319
+04:54:01|INFO   |START tune_sam_lr0.03_rho0.2_E40_s100: condition=sam lr=0.03 rho=0.2 seed=100 epochs=40 save=(40,) include_test=False
+04:54:03|INFO   |epoch 1/40 lr=0.03000 batch_loss_mean=2.2978 time=2.37s
+04:54:05|INFO   |epoch 2/40 lr=0.02995 batch_loss_mean=2.2979 time=2.33s
+04:54:08|INFO   |epoch 3/40 lr=0.02982 batch_loss_mean=2.2989 time=2.25s
+04:54:10|INFO   |epoch 4/40 lr=0.02959 batch_loss_mean=2.2990 time=2.26s
+04:54:12|INFO   |epoch 5/40 lr=0.02927 batch_loss_mean=2.2972 time=2.30s
+04:54:15|INFO   |epoch 6/40 lr=0.02886 batch_loss_mean=2.2989 time=2.30s
+04:54:17|INFO   |epoch 7/40 lr=0.02837 batch_loss_mean=2.2976 time=2.27s
+04:54:19|INFO   |epoch 8/40 lr=0.02779 batch_loss_mean=2.2986 time=2.28s
+04:54:21|INFO   |epoch 9/40 lr=0.02714 batch_loss_mean=2.2988 time=2.30s
+04:54:24|INFO   |epoch 10/40 lr=0.02641 batch_loss_mean=2.2987 time=2.27s
+04:54:26|INFO   |epoch 11/40 lr=0.02561 batch_loss_mean=2.2989 time=2.33s
+04:54:28|INFO   |epoch 12/40 lr=0.02474 batch_loss_mean=2.2996 time=2.27s
+04:54:30|INFO   |epoch 13/40 lr=0.02382 batch_loss_mean=2.3001 time=2.24s
+04:54:33|INFO   |epoch 14/40 lr=0.02284 batch_loss_mean=2.3005 time=2.23s
+04:54:35|INFO   |epoch 15/40 lr=0.02181 batch_loss_mean=2.3009 time=2.31s
+04:54:37|INFO   |epoch 16/40 lr=0.02074 batch_loss_mean=2.3009 time=2.25s
+04:54:40|INFO   |epoch 17/40 lr=0.01964 batch_loss_mean=2.3010 time=2.33s
+04:54:42|INFO   |epoch 18/40 lr=0.01850 batch_loss_mean=2.3020 time=2.23s
+04:54:44|INFO   |epoch 19/40 lr=0.01735 batch_loss_mean=2.3019 time=2.24s
+04:54:46|INFO   |epoch 20/40 lr=0.01618 batch_loss_mean=2.3021 time=2.24s
+04:54:49|INFO   |epoch 21/40 lr=0.01500 batch_loss_mean=2.3020 time=2.24s
+04:54:51|INFO   |epoch 22/40 lr=0.01382 batch_loss_mean=2.3020 time=2.40s
+04:54:53|INFO   |epoch 23/40 lr=0.01265 batch_loss_mean=2.3021 time=2.34s
+04:54:56|INFO   |epoch 24/40 lr=0.01150 batch_loss_mean=2.3021 time=2.34s
+04:54:58|INFO   |epoch 25/40 lr=0.01036 batch_loss_mean=2.3022 time=2.33s
+04:55:00|INFO   |epoch 26/40 lr=0.00926 batch_loss_mean=2.3021 time=2.34s
+04:55:03|INFO   |epoch 27/40 lr=0.00819 batch_loss_mean=2.3021 time=2.34s
+04:55:05|INFO   |epoch 28/40 lr=0.00716 batch_loss_mean=2.3021 time=2.44s
+04:55:07|INFO   |epoch 29/40 lr=0.00618 batch_loss_mean=2.3021 time=2.37s
+04:55:10|INFO   |epoch 30/40 lr=0.00526 batch_loss_mean=2.3021 time=2.38s
+04:55:12|INFO   |epoch 31/40 lr=0.00439 batch_loss_mean=2.3020 time=2.35s
+04:55:15|INFO   |epoch 32/40 lr=0.00359 batch_loss_mean=2.3020 time=2.40s
+04:55:17|INFO   |epoch 33/40 lr=0.00286 batch_loss_mean=2.3020 time=2.45s
+04:55:19|INFO   |epoch 34/40 lr=0.00221 batch_loss_mean=2.3020 time=2.45s
+04:55:22|INFO   |epoch 35/40 lr=0.00163 batch_loss_mean=2.3020 time=2.85s
+04:55:25|INFO   |epoch 36/40 lr=0.00114 batch_loss_mean=2.3020 time=2.32s
+04:55:27|INFO   |epoch 37/40 lr=0.00073 batch_loss_mean=2.3019 time=2.36s
+04:55:29|INFO   |epoch 38/40 lr=0.00041 batch_loss_mean=2.3019 time=2.35s
+04:55:32|INFO   |epoch 39/40 lr=0.00018 batch_loss_mean=2.3019 time=2.36s
+04:55:34|INFO   |epoch 40/40 lr=0.00005 batch_loss_mean=2.3019 time=2.37s
+04:55:34|INFO   |EVAL ep=40 train_loss=2.30191 val_acc=0.1305 val_nll=2.3020 (no test logits)
+04:55:34|INFO   |DONE tune_sam_lr0.03_rho0.2_E40_s100: final_train_loss=2.30191 mean_epoch_time=2.33s
+04:55:34|INFO   |tune sam lr=0.03 rho=0.2: val_nll=2.3020 val_acc=0.1305
+04:55:34|INFO   |START tune_sam_lr0.1_rho0.05_E40_s100: condition=sam lr=0.1 rho=0.05 seed=100 epochs=40 save=(40,) include_test=False
+04:55:37|INFO   |epoch 1/40 lr=0.10000 batch_loss_mean=0.6744 time=2.37s
+04:55:39|INFO   |epoch 2/40 lr=0.09985 batch_loss_mean=0.3582 time=2.33s
+04:55:41|INFO   |epoch 3/40 lr=0.09938 batch_loss_mean=0.3043 time=2.29s
+04:55:44|INFO   |epoch 4/40 lr=0.09862 batch_loss_mean=0.2775 time=2.30s
+04:55:46|INFO   |epoch 5/40 lr=0.09755 batch_loss_mean=0.2642 time=2.29s
+04:55:48|INFO   |epoch 6/40 lr=0.09619 batch_loss_mean=0.2457 time=2.30s
+04:55:51|INFO   |epoch 7/40 lr=0.09455 batch_loss_mean=0.2389 time=2.30s
+04:55:53|INFO   |epoch 8/40 lr=0.09263 batch_loss_mean=0.2281 time=2.29s
+04:55:55|INFO   |epoch 9/40 lr=0.09045 batch_loss_mean=0.2189 time=2.38s
+04:55:58|INFO   |epoch 10/40 lr=0.08802 batch_loss_mean=0.2130 time=2.36s
+04:56:00|INFO   |epoch 11/40 lr=0.08536 batch_loss_mean=0.2054 time=2.31s
+04:56:02|INFO   |epoch 12/40 lr=0.08247 batch_loss_mean=0.1969 time=2.32s
+04:56:04|INFO   |epoch 13/40 lr=0.07939 batch_loss_mean=0.1936 time=2.25s
+04:56:07|INFO   |epoch 14/40 lr=0.07612 batch_loss_mean=0.1844 time=2.34s
+04:56:09|INFO   |epoch 15/40 lr=0.07270 batch_loss_mean=0.1796 time=2.29s
+04:56:11|INFO   |epoch 16/40 lr=0.06913 batch_loss_mean=0.1715 time=2.25s
+04:56:14|INFO   |epoch 17/40 lr=0.06545 batch_loss_mean=0.1646 time=2.31s
+04:56:16|INFO   |epoch 18/40 lr=0.06167 batch_loss_mean=0.1588 time=2.28s
+04:56:18|INFO   |epoch 19/40 lr=0.05782 batch_loss_mean=0.1503 time=2.30s
+04:56:21|INFO   |epoch 20/40 lr=0.05392 batch_loss_mean=0.1444 time=2.27s
+04:56:23|INFO   |epoch 21/40 lr=0.05000 batch_loss_mean=0.1391 time=2.29s
+04:56:25|INFO   |epoch 22/40 lr=0.04608 batch_loss_mean=0.1343 time=2.35s
+04:56:27|INFO   |epoch 23/40 lr=0.04218 batch_loss_mean=0.1248 time=2.27s
+04:56:30|INFO   |epoch 24/40 lr=0.03833 batch_loss_mean=0.1178 time=2.29s
+04:56:32|INFO   |epoch 25/40 lr=0.03455 batch_loss_mean=0.1110 time=2.29s
+04:56:34|INFO   |epoch 26/40 lr=0.03087 batch_loss_mean=0.1036 time=2.23s
+04:56:37|INFO   |epoch 27/40 lr=0.02730 batch_loss_mean=0.0955 time=2.31s
+04:56:39|INFO   |epoch 28/40 lr=0.02388 batch_loss_mean=0.0881 time=2.27s
+04:56:41|INFO   |epoch 29/40 lr=0.02061 batch_loss_mean=0.0810 time=2.32s
+04:56:43|INFO   |epoch 30/40 lr=0.01753 batch_loss_mean=0.0741 time=2.30s
+04:56:46|INFO   |epoch 31/40 lr=0.01464 batch_loss_mean=0.0696 time=2.30s
+04:56:48|INFO   |epoch 32/40 lr=0.01198 batch_loss_mean=0.0630 time=2.27s
+04:56:50|INFO   |epoch 33/40 lr=0.00955 batch_loss_mean=0.0570 time=2.28s
+04:56:53|INFO   |epoch 34/40 lr=0.00737 batch_loss_mean=0.0519 time=2.28s
+04:56:55|INFO   |epoch 35/40 lr=0.00545 batch_loss_mean=0.0478 time=2.26s
+04:56:57|INFO   |epoch 36/40 lr=0.00381 batch_loss_mean=0.0442 time=2.36s
+04:57:00|INFO   |epoch 37/40 lr=0.00245 batch_loss_mean=0.0415 time=2.63s
+04:57:02|INFO   |epoch 38/40 lr=0.00138 batch_loss_mean=0.0398 time=2.34s
+04:57:05|INFO   |epoch 39/40 lr=0.00062 batch_loss_mean=0.0386 time=2.36s
+04:57:07|INFO   |epoch 40/40 lr=0.00015 batch_loss_mean=0.0378 time=2.68s
+04:57:07|INFO   |EVAL ep=40 train_loss=0.03740 val_acc=0.9321 val_nll=0.2096 (no test logits)
+04:57:07|INFO   |DONE tune_sam_lr0.1_rho0.05_E40_s100: final_train_loss=0.03740 mean_epoch_time=2.32s
+04:57:08|INFO   |tune sam lr=0.1 rho=0.05: val_nll=0.2096 val_acc=0.9321
+04:57:08|INFO   |START tune_sam_lr0.1_rho0.1_E40_s100: condition=sam lr=0.1 rho=0.1 seed=100 epochs=40 save=(40,) include_test=False
+04:57:16|INFO   |epoch 1/40 lr=0.10000 batch_loss_mean=0.6404 time=8.34s
+04:57:19|INFO   |epoch 2/40 lr=0.09985 batch_loss_mean=0.3303 time=3.38s
+04:57:22|INFO   |epoch 3/40 lr=0.09938 batch_loss_mean=0.2939 time=2.50s
+04:57:24|INFO   |epoch 4/40 lr=0.09862 batch_loss_mean=0.2627 time=2.41s
+04:57:27|INFO   |epoch 5/40 lr=0.09755 batch_loss_mean=0.2517 time=2.40s
+04:57:29|INFO   |epoch 6/40 lr=0.09619 batch_loss_mean=0.2374 time=2.38s
+04:57:31|INFO   |epoch 7/40 lr=0.09455 batch_loss_mean=0.2334 time=2.46s
+04:57:34|INFO   |epoch 8/40 lr=0.09263 batch_loss_mean=0.2251 time=2.47s
+04:57:37|INFO   |epoch 9/40 lr=0.09045 batch_loss_mean=0.2231 time=3.58s
+04:57:40|INFO   |epoch 10/40 lr=0.08802 batch_loss_mean=0.2143 time=2.36s
+04:57:42|INFO   |epoch 11/40 lr=0.08536 batch_loss_mean=0.2077 time=2.34s
+04:57:44|INFO   |epoch 12/40 lr=0.08247 batch_loss_mean=0.2022 time=2.31s
+04:57:47|INFO   |epoch 13/40 lr=0.07939 batch_loss_mean=0.1964 time=2.31s
+04:57:49|INFO   |epoch 14/40 lr=0.07612 batch_loss_mean=0.1902 time=2.32s
+04:57:51|INFO   |epoch 15/40 lr=0.07270 batch_loss_mean=0.1848 time=2.25s
+04:57:54|INFO   |epoch 16/40 lr=0.06913 batch_loss_mean=0.1795 time=2.25s
+04:57:56|INFO   |epoch 17/40 lr=0.06545 batch_loss_mean=0.1711 time=2.25s
+04:57:58|INFO   |epoch 18/40 lr=0.06167 batch_loss_mean=0.1658 time=2.27s
+04:58:00|INFO   |epoch 19/40 lr=0.05782 batch_loss_mean=0.1630 time=2.26s
+04:58:03|INFO   |epoch 20/40 lr=0.05392 batch_loss_mean=0.1549 time=2.27s
+04:58:05|INFO   |epoch 21/40 lr=0.05000 batch_loss_mean=0.1484 time=2.25s
+04:58:07|INFO   |epoch 22/40 lr=0.04608 batch_loss_mean=0.1436 time=2.33s
+04:58:09|INFO   |epoch 23/40 lr=0.04218 batch_loss_mean=0.1349 time=2.29s
+04:58:12|INFO   |epoch 24/40 lr=0.03833 batch_loss_mean=0.1285 time=2.27s
+04:58:14|INFO   |epoch 25/40 lr=0.03455 batch_loss_mean=0.1227 time=2.27s
+04:58:16|INFO   |epoch 26/40 lr=0.03087 batch_loss_mean=0.1173 time=2.25s
+04:58:19|INFO   |epoch 27/40 lr=0.02730 batch_loss_mean=0.1119 time=2.25s
+04:58:21|INFO   |epoch 28/40 lr=0.02388 batch_loss_mean=0.1047 time=2.24s
+04:58:23|INFO   |epoch 29/40 lr=0.02061 batch_loss_mean=0.0987 time=2.22s
+04:58:25|INFO   |epoch 30/40 lr=0.01753 batch_loss_mean=0.0931 time=2.28s
+04:58:28|INFO   |epoch 31/40 lr=0.01464 batch_loss_mean=0.0894 time=2.24s
+04:58:30|INFO   |epoch 32/40 lr=0.01198 batch_loss_mean=0.0830 time=2.22s
+04:58:32|INFO   |epoch 33/40 lr=0.00955 batch_loss_mean=0.0790 time=2.25s
+04:58:34|INFO   |epoch 34/40 lr=0.00737 batch_loss_mean=0.0756 time=2.27s
+04:58:37|INFO   |epoch 35/40 lr=0.00545 batch_loss_mean=0.0719 time=2.26s
+04:58:39|INFO   |epoch 36/40 lr=0.00381 batch_loss_mean=0.0692 time=2.35s
+04:58:41|INFO   |epoch 37/40 lr=0.00245 batch_loss_mean=0.0667 time=2.37s
+04:58:44|INFO   |epoch 38/40 lr=0.00138 batch_loss_mean=0.0653 time=2.28s
+04:58:46|INFO   |epoch 39/40 lr=0.00062 batch_loss_mean=0.0638 time=2.28s
+04:58:48|INFO   |epoch 40/40 lr=0.00015 batch_loss_mean=0.0635 time=2.28s
+04:58:48|INFO   |EVAL ep=40 train_loss=0.06292 val_acc=0.9303 val_nll=0.1932 (no test logits)
+04:58:48|INFO   |DONE tune_sam_lr0.1_rho0.1_E40_s100: final_train_loss=0.06292 mean_epoch_time=2.51s
+04:58:48|INFO   |tune sam lr=0.1 rho=0.1: val_nll=0.1932 val_acc=0.9303
+04:58:48|INFO   |START tune_sam_lr0.1_rho0.2_E40_s100: condition=sam lr=0.1 rho=0.2 seed=100 epochs=40 save=(40,) include_test=False
+04:58:51|INFO   |epoch 1/40 lr=0.10000 batch_loss_mean=2.2982 time=2.28s
+04:58:53|INFO   |epoch 2/40 lr=0.09985 batch_loss_mean=2.3016 time=2.30s
+04:58:55|INFO   |epoch 3/40 lr=0.09938 batch_loss_mean=2.3029 time=2.34s
+04:58:58|INFO   |epoch 4/40 lr=0.09862 batch_loss_mean=2.3034 time=2.27s
+04:59:00|INFO   |epoch 5/40 lr=0.09755 batch_loss_mean=2.3040 time=2.30s
+04:59:02|INFO   |epoch 6/40 lr=0.09619 batch_loss_mean=2.3044 time=2.26s
+04:59:04|INFO   |epoch 7/40 lr=0.09455 batch_loss_mean=2.3039 time=2.29s
+04:59:07|INFO   |epoch 8/40 lr=0.09263 batch_loss_mean=2.3044 time=2.31s
+04:59:09|INFO   |epoch 9/40 lr=0.09045 batch_loss_mean=2.3046 time=2.30s
+04:59:11|INFO   |epoch 10/40 lr=0.08802 batch_loss_mean=2.3047 time=2.29s
+04:59:14|INFO   |epoch 11/40 lr=0.08536 batch_loss_mean=2.3045 time=2.29s
+04:59:16|INFO   |epoch 12/40 lr=0.08247 batch_loss_mean=2.0749 time=2.33s
+04:59:18|INFO   |epoch 13/40 lr=0.07939 batch_loss_mean=0.6700 time=2.35s
+04:59:21|INFO   |epoch 14/40 lr=0.07612 batch_loss_mean=0.4134 time=2.33s
+04:59:23|INFO   |epoch 15/40 lr=0.07270 batch_loss_mean=0.3411 time=2.31s
+04:59:25|INFO   |epoch 16/40 lr=0.06913 batch_loss_mean=0.3131 time=2.32s
+04:59:28|INFO   |epoch 17/40 lr=0.06545 batch_loss_mean=0.2940 time=2.28s
+04:59:30|INFO   |epoch 18/40 lr=0.06167 batch_loss_mean=0.2828 time=2.25s
+04:59:32|INFO   |epoch 19/40 lr=0.05782 batch_loss_mean=0.2704 time=2.27s
+04:59:34|INFO   |epoch 20/40 lr=0.05392 batch_loss_mean=0.2572 time=2.23s
+04:59:37|INFO   |epoch 21/40 lr=0.05000 batch_loss_mean=0.2482 time=2.25s
+04:59:39|INFO   |epoch 22/40 lr=0.04608 batch_loss_mean=0.2427 time=2.29s
+04:59:41|INFO   |epoch 23/40 lr=0.04218 batch_loss_mean=0.2327 time=2.27s
+04:59:43|INFO   |epoch 24/40 lr=0.03833 batch_loss_mean=0.2272 time=2.33s
+04:59:46|INFO   |epoch 25/40 lr=0.03455 batch_loss_mean=0.2224 time=2.31s
+04:59:48|INFO   |epoch 26/40 lr=0.03087 batch_loss_mean=0.2156 time=2.34s
+04:59:50|INFO   |epoch 27/40 lr=0.02730 batch_loss_mean=0.2103 time=2.30s
+04:59:53|INFO   |epoch 28/40 lr=0.02388 batch_loss_mean=0.2047 time=2.23s
+04:59:55|INFO   |epoch 29/40 lr=0.02061 batch_loss_mean=0.1997 time=2.25s
+04:59:57|INFO   |epoch 30/40 lr=0.01753 batch_loss_mean=0.1966 time=2.30s
+04:59:59|INFO   |epoch 31/40 lr=0.01464 batch_loss_mean=0.1920 time=2.29s
+05:00:02|INFO   |epoch 32/40 lr=0.01198 batch_loss_mean=0.1889 time=2.26s
+05:00:04|INFO   |epoch 33/40 lr=0.00955 batch_loss_mean=0.1862 time=2.25s
+05:00:06|INFO   |epoch 34/40 lr=0.00737 batch_loss_mean=0.1834 time=2.29s
+05:00:09|INFO   |epoch 35/40 lr=0.00545 batch_loss_mean=0.1810 time=2.33s
+05:00:11|INFO   |epoch 36/40 lr=0.00381 batch_loss_mean=0.1792 time=2.27s
+05:00:13|INFO   |epoch 37/40 lr=0.00245 batch_loss_mean=0.1780 time=2.32s
+05:00:15|INFO   |epoch 38/40 lr=0.00138 batch_loss_mean=0.1770 time=2.28s
+05:00:18|INFO   |epoch 39/40 lr=0.00062 batch_loss_mean=0.1758 time=2.26s
+05:00:20|INFO   |epoch 40/40 lr=0.00015 batch_loss_mean=0.1752 time=2.27s
+05:00:20|INFO   |EVAL ep=40 train_loss=0.17502 val_acc=0.9234 val_nll=0.2082 (no test logits)
+05:00:20|INFO   |DONE tune_sam_lr0.1_rho0.2_E40_s100: final_train_loss=0.17502 mean_epoch_time=2.29s
+05:00:20|INFO   |tune sam lr=0.1 rho=0.2: val_nll=0.2082 val_acc=0.9234
+05:00:20|INFO   |Chosen: SGD lr=0.01; SAM lr=0.01 rho=0.1
+=== mode: final ===
+05:00:22|INFO   |method.py mode=final device=mps torch=2.16.0.dev20261116
+05:00:22|INFO   |Train-split normalisation: mean=0.2862 std=0.3531
+05:00:23|INFO   |Data: train=(50000, 1, 28, 28) val=(10000, 1, 28, 28) test=(10000, 1, 28, 28) device=mps
+05:00:23|INFO   |START final_sgd_lr0.01_E40_s0: condition=sgd lr=0.01 rho=None seed=0 epochs=40 save=(5, 15, 40) include_test=True
+05:00:25|INFO   |epoch 1/40 lr=0.01000 batch_loss_mean=0.4471 time=2.07s
+05:00:26|INFO   |epoch 2/40 lr=0.00998 batch_loss_mean=0.2867 time=1.29s
+05:00:27|INFO   |epoch 3/40 lr=0.00994 batch_loss_mean=0.2463 time=1.23s
+05:00:28|INFO   |epoch 4/40 lr=0.00986 batch_loss_mean=0.2148 time=1.22s
+05:00:30|INFO   |epoch 5/40 lr=0.00976 batch_loss_mean=0.1972 time=1.33s
+05:00:30|INFO   |EVAL ep=5 train_loss=0.20230 val_acc=0.9071 val_nll=0.2438 test_acc=0.8951
+05:00:31|INFO   |epoch 6/40 lr=0.00962 batch_loss_mean=0.1797 time=1.29s
+05:00:33|INFO   |epoch 7/40 lr=0.00946 batch_loss_mean=0.1653 time=1.25s
+05:00:34|INFO   |epoch 8/40 lr=0.00926 batch_loss_mean=0.1506 time=1.49s
+05:00:35|INFO   |epoch 9/40 lr=0.00905 batch_loss_mean=0.1336 time=1.34s
+05:00:37|INFO   |epoch 10/40 lr=0.00880 batch_loss_mean=0.1278 time=1.28s
+05:00:38|INFO   |epoch 11/40 lr=0.00854 batch_loss_mean=0.1156 time=1.46s
+05:00:39|INFO   |epoch 12/40 lr=0.00825 batch_loss_mean=0.1035 time=1.34s
+05:00:41|INFO   |epoch 13/40 lr=0.00794 batch_loss_mean=0.0939 time=1.26s
+05:00:42|INFO   |epoch 14/40 lr=0.00761 batch_loss_mean=0.0845 time=1.30s
+05:00:43|INFO   |epoch 15/40 lr=0.00727 batch_loss_mean=0.0745 time=1.26s
+05:00:44|INFO   |EVAL ep=15 train_loss=0.06941 val_acc=0.9220 val_nll=0.2297 test_acc=0.9179
+05:00:45|INFO   |epoch 16/40 lr=0.00691 batch_loss_mean=0.0655 time=1.25s
+05:00:46|INFO   |epoch 17/40 lr=0.00655 batch_loss_mean=0.0583 time=1.29s
+05:00:47|INFO   |epoch 18/40 lr=0.00617 batch_loss_mean=0.0509 time=1.27s
+05:00:49|INFO   |epoch 19/40 lr=0.00578 batch_loss_mean=0.0421 time=1.21s
+05:00:50|INFO   |epoch 20/40 lr=0.00539 batch_loss_mean=0.0362 time=1.28s
+05:00:51|INFO   |epoch 21/40 lr=0.00500 batch_loss_mean=0.0321 time=1.21s
+05:00:52|INFO   |epoch 22/40 lr=0.00461 batch_loss_mean=0.0266 time=1.27s
+05:00:54|INFO   |epoch 23/40 lr=0.00422 batch_loss_mean=0.0226 time=1.32s
+05:00:55|INFO   |epoch 24/40 lr=0.00383 batch_loss_mean=0.0182 time=1.22s
+05:00:56|INFO   |epoch 25/40 lr=0.00345 batch_loss_mean=0.0160 time=1.30s
+05:00:57|INFO   |epoch 26/40 lr=0.00309 batch_loss_mean=0.0140 time=1.29s
+05:00:59|INFO   |epoch 27/40 lr=0.00273 batch_loss_mean=0.0126 time=1.29s
+05:01:00|INFO   |epoch 28/40 lr=0.00239 batch_loss_mean=0.0117 time=1.34s
+05:01:02|INFO   |epoch 29/40 lr=0.00206 batch_loss_mean=0.0107 time=1.38s
+05:01:03|INFO   |epoch 30/40 lr=0.00175 batch_loss_mean=0.0101 time=1.23s
+05:01:04|INFO   |epoch 31/40 lr=0.00146 batch_loss_mean=0.0097 time=1.33s
+05:01:05|INFO   |epoch 32/40 lr=0.00120 batch_loss_mean=0.0092 time=1.33s
+05:01:07|INFO   |epoch 33/40 lr=0.00095 batch_loss_mean=0.0089 time=1.31s
+05:01:08|INFO   |epoch 34/40 lr=0.00074 batch_loss_mean=0.0087 time=1.31s
+05:01:09|INFO   |epoch 35/40 lr=0.00054 batch_loss_mean=0.0086 time=1.24s
+05:01:10|INFO   |epoch 36/40 lr=0.00038 batch_loss_mean=0.0084 time=1.19s
+05:01:12|INFO   |epoch 37/40 lr=0.00024 batch_loss_mean=0.0083 time=1.26s
+05:01:13|INFO   |epoch 38/40 lr=0.00014 batch_loss_mean=0.0082 time=1.18s
+05:01:14|INFO   |epoch 39/40 lr=0.00006 batch_loss_mean=0.0082 time=1.31s
+05:01:15|INFO   |epoch 40/40 lr=0.00002 batch_loss_mean=0.0081 time=1.23s
+05:01:16|INFO   |EVAL ep=40 train_loss=0.00817 val_acc=0.9309 val_nll=0.2532 test_acc=0.9227
+05:01:16|INFO   |DONE final_sgd_lr0.01_E40_s0: final_train_loss=0.00817 mean_epoch_time=1.31s
+05:01:16|INFO   |final sgd_lr0.01_E40_s0: T=1.8179 at_bound=False final_train_loss=0.00817 test_acc@40=0.9227
+05:01:16|INFO   |START final_sam_lr0.01_rho0.1_E40_s0: condition=sam lr=0.01 rho=0.1 seed=0 epochs=40 save=(5, 15, 40) include_test=True
+05:01:19|INFO   |epoch 1/40 lr=0.01000 batch_loss_mean=0.5486 time=2.33s
+05:01:21|INFO   |epoch 2/40 lr=0.00998 batch_loss_mean=0.3294 time=2.19s
+05:01:23|INFO   |epoch 3/40 lr=0.00994 batch_loss_mean=0.2870 time=2.19s
+05:01:25|INFO   |epoch 4/40 lr=0.00986 batch_loss_mean=0.2598 time=2.20s
+05:01:28|INFO   |epoch 5/40 lr=0.00976 batch_loss_mean=0.2404 time=2.24s
+05:01:28|INFO   |EVAL ep=5 train_loss=0.22737 val_acc=0.9118 val_nll=0.2382 test_acc=0.8988
+05:01:30|INFO   |epoch 6/40 lr=0.00962 batch_loss_mean=0.2283 time=2.27s
+05:01:32|INFO   |epoch 7/40 lr=0.00946 batch_loss_mean=0.2174 time=2.34s
+05:01:35|INFO   |epoch 8/40 lr=0.00926 batch_loss_mean=0.2066 time=2.26s
+05:01:37|INFO   |epoch 9/40 lr=0.00905 batch_loss_mean=0.1992 time=2.25s
+05:01:39|INFO   |epoch 10/40 lr=0.00880 batch_loss_mean=0.1915 time=2.34s
+05:01:42|INFO   |epoch 11/40 lr=0.00854 batch_loss_mean=0.1835 time=2.28s
+05:01:44|INFO   |epoch 12/40 lr=0.00825 batch_loss_mean=0.1766 time=2.19s
+05:01:46|INFO   |epoch 13/40 lr=0.00794 batch_loss_mean=0.1709 time=2.20s
+05:01:48|INFO   |epoch 14/40 lr=0.00761 batch_loss_mean=0.1656 time=2.22s
+05:01:50|INFO   |epoch 15/40 lr=0.00727 batch_loss_mean=0.1606 time=2.25s
+05:01:51|INFO   |EVAL ep=15 train_loss=0.15422 val_acc=0.9297 val_nll=0.1947 test_acc=0.9166
+05:01:53|INFO   |epoch 16/40 lr=0.00691 batch_loss_mean=0.1545 time=2.31s
+05:01:55|INFO   |epoch 17/40 lr=0.00655 batch_loss_mean=0.1507 time=2.24s
+05:01:57|INFO   |epoch 18/40 lr=0.00617 batch_loss_mean=0.1468 time=2.30s
+05:02:00|INFO   |epoch 19/40 lr=0.00578 batch_loss_mean=0.1428 time=2.34s
+05:02:02|INFO   |epoch 20/40 lr=0.00539 batch_loss_mean=0.1385 time=2.34s
+05:02:04|INFO   |epoch 21/40 lr=0.00500 batch_loss_mean=0.1351 time=2.32s
+05:02:07|INFO   |epoch 22/40 lr=0.00461 batch_loss_mean=0.1323 time=2.33s
+05:02:09|INFO   |epoch 23/40 lr=0.00422 batch_loss_mean=0.1291 time=2.36s
+05:02:11|INFO   |epoch 24/40 lr=0.00383 batch_loss_mean=0.1259 time=2.32s
+05:02:14|INFO   |epoch 25/40 lr=0.00345 batch_loss_mean=0.1229 time=2.28s
+05:02:16|INFO   |epoch 26/40 lr=0.00309 batch_loss_mean=0.1208 time=2.32s
+05:02:18|INFO   |epoch 27/40 lr=0.00273 batch_loss_mean=0.1185 time=2.35s
+05:02:21|INFO   |epoch 28/40 lr=0.00239 batch_loss_mean=0.1167 time=2.54s
+05:02:24|INFO   |epoch 29/40 lr=0.00206 batch_loss_mean=0.1147 time=2.67s
+05:02:28|INFO   |epoch 30/40 lr=0.00175 batch_loss_mean=0.1131 time=4.81s
+05:02:35|INFO   |epoch 31/40 lr=0.00146 batch_loss_mean=0.1119 time=6.42s
+05:02:38|INFO   |epoch 32/40 lr=0.00120 batch_loss_mean=0.1109 time=2.95s
+05:02:40|INFO   |epoch 33/40 lr=0.00095 batch_loss_mean=0.1096 time=2.52s
+05:02:43|INFO   |epoch 34/40 lr=0.00074 batch_loss_mean=0.1089 time=2.45s
+05:02:45|INFO   |epoch 35/40 lr=0.00054 batch_loss_mean=0.1083 time=2.40s
+05:02:48|INFO   |epoch 36/40 lr=0.00038 batch_loss_mean=0.1076 time=2.45s
+05:02:50|INFO   |epoch 37/40 lr=0.00024 batch_loss_mean=0.1070 time=2.34s
+05:02:52|INFO   |epoch 38/40 lr=0.00014 batch_loss_mean=0.1066 time=2.45s
+05:02:56|INFO   |epoch 39/40 lr=0.00006 batch_loss_mean=0.1063 time=3.44s
+05:02:58|INFO   |epoch 40/40 lr=0.00002 batch_loss_mean=0.1062 time=2.31s
+05:02:58|INFO   |EVAL ep=40 train_loss=0.10647 val_acc=0.9354 val_nll=0.1785 test_acc=0.9221
+05:02:58|INFO   |DONE final_sam_lr0.01_rho0.1_E40_s0: final_train_loss=0.10647 mean_epoch_time=2.53s
+05:02:59|INFO   |final sam_lr0.01_rho0.1_E40_s0: T=0.9349 at_bound=False final_train_loss=0.10647 test_acc@40=0.9221
+05:02:59|WARNING|final sam_lr0.01_rho0.1_E40_s0: eval train loss 0.10647 > 0.01; recorded, not extended
+05:02:59|INFO   |START final_sgd_lr0.01_E40_s1: condition=sgd lr=0.01 rho=None seed=1 epochs=40 save=(5, 15, 40) include_test=True
+05:03:01|INFO   |epoch 1/40 lr=0.01000 batch_loss_mean=0.4504 time=1.50s
+05:03:02|INFO   |epoch 2/40 lr=0.00998 batch_loss_mean=0.2870 time=1.31s
+05:03:03|INFO   |epoch 3/40 lr=0.00994 batch_loss_mean=0.2461 time=1.24s
+05:03:05|INFO   |epoch 4/40 lr=0.00986 batch_loss_mean=0.2235 time=1.36s
+05:03:06|INFO   |epoch 5/40 lr=0.00976 batch_loss_mean=0.2001 time=1.38s
+05:03:06|INFO   |EVAL ep=5 train_loss=0.21991 val_acc=0.9001 val_nll=0.2633 test_acc=0.8900
+05:03:08|INFO   |epoch 6/40 lr=0.00962 batch_loss_mean=0.1801 time=1.38s
+05:03:09|INFO   |epoch 7/40 lr=0.00946 batch_loss_mean=0.1659 time=1.42s
+05:03:10|INFO   |epoch 8/40 lr=0.00926 batch_loss_mean=0.1521 time=1.35s
+05:03:13|INFO   |epoch 9/40 lr=0.00905 batch_loss_mean=0.1345 time=2.42s
+05:03:14|INFO   |epoch 10/40 lr=0.00880 batch_loss_mean=0.1275 time=1.62s
+05:03:16|INFO   |epoch 11/40 lr=0.00854 batch_loss_mean=0.1117 time=1.39s
+05:03:17|INFO   |epoch 12/40 lr=0.00825 batch_loss_mean=0.1022 time=1.29s
+05:03:18|INFO   |epoch 13/40 lr=0.00794 batch_loss_mean=0.0921 time=1.33s
+05:03:20|INFO   |epoch 14/40 lr=0.00761 batch_loss_mean=0.0820 time=1.36s
+05:03:21|INFO   |epoch 15/40 lr=0.00727 batch_loss_mean=0.0726 time=1.28s
+05:03:21|INFO   |EVAL ep=15 train_loss=0.05666 val_acc=0.9261 val_nll=0.2318 test_acc=0.9194
+05:03:23|INFO   |epoch 16/40 lr=0.00691 batch_loss_mean=0.0617 time=1.30s
+05:03:24|INFO   |epoch 17/40 lr=0.00655 batch_loss_mean=0.0537 time=1.33s
+05:03:25|INFO   |epoch 18/40 lr=0.00617 batch_loss_mean=0.0495 time=1.32s
+05:03:27|INFO   |epoch 19/40 lr=0.00578 batch_loss_mean=0.0436 time=1.31s
+05:03:28|INFO   |epoch 20/40 lr=0.00539 batch_loss_mean=0.0361 time=1.34s
+05:03:29|INFO   |epoch 21/40 lr=0.00500 batch_loss_mean=0.0288 time=1.25s
+05:03:30|INFO   |epoch 22/40 lr=0.00461 batch_loss_mean=0.0241 time=1.28s
+05:03:32|INFO   |epoch 23/40 lr=0.00422 batch_loss_mean=0.0204 time=1.27s
+05:03:33|INFO   |epoch 24/40 lr=0.00383 batch_loss_mean=0.0177 time=1.28s
+05:03:34|INFO   |epoch 25/40 lr=0.00345 batch_loss_mean=0.0152 time=1.35s
+05:03:36|INFO   |epoch 26/40 lr=0.00309 batch_loss_mean=0.0133 time=1.37s
+05:03:37|INFO   |epoch 27/40 lr=0.00273 batch_loss_mean=0.0121 time=1.28s
+05:03:38|INFO   |epoch 28/40 lr=0.00239 batch_loss_mean=0.0110 time=1.37s
+05:03:40|INFO   |epoch 29/40 lr=0.00206 batch_loss_mean=0.0101 time=1.34s
+05:03:41|INFO   |epoch 30/40 lr=0.00175 batch_loss_mean=0.0095 time=1.22s
+05:03:42|INFO   |epoch 31/40 lr=0.00146 batch_loss_mean=0.0091 time=1.29s
+05:03:44|INFO   |epoch 32/40 lr=0.00120 batch_loss_mean=0.0087 time=1.48s
+05:03:45|INFO   |epoch 33/40 lr=0.00095 batch_loss_mean=0.0084 time=1.26s
+05:03:46|INFO   |epoch 34/40 lr=0.00074 batch_loss_mean=0.0082 time=1.33s
+05:03:48|INFO   |epoch 35/40 lr=0.00054 batch_loss_mean=0.0081 time=1.29s
+05:03:49|INFO   |epoch 36/40 lr=0.00038 batch_loss_mean=0.0079 time=1.27s
+05:03:50|INFO   |epoch 37/40 lr=0.00024 batch_loss_mean=0.0078 time=1.32s
+05:03:51|INFO   |epoch 38/40 lr=0.00014 batch_loss_mean=0.0078 time=1.30s
+05:03:53|INFO   |epoch 39/40 lr=0.00006 batch_loss_mean=0.0078 time=1.29s
+05:03:54|INFO   |epoch 40/40 lr=0.00002 batch_loss_mean=0.0077 time=1.34s
+05:03:54|INFO   |EVAL ep=40 train_loss=0.00744 val_acc=0.9287 val_nll=0.2654 test_acc=0.9208
+05:03:54|INFO   |DONE final_sgd_lr0.01_E40_s1: final_train_loss=0.00744 mean_epoch_time=1.36s
+05:03:55|INFO   |final sgd_lr0.01_E40_s1: T=1.8753 at_bound=False final_train_loss=0.00744 test_acc@40=0.9208
+05:03:55|INFO   |START final_sam_lr0.01_rho0.1_E40_s1: condition=sam lr=0.01 rho=0.1 seed=1 epochs=40 save=(5, 15, 40) include_test=True
+05:03:57|INFO   |epoch 1/40 lr=0.01000 batch_loss_mean=0.5591 time=2.33s
+05:04:00|INFO   |epoch 2/40 lr=0.00998 batch_loss_mean=0.3357 time=2.32s
+05:04:02|INFO   |epoch 3/40 lr=0.00994 batch_loss_mean=0.2913 time=2.27s
+05:04:04|INFO   |epoch 4/40 lr=0.00986 batch_loss_mean=0.2685 time=2.28s
+05:04:06|INFO   |epoch 5/40 lr=0.00976 batch_loss_mean=0.2485 time=2.27s
+05:04:07|INFO   |EVAL ep=5 train_loss=0.23167 val_acc=0.9088 val_nll=0.2447 test_acc=0.9027
+05:04:09|INFO   |epoch 6/40 lr=0.00962 batch_loss_mean=0.2319 time=2.26s
+05:04:11|INFO   |epoch 7/40 lr=0.00946 batch_loss_mean=0.2213 time=2.24s
+05:04:14|INFO   |epoch 8/40 lr=0.00926 batch_loss_mean=0.2124 time=2.31s
+05:04:16|INFO   |epoch 9/40 lr=0.00905 batch_loss_mean=0.2009 time=2.28s
+05:04:18|INFO   |epoch 10/40 lr=0.00880 batch_loss_mean=0.1940 time=2.26s
+05:04:20|INFO   |epoch 11/40 lr=0.00854 batch_loss_mean=0.1862 time=2.27s
+05:04:23|INFO   |epoch 12/40 lr=0.00825 batch_loss_mean=0.1806 time=2.24s
+05:04:25|INFO   |epoch 13/40 lr=0.00794 batch_loss_mean=0.1749 time=2.24s
+05:04:27|INFO   |epoch 14/40 lr=0.00761 batch_loss_mean=0.1695 time=2.27s
+05:04:29|INFO   |epoch 15/40 lr=0.00727 batch_loss_mean=0.1632 time=2.32s
+05:04:30|INFO   |EVAL ep=15 train_loss=0.15682 val_acc=0.9253 val_nll=0.2005 test_acc=0.9187
+05:04:32|INFO   |epoch 16/40 lr=0.00691 batch_loss_mean=0.1585 time=2.27s
+05:04:34|INFO   |epoch 17/40 lr=0.00655 batch_loss_mean=0.1539 time=2.29s
+05:04:37|INFO   |epoch 18/40 lr=0.00617 batch_loss_mean=0.1489 time=2.39s
+05:04:39|INFO   |epoch 19/40 lr=0.00578 batch_loss_mean=0.1454 time=2.39s
+05:04:41|INFO   |epoch 20/40 lr=0.00539 batch_loss_mean=0.1406 time=2.37s
+05:04:44|INFO   |epoch 21/40 lr=0.00500 batch_loss_mean=0.1368 time=2.34s
+05:04:46|INFO   |epoch 22/40 lr=0.00461 batch_loss_mean=0.1335 time=2.33s
+05:04:48|INFO   |epoch 23/40 lr=0.00422 batch_loss_mean=0.1305 time=2.29s
+05:04:51|INFO   |epoch 24/40 lr=0.00383 batch_loss_mean=0.1283 time=2.28s
+05:04:53|INFO   |epoch 25/40 lr=0.00345 batch_loss_mean=0.1253 time=2.27s
+05:04:55|INFO   |epoch 26/40 lr=0.00309 batch_loss_mean=0.1228 time=2.30s
+05:04:58|INFO   |epoch 27/40 lr=0.00273 batch_loss_mean=0.1204 time=2.37s
+05:05:00|INFO   |epoch 28/40 lr=0.00239 batch_loss_mean=0.1183 time=2.34s
+05:05:02|INFO   |epoch 29/40 lr=0.00206 batch_loss_mean=0.1164 time=2.37s
+05:05:05|INFO   |epoch 30/40 lr=0.00175 batch_loss_mean=0.1149 time=2.45s
+05:05:07|INFO   |epoch 31/40 lr=0.00146 batch_loss_mean=0.1135 time=2.38s
+05:05:10|INFO   |epoch 32/40 lr=0.00120 batch_loss_mean=0.1120 time=2.42s
+05:05:12|INFO   |epoch 33/40 lr=0.00095 batch_loss_mean=0.1110 time=2.32s
+05:05:14|INFO   |epoch 34/40 lr=0.00074 batch_loss_mean=0.1099 time=2.36s
+05:05:17|INFO   |epoch 35/40 lr=0.00054 batch_loss_mean=0.1093 time=2.40s
+05:05:19|INFO   |epoch 36/40 lr=0.00038 batch_loss_mean=0.1087 time=2.42s
+05:05:22|INFO   |epoch 37/40 lr=0.00024 batch_loss_mean=0.1083 time=2.44s
+05:05:24|INFO   |epoch 38/40 lr=0.00014 batch_loss_mean=0.1078 time=2.39s
+05:05:26|INFO   |epoch 39/40 lr=0.00006 batch_loss_mean=0.1079 time=2.30s
+05:05:29|INFO   |epoch 40/40 lr=0.00002 batch_loss_mean=0.1077 time=2.31s
+05:05:29|INFO   |EVAL ep=40 train_loss=0.10722 val_acc=0.9310 val_nll=0.1848 test_acc=0.9250
+05:05:29|INFO   |DONE final_sam_lr0.01_rho0.1_E40_s1: final_train_loss=0.10722 mean_epoch_time=2.32s
+05:05:29|INFO   |final sam_lr0.01_rho0.1_E40_s1: T=0.9539 at_bound=False final_train_loss=0.10722 test_acc@40=0.9250
+05:05:29|WARNING|final sam_lr0.01_rho0.1_E40_s1: eval train loss 0.10722 > 0.01; recorded, not extended
+05:05:29|INFO   |START final_sgd_lr0.01_E40_s2: condition=sgd lr=0.01 rho=None seed=2 epochs=40 save=(5, 15, 40) include_test=True
+05:05:31|INFO   |epoch 1/40 lr=0.01000 batch_loss_mean=0.4517 time=1.52s
+05:05:32|INFO   |epoch 2/40 lr=0.00998 batch_loss_mean=0.2835 time=1.39s
+05:05:34|INFO   |epoch 3/40 lr=0.00994 batch_loss_mean=0.2445 time=1.34s
+05:05:35|INFO   |epoch 4/40 lr=0.00986 batch_loss_mean=0.2228 time=1.30s
+05:05:36|INFO   |epoch 5/40 lr=0.00976 batch_loss_mean=0.1980 time=1.39s
+05:05:37|INFO   |EVAL ep=5 train_loss=0.18290 val_acc=0.9134 val_nll=0.2314 test_acc=0.9030
+05:05:38|INFO   |epoch 6/40 lr=0.00962 batch_loss_mean=0.1838 time=1.31s
+05:05:39|INFO   |epoch 7/40 lr=0.00946 batch_loss_mean=0.1660 time=1.30s
+05:05:41|INFO   |epoch 8/40 lr=0.00926 batch_loss_mean=0.1502 time=1.46s
+05:05:42|INFO   |epoch 9/40 lr=0.00905 batch_loss_mean=0.1358 time=1.29s
+05:05:43|INFO   |epoch 10/40 lr=0.00880 batch_loss_mean=0.1263 time=1.25s
+05:05:45|INFO   |epoch 11/40 lr=0.00854 batch_loss_mean=0.1161 time=1.30s
+05:05:46|INFO   |epoch 12/40 lr=0.00825 batch_loss_mean=0.1066 time=1.32s
+05:05:47|INFO   |epoch 13/40 lr=0.00794 batch_loss_mean=0.0929 time=1.30s
+05:05:49|INFO   |epoch 14/40 lr=0.00761 batch_loss_mean=0.0840 time=1.30s
+05:05:50|INFO   |epoch 15/40 lr=0.00727 batch_loss_mean=0.0764 time=1.30s
+05:05:50|INFO   |EVAL ep=15 train_loss=0.06533 val_acc=0.9246 val_nll=0.2225 test_acc=0.9150
+05:05:51|INFO   |epoch 16/40 lr=0.00691 batch_loss_mean=0.0674 time=1.25s
+05:05:53|INFO   |epoch 17/40 lr=0.00655 batch_loss_mean=0.0582 time=1.26s
+05:05:54|INFO   |epoch 18/40 lr=0.00617 batch_loss_mean=0.0496 time=1.29s
+05:05:55|INFO   |epoch 19/40 lr=0.00578 batch_loss_mean=0.0430 time=1.26s
+05:05:56|INFO   |epoch 20/40 lr=0.00539 batch_loss_mean=0.0373 time=1.27s
+05:05:58|INFO   |epoch 21/40 lr=0.00500 batch_loss_mean=0.0316 time=1.26s
+05:05:59|INFO   |epoch 22/40 lr=0.00461 batch_loss_mean=0.0267 time=1.28s
+05:06:00|INFO   |epoch 23/40 lr=0.00422 batch_loss_mean=0.0234 time=1.28s
+05:06:02|INFO   |epoch 24/40 lr=0.00383 batch_loss_mean=0.0209 time=1.26s
+05:06:03|INFO   |epoch 25/40 lr=0.00345 batch_loss_mean=0.0173 time=1.23s
+05:06:04|INFO   |epoch 26/40 lr=0.00309 batch_loss_mean=0.0150 time=1.28s
+05:06:05|INFO   |epoch 27/40 lr=0.00273 batch_loss_mean=0.0132 time=1.26s
+05:06:07|INFO   |epoch 28/40 lr=0.00239 batch_loss_mean=0.0122 time=1.28s
+05:06:08|INFO   |epoch 29/40 lr=0.00206 batch_loss_mean=0.0112 time=1.27s
+05:06:09|INFO   |epoch 30/40 lr=0.00175 batch_loss_mean=0.0106 time=1.34s
+05:06:10|INFO   |epoch 31/40 lr=0.00146 batch_loss_mean=0.0100 time=1.30s
+05:06:12|INFO   |epoch 32/40 lr=0.00120 batch_loss_mean=0.0096 time=1.29s
+05:06:13|INFO   |epoch 33/40 lr=0.00095 batch_loss_mean=0.0093 time=1.26s
+05:06:14|INFO   |epoch 34/40 lr=0.00074 batch_loss_mean=0.0091 time=1.28s
+05:06:16|INFO   |epoch 35/40 lr=0.00054 batch_loss_mean=0.0089 time=1.29s
+05:06:17|INFO   |epoch 36/40 lr=0.00038 batch_loss_mean=0.0087 time=1.23s
+05:06:18|INFO   |epoch 37/40 lr=0.00024 batch_loss_mean=0.0086 time=1.24s
+05:06:19|INFO   |epoch 38/40 lr=0.00014 batch_loss_mean=0.0085 time=1.24s
+05:06:21|INFO   |epoch 39/40 lr=0.00006 batch_loss_mean=0.0085 time=1.29s
+05:06:22|INFO   |epoch 40/40 lr=0.00002 batch_loss_mean=0.0084 time=1.24s
+05:06:22|INFO   |EVAL ep=40 train_loss=0.00813 val_acc=0.9294 val_nll=0.2568 test_acc=0.9215
+05:06:22|INFO   |DONE final_sgd_lr0.01_E40_s2: final_train_loss=0.00813 mean_epoch_time=1.30s
+05:06:23|INFO   |final sgd_lr0.01_E40_s2: T=1.8501 at_bound=False final_train_loss=0.00813 test_acc@40=0.9215
+05:06:23|INFO   |START final_sam_lr0.01_rho0.1_E40_s2: condition=sam lr=0.01 rho=0.1 seed=2 epochs=40 save=(5, 15, 40) include_test=True
+05:06:25|INFO   |epoch 1/40 lr=0.01000 batch_loss_mean=0.5768 time=2.26s
+05:06:27|INFO   |epoch 2/40 lr=0.00998 batch_loss_mean=0.3413 time=2.28s
+05:06:30|INFO   |epoch 3/40 lr=0.00994 batch_loss_mean=0.2940 time=2.32s
+05:06:32|INFO   |epoch 4/40 lr=0.00986 batch_loss_mean=0.2666 time=2.30s
+05:06:34|INFO   |epoch 5/40 lr=0.00976 batch_loss_mean=0.2478 time=2.30s
+05:06:34|INFO   |EVAL ep=5 train_loss=0.23058 val_acc=0.9122 val_nll=0.2389 test_acc=0.9015
+05:06:37|INFO   |epoch 6/40 lr=0.00962 batch_loss_mean=0.2337 time=2.36s
+05:06:39|INFO   |epoch 7/40 lr=0.00946 batch_loss_mean=0.2212 time=2.41s
+05:06:42|INFO   |epoch 8/40 lr=0.00926 batch_loss_mean=0.2121 time=2.44s
+05:06:44|INFO   |epoch 9/40 lr=0.00905 batch_loss_mean=0.2024 time=2.30s
+05:06:46|INFO   |epoch 10/40 lr=0.00880 batch_loss_mean=0.1942 time=2.30s
+05:06:49|INFO   |epoch 11/40 lr=0.00854 batch_loss_mean=0.1870 time=2.32s
+05:06:51|INFO   |epoch 12/40 lr=0.00825 batch_loss_mean=0.1804 time=2.28s
+05:06:53|INFO   |epoch 13/40 lr=0.00794 batch_loss_mean=0.1741 time=2.27s
+05:06:55|INFO   |epoch 14/40 lr=0.00761 batch_loss_mean=0.1682 time=2.28s
+05:06:58|INFO   |epoch 15/40 lr=0.00727 batch_loss_mean=0.1633 time=2.35s
+05:06:58|INFO   |EVAL ep=15 train_loss=0.15596 val_acc=0.9263 val_nll=0.1989 test_acc=0.9146
+05:07:01|INFO   |epoch 16/40 lr=0.00691 batch_loss_mean=0.1580 time=2.46s
+05:07:03|INFO   |epoch 17/40 lr=0.00655 batch_loss_mean=0.1535 time=2.28s
+05:07:05|INFO   |epoch 18/40 lr=0.00617 batch_loss_mean=0.1493 time=2.32s
+05:07:07|INFO   |epoch 19/40 lr=0.00578 batch_loss_mean=0.1451 time=2.27s
+05:07:10|INFO   |epoch 20/40 lr=0.00539 batch_loss_mean=0.1412 time=2.32s
+05:07:12|INFO   |epoch 21/40 lr=0.00500 batch_loss_mean=0.1377 time=2.29s
+05:07:14|INFO   |epoch 22/40 lr=0.00461 batch_loss_mean=0.1349 time=2.27s
+05:07:17|INFO   |epoch 23/40 lr=0.00422 batch_loss_mean=0.1318 time=2.34s
+05:07:19|INFO   |epoch 24/40 lr=0.00383 batch_loss_mean=0.1294 time=2.28s
+05:07:21|INFO   |epoch 25/40 lr=0.00345 batch_loss_mean=0.1264 time=2.31s
+05:07:23|INFO   |epoch 26/40 lr=0.00309 batch_loss_mean=0.1239 time=2.30s
+05:07:26|INFO   |epoch 27/40 lr=0.00273 batch_loss_mean=0.1218 time=2.34s
+05:07:28|INFO   |epoch 28/40 lr=0.00239 batch_loss_mean=0.1200 time=2.29s
+05:07:30|INFO   |epoch 29/40 lr=0.00206 batch_loss_mean=0.1181 time=2.31s
+05:07:33|INFO   |epoch 30/40 lr=0.00175 batch_loss_mean=0.1163 time=2.34s
+05:07:35|INFO   |epoch 31/40 lr=0.00146 batch_loss_mean=0.1149 time=2.38s
+05:07:38|INFO   |epoch 32/40 lr=0.00120 batch_loss_mean=0.1139 time=2.65s
+05:07:41|INFO   |epoch 33/40 lr=0.00095 batch_loss_mean=0.1127 time=2.84s
+05:07:44|INFO   |epoch 34/40 lr=0.00074 batch_loss_mean=0.1119 time=3.20s
+05:07:46|INFO   |epoch 35/40 lr=0.00054 batch_loss_mean=0.1112 time=2.53s
+05:07:49|INFO   |epoch 36/40 lr=0.00038 batch_loss_mean=0.1105 time=2.33s
+05:07:51|INFO   |epoch 37/40 lr=0.00024 batch_loss_mean=0.1100 time=2.33s
+05:07:53|INFO   |epoch 38/40 lr=0.00014 batch_loss_mean=0.1098 time=2.44s
+05:07:57|INFO   |epoch 39/40 lr=0.00006 batch_loss_mean=0.1097 time=3.30s
+05:07:59|INFO   |epoch 40/40 lr=0.00002 batch_loss_mean=0.1095 time=2.30s
+05:07:59|INFO   |EVAL ep=40 train_loss=0.10910 val_acc=0.9341 val_nll=0.1816 test_acc=0.9229
+05:07:59|INFO   |DONE final_sam_lr0.01_rho0.1_E40_s2: final_train_loss=0.10910 mean_epoch_time=2.39s
+05:08:00|INFO   |final sam_lr0.01_rho0.1_E40_s2: T=0.9429 at_bound=False final_train_loss=0.10910 test_acc@40=0.9229
+05:08:00|WARNING|final sam_lr0.01_rho0.1_E40_s2: eval train loss 0.10910 > 0.01; recorded, not extended
+05:08:00|INFO   |START final_sgd_lr0.01_E40_s3: condition=sgd lr=0.01 rho=None seed=3 epochs=40 save=(5, 15, 40) include_test=True
+05:08:02|INFO   |epoch 1/40 lr=0.01000 batch_loss_mean=0.4469 time=1.47s
+05:08:03|INFO   |epoch 2/40 lr=0.00998 batch_loss_mean=0.2893 time=1.46s
+05:08:04|INFO   |epoch 3/40 lr=0.00994 batch_loss_mean=0.2464 time=1.36s
+05:08:06|INFO   |epoch 4/40 lr=0.00986 batch_loss_mean=0.2213 time=1.39s
+05:08:07|INFO   |epoch 5/40 lr=0.00976 batch_loss_mean=0.2029 time=1.34s
+05:08:07|INFO   |EVAL ep=5 train_loss=0.20090 val_acc=0.9059 val_nll=0.2486 test_acc=0.8968
+05:08:09|INFO   |epoch 6/40 lr=0.00962 batch_loss_mean=0.1870 time=1.32s
+05:08:10|INFO   |epoch 7/40 lr=0.00946 batch_loss_mean=0.1695 time=1.39s
+05:08:11|INFO   |epoch 8/40 lr=0.00926 batch_loss_mean=0.1542 time=1.32s
+05:08:13|INFO   |epoch 9/40 lr=0.00905 batch_loss_mean=0.1411 time=1.39s
+05:08:14|INFO   |epoch 10/40 lr=0.00880 batch_loss_mean=0.1281 time=1.35s
+05:08:15|INFO   |epoch 11/40 lr=0.00854 batch_loss_mean=0.1166 time=1.30s
+05:08:17|INFO   |epoch 12/40 lr=0.00825 batch_loss_mean=0.1067 time=1.36s
+05:08:19|INFO   |epoch 13/40 lr=0.00794 batch_loss_mean=0.0999 time=1.92s
+05:08:20|INFO   |epoch 14/40 lr=0.00761 batch_loss_mean=0.0853 time=1.58s
+05:08:22|INFO   |epoch 15/40 lr=0.00727 batch_loss_mean=0.0785 time=1.49s
+05:08:22|INFO   |EVAL ep=15 train_loss=0.06949 val_acc=0.9273 val_nll=0.2297 test_acc=0.9132
+05:08:23|INFO   |epoch 16/40 lr=0.00691 batch_loss_mean=0.0653 time=1.41s
+05:08:25|INFO   |epoch 17/40 lr=0.00655 batch_loss_mean=0.0595 time=1.49s
+05:08:27|INFO   |epoch 18/40 lr=0.00617 batch_loss_mean=0.0506 time=1.60s
+05:08:28|INFO   |epoch 19/40 lr=0.00578 batch_loss_mean=0.0434 time=1.38s
+05:08:29|INFO   |epoch 20/40 lr=0.00539 batch_loss_mean=0.0375 time=1.33s
+05:08:31|INFO   |epoch 21/40 lr=0.00500 batch_loss_mean=0.0320 time=1.47s
+05:08:32|INFO   |epoch 22/40 lr=0.00461 batch_loss_mean=0.0271 time=1.35s
+05:08:33|INFO   |epoch 23/40 lr=0.00422 batch_loss_mean=0.0226 time=1.33s
+05:08:35|INFO   |epoch 24/40 lr=0.00383 batch_loss_mean=0.0197 time=1.38s
+05:08:36|INFO   |epoch 25/40 lr=0.00345 batch_loss_mean=0.0162 time=1.37s
+05:08:37|INFO   |epoch 26/40 lr=0.00309 batch_loss_mean=0.0148 time=1.28s
+05:08:39|INFO   |epoch 27/40 lr=0.00273 batch_loss_mean=0.0134 time=1.31s
+05:08:40|INFO   |epoch 28/40 lr=0.00239 batch_loss_mean=0.0121 time=1.30s
+05:08:41|INFO   |epoch 29/40 lr=0.00206 batch_loss_mean=0.0111 time=1.42s
+05:08:43|INFO   |epoch 30/40 lr=0.00175 batch_loss_mean=0.0104 time=1.28s
+05:08:44|INFO   |epoch 31/40 lr=0.00146 batch_loss_mean=0.0100 time=1.33s
+05:08:48|INFO   |epoch 32/40 lr=0.00120 batch_loss_mean=0.0095 time=4.16s
+05:08:50|INFO   |epoch 33/40 lr=0.00095 batch_loss_mean=0.0093 time=2.13s
+05:08:52|INFO   |epoch 34/40 lr=0.00074 batch_loss_mean=0.0090 time=1.75s
+05:08:54|INFO   |epoch 35/40 lr=0.00054 batch_loss_mean=0.0088 time=1.39s
+05:08:55|INFO   |epoch 36/40 lr=0.00038 batch_loss_mean=0.0087 time=1.47s
+05:08:57|INFO   |epoch 37/40 lr=0.00024 batch_loss_mean=0.0086 time=1.82s
+05:08:59|INFO   |epoch 38/40 lr=0.00014 batch_loss_mean=0.0085 time=2.43s
+05:09:01|INFO   |epoch 39/40 lr=0.00006 batch_loss_mean=0.0084 time=1.53s
+05:09:02|INFO   |epoch 40/40 lr=0.00002 batch_loss_mean=0.0084 time=1.30s
+05:09:02|INFO   |EVAL ep=40 train_loss=0.00811 val_acc=0.9310 val_nll=0.2604 test_acc=0.9235
+05:09:02|INFO   |DONE final_sgd_lr0.01_E40_s3: final_train_loss=0.00811 mean_epoch_time=1.54s
+05:09:03|INFO   |final sgd_lr0.01_E40_s3: T=1.8538 at_bound=False final_train_loss=0.00811 test_acc@40=0.9235
+05:09:03|INFO   |START final_sam_lr0.01_rho0.1_E40_s3: condition=sam lr=0.01 rho=0.1 seed=3 epochs=40 save=(5, 15, 40) include_test=True
+05:09:05|INFO   |epoch 1/40 lr=0.01000 batch_loss_mean=0.5621 time=2.22s
+05:09:07|INFO   |epoch 2/40 lr=0.00998 batch_loss_mean=0.3486 time=2.22s
+05:09:10|INFO   |epoch 3/40 lr=0.00994 batch_loss_mean=0.2952 time=2.30s
+05:09:12|INFO   |epoch 4/40 lr=0.00986 batch_loss_mean=0.2679 time=2.26s
+05:09:14|INFO   |epoch 5/40 lr=0.00976 batch_loss_mean=0.2486 time=2.28s
+05:09:15|INFO   |EVAL ep=5 train_loss=0.23363 val_acc=0.9098 val_nll=0.2461 test_acc=0.8966
+05:09:17|INFO   |epoch 6/40 lr=0.00962 batch_loss_mean=0.2329 time=2.29s
+05:09:19|INFO   |epoch 7/40 lr=0.00946 batch_loss_mean=0.2218 time=2.27s
+05:09:21|INFO   |epoch 8/40 lr=0.00926 batch_loss_mean=0.2124 time=2.27s
+05:09:24|INFO   |epoch 9/40 lr=0.00905 batch_loss_mean=0.2018 time=2.26s
+05:09:26|INFO   |epoch 10/40 lr=0.00880 batch_loss_mean=0.1946 time=2.29s
+05:09:28|INFO   |epoch 11/40 lr=0.00854 batch_loss_mean=0.1885 time=2.29s
+05:09:31|INFO   |epoch 12/40 lr=0.00825 batch_loss_mean=0.1805 time=2.29s
+05:09:33|INFO   |epoch 13/40 lr=0.00794 batch_loss_mean=0.1741 time=2.29s
+05:09:35|INFO   |epoch 14/40 lr=0.00761 batch_loss_mean=0.1685 time=2.31s
+05:09:38|INFO   |epoch 15/40 lr=0.00727 batch_loss_mean=0.1633 time=3.33s
+05:09:39|INFO   |EVAL ep=15 train_loss=0.15549 val_acc=0.9309 val_nll=0.1973 test_acc=0.9174
+05:09:41|INFO   |epoch 16/40 lr=0.00691 batch_loss_mean=0.1578 time=2.31s
+05:09:43|INFO   |epoch 17/40 lr=0.00655 batch_loss_mean=0.1532 time=2.28s
+05:09:46|INFO   |epoch 18/40 lr=0.00617 batch_loss_mean=0.1493 time=2.26s
+05:09:48|INFO   |epoch 19/40 lr=0.00578 batch_loss_mean=0.1451 time=2.26s
+05:09:50|INFO   |epoch 20/40 lr=0.00539 batch_loss_mean=0.1408 time=2.25s
+05:09:52|INFO   |epoch 21/40 lr=0.00500 batch_loss_mean=0.1381 time=2.27s
+05:09:55|INFO   |epoch 22/40 lr=0.00461 batch_loss_mean=0.1350 time=2.27s
+05:09:57|INFO   |epoch 23/40 lr=0.00422 batch_loss_mean=0.1317 time=2.34s
+05:09:59|INFO   |epoch 24/40 lr=0.00383 batch_loss_mean=0.1285 time=2.29s
+05:10:02|INFO   |epoch 25/40 lr=0.00345 batch_loss_mean=0.1259 time=2.37s
+05:10:04|INFO   |epoch 26/40 lr=0.00309 batch_loss_mean=0.1235 time=2.29s
+05:10:06|INFO   |epoch 27/40 lr=0.00273 batch_loss_mean=0.1213 time=2.25s
+05:10:08|INFO   |epoch 28/40 lr=0.00239 batch_loss_mean=0.1195 time=2.23s
+05:10:11|INFO   |epoch 29/40 lr=0.00206 batch_loss_mean=0.1174 time=2.25s
+05:10:13|INFO   |epoch 30/40 lr=0.00175 batch_loss_mean=0.1157 time=2.24s
+05:10:16|INFO   |epoch 31/40 lr=0.00146 batch_loss_mean=0.1146 time=2.73s
+05:10:18|INFO   |epoch 32/40 lr=0.00120 batch_loss_mean=0.1131 time=2.27s
+05:10:20|INFO   |epoch 33/40 lr=0.00095 batch_loss_mean=0.1121 time=2.28s
+05:10:23|INFO   |epoch 34/40 lr=0.00074 batch_loss_mean=0.1113 time=2.43s
+05:10:25|INFO   |epoch 35/40 lr=0.00054 batch_loss_mean=0.1105 time=2.33s
+05:10:27|INFO   |epoch 36/40 lr=0.00038 batch_loss_mean=0.1100 time=2.36s
+05:10:30|INFO   |epoch 37/40 lr=0.00024 batch_loss_mean=0.1095 time=2.38s
+05:10:32|INFO   |epoch 38/40 lr=0.00014 batch_loss_mean=0.1092 time=2.35s
+05:10:34|INFO   |epoch 39/40 lr=0.00006 batch_loss_mean=0.1091 time=2.29s
+05:10:37|INFO   |epoch 40/40 lr=0.00002 batch_loss_mean=0.1089 time=2.24s
+05:10:37|INFO   |EVAL ep=40 train_loss=0.10868 val_acc=0.9351 val_nll=0.1822 test_acc=0.9243
+05:10:37|INFO   |DONE final_sam_lr0.01_rho0.1_E40_s3: final_train_loss=0.10868 mean_epoch_time=2.32s
+05:10:37|INFO   |final sam_lr0.01_rho0.1_E40_s3: T=0.9372 at_bound=False final_train_loss=0.10868 test_acc@40=0.9243
+05:10:37|WARNING|final sam_lr0.01_rho0.1_E40_s3: eval train loss 0.10868 > 0.01; recorded, not extended
+05:10:37|INFO   |START final_sgd_lr0.01_E40_s4: condition=sgd lr=0.01 rho=None seed=4 epochs=40 save=(5, 15, 40) include_test=True
+05:10:39|INFO   |epoch 1/40 lr=0.01000 batch_loss_mean=0.4497 time=1.78s
+05:10:41|INFO   |epoch 2/40 lr=0.00998 batch_loss_mean=0.2910 time=1.61s
+05:10:43|INFO   |epoch 3/40 lr=0.00994 batch_loss_mean=0.2474 time=1.76s
+05:10:44|INFO   |epoch 4/40 lr=0.00986 batch_loss_mean=0.2235 time=1.67s
+05:10:46|INFO   |epoch 5/40 lr=0.00976 batch_loss_mean=0.1978 time=1.69s
+05:10:46|INFO   |EVAL ep=5 train_loss=0.21054 val_acc=0.9048 val_nll=0.2586 test_acc=0.8919
+05:10:48|INFO   |epoch 6/40 lr=0.00962 batch_loss_mean=0.1843 time=1.41s
+05:10:49|INFO   |epoch 7/40 lr=0.00946 batch_loss_mean=0.1650 time=1.77s
+05:10:51|INFO   |epoch 8/40 lr=0.00926 batch_loss_mean=0.1509 time=1.66s
+05:10:53|INFO   |epoch 9/40 lr=0.00905 batch_loss_mean=0.1436 time=1.49s
+05:10:54|INFO   |epoch 10/40 lr=0.00880 batch_loss_mean=0.1275 time=1.76s
+05:10:56|INFO   |epoch 11/40 lr=0.00854 batch_loss_mean=0.1094 time=1.76s
+05:10:58|INFO   |epoch 12/40 lr=0.00825 batch_loss_mean=0.1042 time=1.77s
+05:11:00|INFO   |epoch 13/40 lr=0.00794 batch_loss_mean=0.0921 time=1.71s
+05:11:01|INFO   |epoch 14/40 lr=0.00761 batch_loss_mean=0.0814 time=1.72s
+05:11:03|INFO   |epoch 15/40 lr=0.00727 batch_loss_mean=0.0728 time=1.83s
+05:11:03|INFO   |EVAL ep=15 train_loss=0.07301 val_acc=0.9236 val_nll=0.2371 test_acc=0.9134
+05:11:05|INFO   |epoch 16/40 lr=0.00691 batch_loss_mean=0.0642 time=1.51s
+05:11:07|INFO   |epoch 17/40 lr=0.00655 batch_loss_mean=0.0550 time=1.65s
+05:11:08|INFO   |epoch 18/40 lr=0.00617 batch_loss_mean=0.0480 time=1.80s
+05:11:10|INFO   |epoch 19/40 lr=0.00578 batch_loss_mean=0.0416 time=1.82s
+05:11:12|INFO   |epoch 20/40 lr=0.00539 batch_loss_mean=0.0343 time=1.71s
+05:11:13|INFO   |epoch 21/40 lr=0.00500 batch_loss_mean=0.0282 time=1.51s
+05:11:15|INFO   |epoch 22/40 lr=0.00461 batch_loss_mean=0.0245 time=1.27s
+05:11:16|INFO   |epoch 23/40 lr=0.00422 batch_loss_mean=0.0204 time=1.22s
+05:11:17|INFO   |epoch 24/40 lr=0.00383 batch_loss_mean=0.0168 time=1.34s
+05:11:19|INFO   |epoch 25/40 lr=0.00345 batch_loss_mean=0.0151 time=1.53s
+05:11:20|INFO   |epoch 26/40 lr=0.00309 batch_loss_mean=0.0138 time=1.34s
+05:11:21|INFO   |epoch 27/40 lr=0.00273 batch_loss_mean=0.0118 time=1.25s
+05:11:23|INFO   |epoch 28/40 lr=0.00239 batch_loss_mean=0.0109 time=1.22s
+05:11:24|INFO   |epoch 29/40 lr=0.00206 batch_loss_mean=0.0101 time=1.32s
+05:11:25|INFO   |epoch 30/40 lr=0.00175 batch_loss_mean=0.0095 time=1.35s
+05:11:27|INFO   |epoch 31/40 lr=0.00146 batch_loss_mean=0.0092 time=1.31s
+05:11:28|INFO   |epoch 32/40 lr=0.00120 batch_loss_mean=0.0089 time=1.28s
+05:11:29|INFO   |epoch 33/40 lr=0.00095 batch_loss_mean=0.0086 time=1.36s
+05:11:31|INFO   |epoch 34/40 lr=0.00074 batch_loss_mean=0.0084 time=1.56s
+05:11:32|INFO   |epoch 35/40 lr=0.00054 batch_loss_mean=0.0082 time=1.57s
+05:11:34|INFO   |epoch 36/40 lr=0.00038 batch_loss_mean=0.0081 time=1.64s
+05:11:35|INFO   |epoch 37/40 lr=0.00024 batch_loss_mean=0.0080 time=1.40s
+05:11:37|INFO   |epoch 38/40 lr=0.00014 batch_loss_mean=0.0079 time=1.30s
+05:11:38|INFO   |epoch 39/40 lr=0.00006 batch_loss_mean=0.0079 time=1.24s
+05:11:39|INFO   |epoch 40/40 lr=0.00002 batch_loss_mean=0.0079 time=1.28s
+05:11:39|INFO   |EVAL ep=40 train_loss=0.00751 val_acc=0.9312 val_nll=0.2573 test_acc=0.9223
+05:11:39|INFO   |DONE final_sgd_lr0.01_E40_s4: final_train_loss=0.00751 mean_epoch_time=1.53s
+05:11:40|INFO   |final sgd_lr0.01_E40_s4: T=1.8604 at_bound=False final_train_loss=0.00751 test_acc@40=0.9223
+05:11:40|INFO   |START final_sam_lr0.01_rho0.1_E40_s4: condition=sam lr=0.01 rho=0.1 seed=4 epochs=40 save=(5, 15, 40) include_test=True
+05:11:42|INFO   |epoch 1/40 lr=0.01000 batch_loss_mean=0.5609 time=2.22s
+05:11:44|INFO   |epoch 2/40 lr=0.00998 batch_loss_mean=0.3384 time=2.16s
+05:11:47|INFO   |epoch 3/40 lr=0.00994 batch_loss_mean=0.2897 time=2.16s
+05:11:49|INFO   |epoch 4/40 lr=0.00986 batch_loss_mean=0.2630 time=2.18s
+05:11:51|INFO   |epoch 5/40 lr=0.00976 batch_loss_mean=0.2432 time=2.19s
+05:11:51|INFO   |EVAL ep=5 train_loss=0.24048 val_acc=0.9057 val_nll=0.2531 test_acc=0.8944
+05:11:53|INFO   |epoch 6/40 lr=0.00962 batch_loss_mean=0.2299 time=2.24s
+05:11:56|INFO   |epoch 7/40 lr=0.00946 batch_loss_mean=0.2176 time=2.20s
+05:11:58|INFO   |epoch 8/40 lr=0.00926 batch_loss_mean=0.2079 time=2.22s
+05:12:00|INFO   |epoch 9/40 lr=0.00905 batch_loss_mean=0.1976 time=2.25s
+05:12:02|INFO   |epoch 10/40 lr=0.00880 batch_loss_mean=0.1902 time=2.23s
+05:12:05|INFO   |epoch 11/40 lr=0.00854 batch_loss_mean=0.1822 time=2.21s
+05:12:07|INFO   |epoch 12/40 lr=0.00825 batch_loss_mean=0.1760 time=2.24s
+05:12:09|INFO   |epoch 13/40 lr=0.00794 batch_loss_mean=0.1716 time=2.29s
+05:12:12|INFO   |epoch 14/40 lr=0.00761 batch_loss_mean=0.1652 time=2.40s
+05:12:14|INFO   |epoch 15/40 lr=0.00727 batch_loss_mean=0.1595 time=2.31s
+05:12:14|INFO   |EVAL ep=15 train_loss=0.15514 val_acc=0.9258 val_nll=0.1993 test_acc=0.9164
+05:12:16|INFO   |epoch 16/40 lr=0.00691 batch_loss_mean=0.1546 time=2.27s
+05:12:19|INFO   |epoch 17/40 lr=0.00655 batch_loss_mean=0.1495 time=2.25s
+05:12:21|INFO   |epoch 18/40 lr=0.00617 batch_loss_mean=0.1459 time=2.27s
+05:12:23|INFO   |epoch 19/40 lr=0.00578 batch_loss_mean=0.1416 time=2.30s
+05:12:25|INFO   |epoch 20/40 lr=0.00539 batch_loss_mean=0.1372 time=2.27s
+05:12:28|INFO   |epoch 21/40 lr=0.00500 batch_loss_mean=0.1343 time=2.25s
+05:12:30|INFO   |epoch 22/40 lr=0.00461 batch_loss_mean=0.1303 time=2.32s
+05:12:32|INFO   |epoch 23/40 lr=0.00422 batch_loss_mean=0.1274 time=2.22s
+05:12:35|INFO   |epoch 24/40 lr=0.00383 batch_loss_mean=0.1242 time=2.74s
+05:12:37|INFO   |epoch 25/40 lr=0.00345 batch_loss_mean=0.1222 time=2.33s
+05:12:40|INFO   |epoch 26/40 lr=0.00309 batch_loss_mean=0.1198 time=2.24s
+05:12:42|INFO   |epoch 27/40 lr=0.00273 batch_loss_mean=0.1173 time=2.30s
+05:12:44|INFO   |epoch 28/40 lr=0.00239 batch_loss_mean=0.1155 time=2.23s
+05:12:46|INFO   |epoch 29/40 lr=0.00206 batch_loss_mean=0.1137 time=2.33s
+05:12:49|INFO   |epoch 30/40 lr=0.00175 batch_loss_mean=0.1119 time=2.30s
+05:12:51|INFO   |epoch 31/40 lr=0.00146 batch_loss_mean=0.1109 time=2.43s
+05:12:54|INFO   |epoch 32/40 lr=0.00120 batch_loss_mean=0.1096 time=2.35s
+05:12:56|INFO   |epoch 33/40 lr=0.00095 batch_loss_mean=0.1083 time=2.39s
+05:12:58|INFO   |epoch 34/40 lr=0.00074 batch_loss_mean=0.1077 time=2.38s
+05:13:01|INFO   |epoch 35/40 lr=0.00054 batch_loss_mean=0.1069 time=2.29s
+05:13:03|INFO   |epoch 36/40 lr=0.00038 batch_loss_mean=0.1062 time=2.23s
+05:13:05|INFO   |epoch 37/40 lr=0.00024 batch_loss_mean=0.1058 time=2.25s
+05:13:07|INFO   |epoch 38/40 lr=0.00014 batch_loss_mean=0.1057 time=2.31s
+05:13:10|INFO   |epoch 39/40 lr=0.00006 batch_loss_mean=0.1053 time=2.25s
+05:13:12|INFO   |epoch 40/40 lr=0.00002 batch_loss_mean=0.1054 time=2.28s
+05:13:12|INFO   |EVAL ep=40 train_loss=0.10473 val_acc=0.9324 val_nll=0.1797 test_acc=0.9238
+05:13:12|INFO   |DONE final_sam_lr0.01_rho0.1_E40_s4: final_train_loss=0.10473 mean_epoch_time=2.28s
+05:13:13|INFO   |final sam_lr0.01_rho0.1_E40_s4: T=0.9422 at_bound=False final_train_loss=0.10473 test_acc@40=0.9238
+05:13:13|WARNING|final sam_lr0.01_rho0.1_E40_s4: eval train loss 0.10473 > 0.01; recorded, not extended
+=== mode: compressed ===
+05:13:15|INFO   |method.py mode=compressed device=mps torch=2.16.0.dev20261116
+05:13:15|INFO   |Train-split normalisation: mean=0.2862 std=0.3531
+05:13:15|INFO   |Data: train=(50000, 1, 28, 28) val=(10000, 1, 28, 28) test=(10000, 1, 28, 28) device=mps
+05:13:15|INFO   |START compressed_sgd_lr0.01_E5_s0: condition=sgd lr=0.01 rho=None seed=0 epochs=5 save=(5,) include_test=True
+05:13:17|INFO   |epoch 1/5 lr=0.01000 batch_loss_mean=0.4471 time=2.32s
+05:13:19|INFO   |epoch 2/5 lr=0.00905 batch_loss_mean=0.2829 time=1.52s
+05:13:20|INFO   |epoch 3/5 lr=0.00655 batch_loss_mean=0.2328 time=1.57s
+05:13:22|INFO   |epoch 4/5 lr=0.00345 batch_loss_mean=0.1948 time=1.55s
+05:13:23|INFO   |epoch 5/5 lr=0.00095 batch_loss_mean=0.1720 time=1.38s
+05:13:24|INFO   |EVAL ep=5 train_loss=0.16512 val_acc=0.9243 val_nll=0.2025 test_acc=0.9141
+05:13:24|INFO   |DONE compressed_sgd_lr0.01_E5_s0: final_train_loss=0.16512 mean_epoch_time=1.67s
+05:13:24|INFO   |compressed done: sgd_lr0.01_E5_s0
+05:13:24|INFO   |START compressed_sam_lr0.01_rho0.1_E5_s0: condition=sam lr=0.01 rho=0.1 seed=0 epochs=5 save=(5,) include_test=True
+05:13:26|INFO   |epoch 1/5 lr=0.01000 batch_loss_mean=0.5486 time=2.39s
+05:13:28|INFO   |epoch 2/5 lr=0.00905 batch_loss_mean=0.3292 time=2.22s
+05:13:31|INFO   |epoch 3/5 lr=0.00655 batch_loss_mean=0.2847 time=2.25s
+05:13:33|INFO   |epoch 4/5 lr=0.00345 batch_loss_mean=0.2590 time=2.17s
+05:13:35|INFO   |epoch 5/5 lr=0.00095 batch_loss_mean=0.2459 time=2.19s
+05:13:35|INFO   |EVAL ep=5 train_loss=0.24238 val_acc=0.9101 val_nll=0.2463 test_acc=0.8961
+05:13:35|INFO   |DONE compressed_sam_lr0.01_rho0.1_E5_s0: final_train_loss=0.24238 mean_epoch_time=2.24s
+05:13:35|INFO   |compressed done: sam_lr0.01_rho0.1_E5_s0
+05:13:35|INFO   |START compressed_sgd_lr0.01_E15_s0: condition=sgd lr=0.01 rho=None seed=0 epochs=15 save=(15,) include_test=True
+05:13:37|INFO   |epoch 1/15 lr=0.01000 batch_loss_mean=0.4471 time=1.49s
+05:13:38|INFO   |epoch 2/15 lr=0.00989 batch_loss_mean=0.2861 time=1.42s
+05:13:40|INFO   |epoch 3/15 lr=0.00957 batch_loss_mean=0.2448 time=1.43s
+05:13:41|INFO   |epoch 4/15 lr=0.00905 batch_loss_mean=0.2126 time=1.37s
+05:13:42|INFO   |epoch 5/15 lr=0.00835 batch_loss_mean=0.1923 time=1.41s
+05:13:44|INFO   |epoch 6/15 lr=0.00750 batch_loss_mean=0.1723 time=1.60s
+05:13:45|INFO   |epoch 7/15 lr=0.00655 batch_loss_mean=0.1563 time=1.31s
+05:13:47|INFO   |epoch 8/15 lr=0.00552 batch_loss_mean=0.1381 time=1.42s
+05:13:48|INFO   |epoch 9/15 lr=0.00448 batch_loss_mean=0.1221 time=1.42s
+05:13:49|INFO   |epoch 10/15 lr=0.00345 batch_loss_mean=0.1090 time=1.21s
+05:13:51|INFO   |epoch 11/15 lr=0.00250 batch_loss_mean=0.0963 time=1.54s
+05:13:52|INFO   |epoch 12/15 lr=0.00165 batch_loss_mean=0.0864 time=1.36s
+05:13:54|INFO   |epoch 13/15 lr=0.00095 batch_loss_mean=0.0790 time=1.51s
+05:13:55|INFO   |epoch 14/15 lr=0.00043 batch_loss_mean=0.0740 time=1.42s
+05:13:57|INFO   |epoch 15/15 lr=0.00011 batch_loss_mean=0.0717 time=1.43s
+05:13:57|INFO   |EVAL ep=15 train_loss=0.07046 val_acc=0.9304 val_nll=0.1951 test_acc=0.9227
+05:13:57|INFO   |DONE compressed_sgd_lr0.01_E15_s0: final_train_loss=0.07046 mean_epoch_time=1.42s
+05:13:57|INFO   |compressed done: sgd_lr0.01_E15_s0
+05:13:57|INFO   |START compressed_sam_lr0.01_rho0.1_E15_s0: condition=sam lr=0.01 rho=0.1 seed=0 epochs=15 save=(15,) include_test=True
+05:13:59|INFO   |epoch 1/15 lr=0.01000 batch_loss_mean=0.5486 time=2.28s
+05:14:01|INFO   |epoch 2/15 lr=0.00989 batch_loss_mean=0.3291 time=2.28s
+05:14:04|INFO   |epoch 3/15 lr=0.00957 batch_loss_mean=0.2869 time=2.35s
+05:14:06|INFO   |epoch 4/15 lr=0.00905 batch_loss_mean=0.2594 time=2.36s
+05:14:08|INFO   |epoch 5/15 lr=0.00835 batch_loss_mean=0.2407 time=2.30s
+05:14:11|INFO   |epoch 6/15 lr=0.00750 batch_loss_mean=0.2283 time=2.28s
+05:14:13|INFO   |epoch 7/15 lr=0.00655 batch_loss_mean=0.2175 time=2.32s
+05:14:16|INFO   |epoch 8/15 lr=0.00552 batch_loss_mean=0.2074 time=3.17s
+05:14:18|INFO   |epoch 9/15 lr=0.00448 batch_loss_mean=0.2010 time=2.22s
+05:14:21|INFO   |epoch 10/15 lr=0.00345 batch_loss_mean=0.1939 time=2.27s
+05:14:23|INFO   |epoch 11/15 lr=0.00250 batch_loss_mean=0.1891 time=2.26s
+05:14:25|INFO   |epoch 12/15 lr=0.00165 batch_loss_mean=0.1849 time=2.25s
+05:14:27|INFO   |epoch 13/15 lr=0.00095 batch_loss_mean=0.1822 time=2.25s
+05:14:30|INFO   |epoch 14/15 lr=0.00043 batch_loss_mean=0.1803 time=2.22s
+05:14:32|INFO   |epoch 15/15 lr=0.00011 batch_loss_mean=0.1794 time=2.23s
+05:14:32|INFO   |EVAL ep=15 train_loss=0.17904 val_acc=0.9260 val_nll=0.2035 test_acc=0.9129
+05:14:32|INFO   |DONE compressed_sam_lr0.01_rho0.1_E15_s0: final_train_loss=0.17904 mean_epoch_time=2.34s
+05:14:32|INFO   |compressed done: sam_lr0.01_rho0.1_E15_s0
+05:14:32|INFO   |START compressed_sgd_lr0.01_E5_s1: condition=sgd lr=0.01 rho=None seed=1 epochs=5 save=(5,) include_test=True
+05:14:34|INFO   |epoch 1/5 lr=0.01000 batch_loss_mean=0.4504 time=1.39s
+05:14:35|INFO   |epoch 2/5 lr=0.00905 batch_loss_mean=0.2835 time=1.58s
+05:14:37|INFO   |epoch 3/5 lr=0.00655 batch_loss_mean=0.2332 time=1.51s
+05:14:38|INFO   |epoch 4/5 lr=0.00345 batch_loss_mean=0.1996 time=1.64s
+05:14:40|INFO   |epoch 5/5 lr=0.00095 batch_loss_mean=0.1729 time=1.52s
+05:14:40|INFO   |EVAL ep=5 train_loss=0.16314 val_acc=0.9237 val_nll=0.2057 test_acc=0.9151
+05:14:40|INFO   |DONE compressed_sgd_lr0.01_E5_s1: final_train_loss=0.16314 mean_epoch_time=1.53s
+05:14:40|INFO   |compressed done: sgd_lr0.01_E5_s1
+05:14:40|INFO   |START compressed_sam_lr0.01_rho0.1_E5_s1: condition=sam lr=0.01 rho=0.1 seed=1 epochs=5 save=(5,) include_test=True
+05:14:42|INFO   |epoch 1/5 lr=0.01000 batch_loss_mean=0.5591 time=2.24s
+05:14:45|INFO   |epoch 2/5 lr=0.00905 batch_loss_mean=0.3352 time=2.24s
+05:14:47|INFO   |epoch 3/5 lr=0.00655 batch_loss_mean=0.2888 time=2.22s
+05:14:49|INFO   |epoch 4/5 lr=0.00345 batch_loss_mean=0.2662 time=2.23s
+05:14:51|INFO   |epoch 5/5 lr=0.00095 batch_loss_mean=0.2529 time=2.22s
+05:14:52|INFO   |EVAL ep=5 train_loss=0.24791 val_acc=0.9053 val_nll=0.2541 test_acc=0.8970
+05:14:52|INFO   |DONE compressed_sam_lr0.01_rho0.1_E5_s1: final_train_loss=0.24791 mean_epoch_time=2.23s
+05:14:52|INFO   |compressed done: sam_lr0.01_rho0.1_E5_s1
+05:14:52|INFO   |START compressed_sgd_lr0.01_E15_s1: condition=sgd lr=0.01 rho=None seed=1 epochs=15 save=(15,) include_test=True
+05:14:53|INFO   |epoch 1/15 lr=0.01000 batch_loss_mean=0.4504 time=1.56s
+05:14:55|INFO   |epoch 2/15 lr=0.00989 batch_loss_mean=0.2873 time=1.49s
+05:14:56|INFO   |epoch 3/15 lr=0.00957 batch_loss_mean=0.2455 time=1.59s
+05:14:58|INFO   |epoch 4/15 lr=0.00905 batch_loss_mean=0.2202 time=1.52s
+05:14:59|INFO   |epoch 5/15 lr=0.00835 batch_loss_mean=0.1956 time=1.59s
+05:15:01|INFO   |epoch 6/15 lr=0.00750 batch_loss_mean=0.1736 time=1.54s
+05:15:03|INFO   |epoch 7/15 lr=0.00655 batch_loss_mean=0.1584 time=1.59s
+05:15:04|INFO   |epoch 8/15 lr=0.00552 batch_loss_mean=0.1375 time=1.66s
+05:15:06|INFO   |epoch 9/15 lr=0.00448 batch_loss_mean=0.1199 time=1.47s
+05:15:08|INFO   |epoch 10/15 lr=0.00345 batch_loss_mean=0.1061 time=1.80s
+05:15:09|INFO   |epoch 11/15 lr=0.00250 batch_loss_mean=0.0928 time=1.67s
+05:15:11|INFO   |epoch 12/15 lr=0.00165 batch_loss_mean=0.0834 time=1.73s
+05:15:13|INFO   |epoch 13/15 lr=0.00095 batch_loss_mean=0.0752 time=1.92s
+05:15:15|INFO   |epoch 14/15 lr=0.00043 batch_loss_mean=0.0706 time=1.77s
+05:15:17|INFO   |epoch 15/15 lr=0.00011 batch_loss_mean=0.0678 time=2.04s
+05:15:17|INFO   |EVAL ep=15 train_loss=0.06658 val_acc=0.9311 val_nll=0.1987 test_acc=0.9211
+05:15:17|INFO   |DONE compressed_sgd_lr0.01_E15_s1: final_train_loss=0.06658 mean_epoch_time=1.66s
+05:15:17|INFO   |compressed done: sgd_lr0.01_E15_s1
+05:15:17|INFO   |START compressed_sam_lr0.01_rho0.1_E15_s1: condition=sam lr=0.01 rho=0.1 seed=1 epochs=15 save=(15,) include_test=True
+05:15:21|INFO   |epoch 1/15 lr=0.01000 batch_loss_mean=0.5591 time=3.96s
+05:15:23|INFO   |epoch 2/15 lr=0.00989 batch_loss_mean=0.3354 time=2.41s
+05:15:26|INFO   |epoch 3/15 lr=0.00957 batch_loss_mean=0.2914 time=2.33s
+05:15:28|INFO   |epoch 4/15 lr=0.00905 batch_loss_mean=0.2672 time=2.31s
+05:15:30|INFO   |epoch 5/15 lr=0.00835 batch_loss_mean=0.2491 time=2.36s
+05:15:33|INFO   |epoch 6/15 lr=0.00750 batch_loss_mean=0.2324 time=2.25s
+05:15:35|INFO   |epoch 7/15 lr=0.00655 batch_loss_mean=0.2221 time=2.24s
+05:15:37|INFO   |epoch 8/15 lr=0.00552 batch_loss_mean=0.2125 time=2.29s
+05:15:40|INFO   |epoch 9/15 lr=0.00448 batch_loss_mean=0.2036 time=2.36s
+05:15:42|INFO   |epoch 10/15 lr=0.00345 batch_loss_mean=0.1981 time=2.43s
+05:15:45|INFO   |epoch 11/15 lr=0.00250 batch_loss_mean=0.1930 time=2.93s
+05:15:47|INFO   |epoch 12/15 lr=0.00165 batch_loss_mean=0.1896 time=2.33s
+05:15:49|INFO   |epoch 13/15 lr=0.00095 batch_loss_mean=0.1864 time=2.25s
+05:15:52|INFO   |epoch 14/15 lr=0.00043 batch_loss_mean=0.1851 time=2.22s
+05:15:54|INFO   |epoch 15/15 lr=0.00011 batch_loss_mean=0.1837 time=2.25s
+05:15:54|INFO   |EVAL ep=15 train_loss=0.18320 val_acc=0.9222 val_nll=0.2100 test_acc=0.9147
+05:15:54|INFO   |DONE compressed_sam_lr0.01_rho0.1_E15_s1: final_train_loss=0.18320 mean_epoch_time=2.46s
+05:15:54|INFO   |compressed done: sam_lr0.01_rho0.1_E15_s1
+05:15:54|INFO   |START compressed_sgd_lr0.01_E5_s2: condition=sgd lr=0.01 rho=None seed=2 epochs=5 save=(5,) include_test=True
+05:15:56|INFO   |epoch 1/5 lr=0.01000 batch_loss_mean=0.4517 time=1.47s
+05:15:57|INFO   |epoch 2/5 lr=0.00905 batch_loss_mean=0.2798 time=1.59s
+05:15:59|INFO   |epoch 3/5 lr=0.00655 batch_loss_mean=0.2312 time=1.67s
+05:16:01|INFO   |epoch 4/5 lr=0.00345 batch_loss_mean=0.1949 time=1.69s
+05:16:02|INFO   |epoch 5/5 lr=0.00095 batch_loss_mean=0.1714 time=1.65s
+05:16:03|INFO   |EVAL ep=5 train_loss=0.16287 val_acc=0.9242 val_nll=0.2035 test_acc=0.9151
+05:16:03|INFO   |DONE compressed_sgd_lr0.01_E5_s2: final_train_loss=0.16287 mean_epoch_time=1.62s
+05:16:03|INFO   |compressed done: sgd_lr0.01_E5_s2
+05:16:03|INFO   |START compressed_sam_lr0.01_rho0.1_E5_s2: condition=sam lr=0.01 rho=0.1 seed=2 epochs=5 save=(5,) include_test=True
+05:16:05|INFO   |epoch 1/5 lr=0.01000 batch_loss_mean=0.5768 time=2.27s
+05:16:07|INFO   |epoch 2/5 lr=0.00905 batch_loss_mean=0.3412 time=2.26s
+05:16:10|INFO   |epoch 3/5 lr=0.00655 batch_loss_mean=0.2916 time=2.25s
+05:16:12|INFO   |epoch 4/5 lr=0.00345 batch_loss_mean=0.2664 time=2.36s
+05:16:14|INFO   |epoch 5/5 lr=0.00095 batch_loss_mean=0.2539 time=2.36s
+05:16:15|INFO   |EVAL ep=5 train_loss=0.24959 val_acc=0.9064 val_nll=0.2537 test_acc=0.8942
+05:16:15|INFO   |DONE compressed_sam_lr0.01_rho0.1_E5_s2: final_train_loss=0.24959 mean_epoch_time=2.30s
+05:16:15|INFO   |compressed done: sam_lr0.01_rho0.1_E5_s2
+05:16:15|INFO   |START compressed_sgd_lr0.01_E15_s2: condition=sgd lr=0.01 rho=None seed=2 epochs=15 save=(15,) include_test=True
+05:16:16|INFO   |epoch 1/15 lr=0.01000 batch_loss_mean=0.4517 time=1.76s
+05:16:18|INFO   |epoch 2/15 lr=0.00989 batch_loss_mean=0.2830 time=1.68s
+05:16:20|INFO   |epoch 3/15 lr=0.00957 batch_loss_mean=0.2430 time=1.75s
+05:16:22|INFO   |epoch 4/15 lr=0.00905 batch_loss_mean=0.2198 time=1.79s
+05:16:23|INFO   |epoch 5/15 lr=0.00835 batch_loss_mean=0.1936 time=1.81s
+05:16:25|INFO   |epoch 6/15 lr=0.00750 batch_loss_mean=0.1750 time=1.60s
+05:16:30|INFO   |epoch 7/15 lr=0.00655 batch_loss_mean=0.1551 time=5.27s
+05:16:34|INFO   |epoch 8/15 lr=0.00552 batch_loss_mean=0.1371 time=3.59s
+05:16:36|INFO   |epoch 9/15 lr=0.00448 batch_loss_mean=0.1224 time=2.30s
+05:16:38|INFO   |epoch 10/15 lr=0.00345 batch_loss_mean=0.1069 time=1.73s
+05:16:40|INFO   |epoch 11/15 lr=0.00250 batch_loss_mean=0.0941 time=1.80s
+05:16:41|INFO   |epoch 12/15 lr=0.00165 batch_loss_mean=0.0853 time=1.77s
+05:16:43|INFO   |epoch 13/15 lr=0.00095 batch_loss_mean=0.0778 time=1.62s
+05:16:45|INFO   |epoch 14/15 lr=0.00043 batch_loss_mean=0.0727 time=1.72s
+05:16:47|INFO   |epoch 15/15 lr=0.00011 batch_loss_mean=0.0699 time=1.87s
+05:16:47|INFO   |EVAL ep=15 train_loss=0.06902 val_acc=0.9312 val_nll=0.1929 test_acc=0.9225
+05:16:47|INFO   |DONE compressed_sgd_lr0.01_E15_s2: final_train_loss=0.06902 mean_epoch_time=2.14s
+05:16:47|INFO   |compressed done: sgd_lr0.01_E15_s2
+05:16:47|INFO   |START compressed_sam_lr0.01_rho0.1_E15_s2: condition=sam lr=0.01 rho=0.1 seed=2 epochs=15 save=(15,) include_test=True
+05:16:50|INFO   |epoch 1/15 lr=0.01000 batch_loss_mean=0.5768 time=3.29s
+05:16:53|INFO   |epoch 2/15 lr=0.00989 batch_loss_mean=0.3403 time=2.32s
+05:16:55|INFO   |epoch 3/15 lr=0.00957 batch_loss_mean=0.2931 time=2.26s
+05:16:57|INFO   |epoch 4/15 lr=0.00905 batch_loss_mean=0.2655 time=2.28s
+05:16:59|INFO   |epoch 5/15 lr=0.00835 batch_loss_mean=0.2479 time=2.28s
+05:17:02|INFO   |epoch 6/15 lr=0.00750 batch_loss_mean=0.2333 time=2.29s
+05:17:04|INFO   |epoch 7/15 lr=0.00655 batch_loss_mean=0.2208 time=2.23s
+05:17:06|INFO   |epoch 8/15 lr=0.00552 batch_loss_mean=0.2122 time=2.23s
+05:17:08|INFO   |epoch 9/15 lr=0.00448 batch_loss_mean=0.2039 time=2.17s
+05:17:11|INFO   |epoch 10/15 lr=0.00345 batch_loss_mean=0.1973 time=2.17s
+05:17:13|INFO   |epoch 11/15 lr=0.00250 batch_loss_mean=0.1925 time=2.16s
+05:17:15|INFO   |epoch 12/15 lr=0.00165 batch_loss_mean=0.1889 time=2.21s
+05:17:17|INFO   |epoch 13/15 lr=0.00095 batch_loss_mean=0.1853 time=2.24s
+05:17:19|INFO   |epoch 14/15 lr=0.00043 batch_loss_mean=0.1835 time=2.25s
+05:17:22|INFO   |epoch 15/15 lr=0.00011 batch_loss_mean=0.1827 time=2.22s
+05:17:22|INFO   |EVAL ep=15 train_loss=0.18213 val_acc=0.9224 val_nll=0.2082 test_acc=0.9125
+05:17:22|INFO   |DONE compressed_sam_lr0.01_rho0.1_E15_s2: final_train_loss=0.18213 mean_epoch_time=2.31s
+05:17:22|INFO   |compressed done: sam_lr0.01_rho0.1_E15_s2
+05:17:22|INFO   |START compressed_sgd_lr0.01_E5_s3: condition=sgd lr=0.01 rho=None seed=3 epochs=5 save=(5,) include_test=True
+05:17:23|INFO   |epoch 1/5 lr=0.01000 batch_loss_mean=0.4469 time=1.46s
+05:17:25|INFO   |epoch 2/5 lr=0.00905 batch_loss_mean=0.2862 time=1.56s
+05:17:27|INFO   |epoch 3/5 lr=0.00655 batch_loss_mean=0.2361 time=1.58s
+05:17:28|INFO   |epoch 4/5 lr=0.00345 batch_loss_mean=0.1999 time=1.42s
+05:17:29|INFO   |epoch 5/5 lr=0.00095 batch_loss_mean=0.1750 time=1.51s
+05:17:30|INFO   |EVAL ep=5 train_loss=0.16848 val_acc=0.9245 val_nll=0.2059 test_acc=0.9139
+05:17:30|INFO   |DONE compressed_sgd_lr0.01_E5_s3: final_train_loss=0.16848 mean_epoch_time=1.50s
+05:17:30|INFO   |compressed done: sgd_lr0.01_E5_s3
+05:17:30|INFO   |START compressed_sam_lr0.01_rho0.1_E5_s3: condition=sam lr=0.01 rho=0.1 seed=3 epochs=5 save=(5,) include_test=True
+05:17:32|INFO   |epoch 1/5 lr=0.01000 batch_loss_mean=0.5621 time=2.34s
+05:17:34|INFO   |epoch 2/5 lr=0.00905 batch_loss_mean=0.3478 time=2.22s
+05:17:37|INFO   |epoch 3/5 lr=0.00655 batch_loss_mean=0.2933 time=2.22s
+05:17:39|INFO   |epoch 4/5 lr=0.00345 batch_loss_mean=0.2668 time=2.20s
+05:17:41|INFO   |epoch 5/5 lr=0.00095 batch_loss_mean=0.2526 time=2.21s
+05:17:41|INFO   |EVAL ep=5 train_loss=0.25114 val_acc=0.9059 val_nll=0.2550 test_acc=0.8967
+05:17:41|INFO   |DONE compressed_sam_lr0.01_rho0.1_E5_s3: final_train_loss=0.25114 mean_epoch_time=2.24s
+05:17:41|INFO   |compressed done: sam_lr0.01_rho0.1_E5_s3
+05:17:41|INFO   |START compressed_sgd_lr0.01_E15_s3: condition=sgd lr=0.01 rho=None seed=3 epochs=15 save=(15,) include_test=True
+05:17:43|INFO   |epoch 1/15 lr=0.01000 batch_loss_mean=0.4469 time=1.43s
+05:17:44|INFO   |epoch 2/15 lr=0.00989 batch_loss_mean=0.2892 time=1.66s
+05:17:46|INFO   |epoch 3/15 lr=0.00957 batch_loss_mean=0.2455 time=1.50s
+05:17:47|INFO   |epoch 4/15 lr=0.00905 batch_loss_mean=0.2190 time=1.56s
+05:17:49|INFO   |epoch 5/15 lr=0.00835 batch_loss_mean=0.1989 time=1.46s
+05:17:50|INFO   |epoch 6/15 lr=0.00750 batch_loss_mean=0.1787 time=1.53s
+05:17:52|INFO   |epoch 7/15 lr=0.00655 batch_loss_mean=0.1581 time=1.36s
+05:17:53|INFO   |epoch 8/15 lr=0.00552 batch_loss_mean=0.1413 time=1.58s
+05:17:55|INFO   |epoch 9/15 lr=0.00448 batch_loss_mean=0.1253 time=1.63s
+05:17:57|INFO   |epoch 10/15 lr=0.00345 batch_loss_mean=0.1113 time=1.64s
+05:17:58|INFO   |epoch 11/15 lr=0.00250 batch_loss_mean=0.0994 time=1.60s
+05:18:00|INFO   |epoch 12/15 lr=0.00165 batch_loss_mean=0.0879 time=1.63s
+05:18:02|INFO   |epoch 13/15 lr=0.00095 batch_loss_mean=0.0806 time=2.11s
+05:18:04|INFO   |epoch 14/15 lr=0.00043 batch_loss_mean=0.0754 time=1.92s
+05:18:06|INFO   |epoch 15/15 lr=0.00011 batch_loss_mean=0.0729 time=1.87s
+05:18:06|INFO   |EVAL ep=15 train_loss=0.07160 val_acc=0.9306 val_nll=0.1977 test_acc=0.9231
+05:18:06|INFO   |DONE compressed_sgd_lr0.01_E15_s3: final_train_loss=0.07160 mean_epoch_time=1.63s
+05:18:06|INFO   |compressed done: sgd_lr0.01_E15_s3
+05:18:06|INFO   |START compressed_sam_lr0.01_rho0.1_E15_s3: condition=sam lr=0.01 rho=0.1 seed=3 epochs=15 save=(15,) include_test=True
+05:18:09|INFO   |epoch 1/15 lr=0.01000 batch_loss_mean=0.5621 time=2.42s
+05:18:11|INFO   |epoch 2/15 lr=0.00989 batch_loss_mean=0.3480 time=2.27s
+05:18:13|INFO   |epoch 3/15 lr=0.00957 batch_loss_mean=0.2953 time=2.33s
+05:18:15|INFO   |epoch 4/15 lr=0.00905 batch_loss_mean=0.2672 time=2.27s
+05:18:18|INFO   |epoch 5/15 lr=0.00835 batch_loss_mean=0.2474 time=2.33s
+05:18:20|INFO   |epoch 6/15 lr=0.00750 batch_loss_mean=0.2325 time=2.33s
+05:18:23|INFO   |epoch 7/15 lr=0.00655 batch_loss_mean=0.2213 time=2.36s
+05:18:25|INFO   |epoch 8/15 lr=0.00552 batch_loss_mean=0.2130 time=2.32s
+05:18:27|INFO   |epoch 9/15 lr=0.00448 batch_loss_mean=0.2040 time=2.53s
+05:18:30|INFO   |epoch 10/15 lr=0.00345 batch_loss_mean=0.1976 time=2.89s
+05:18:33|INFO   |epoch 11/15 lr=0.00250 batch_loss_mean=0.1926 time=2.40s
+05:18:35|INFO   |epoch 12/15 lr=0.00165 batch_loss_mean=0.1886 time=2.49s
+05:18:37|INFO   |epoch 13/15 lr=0.00095 batch_loss_mean=0.1854 time=2.31s
+05:18:40|INFO   |epoch 14/15 lr=0.00043 batch_loss_mean=0.1834 time=2.36s
+05:18:42|INFO   |epoch 15/15 lr=0.00011 batch_loss_mean=0.1826 time=2.39s
+05:18:42|INFO   |EVAL ep=15 train_loss=0.18187 val_acc=0.9242 val_nll=0.2091 test_acc=0.9112
+05:18:42|INFO   |DONE compressed_sam_lr0.01_rho0.1_E15_s3: final_train_loss=0.18187 mean_epoch_time=2.40s
+05:18:43|INFO   |compressed done: sam_lr0.01_rho0.1_E15_s3
+05:18:43|INFO   |START compressed_sgd_lr0.01_E5_s4: condition=sgd lr=0.01 rho=None seed=4 epochs=5 save=(5,) include_test=True
+05:18:44|INFO   |epoch 1/5 lr=0.01000 batch_loss_mean=0.4497 time=1.66s
+05:18:46|INFO   |epoch 2/5 lr=0.00905 batch_loss_mean=0.2878 time=1.53s
+05:18:47|INFO   |epoch 3/5 lr=0.00655 batch_loss_mean=0.2349 time=1.54s
+05:18:49|INFO   |epoch 4/5 lr=0.00345 batch_loss_mean=0.1981 time=1.58s
+05:18:50|INFO   |epoch 5/5 lr=0.00095 batch_loss_mean=0.1730 time=1.54s
+05:18:51|INFO   |EVAL ep=5 train_loss=0.16767 val_acc=0.9222 val_nll=0.2073 test_acc=0.9123
+05:18:51|INFO   |DONE compressed_sgd_lr0.01_E5_s4: final_train_loss=0.16767 mean_epoch_time=1.57s
+05:18:51|INFO   |compressed done: sgd_lr0.01_E5_s4
+05:18:51|INFO   |START compressed_sam_lr0.01_rho0.1_E5_s4: condition=sam lr=0.01 rho=0.1 seed=4 epochs=5 save=(5,) include_test=True
+05:18:53|INFO   |epoch 1/5 lr=0.01000 batch_loss_mean=0.5609 time=2.38s
+05:18:55|INFO   |epoch 2/5 lr=0.00905 batch_loss_mean=0.3376 time=2.30s
+05:18:58|INFO   |epoch 3/5 lr=0.00655 batch_loss_mean=0.2874 time=2.27s
+05:19:00|INFO   |epoch 4/5 lr=0.00345 batch_loss_mean=0.2626 time=2.32s
+05:19:02|INFO   |epoch 5/5 lr=0.00095 batch_loss_mean=0.2484 time=2.42s
+05:19:03|INFO   |EVAL ep=5 train_loss=0.24450 val_acc=0.9060 val_nll=0.2500 test_acc=0.8950
+05:19:03|INFO   |DONE compressed_sam_lr0.01_rho0.1_E5_s4: final_train_loss=0.24450 mean_epoch_time=2.34s
+05:19:03|INFO   |compressed done: sam_lr0.01_rho0.1_E5_s4
+05:19:03|INFO   |START compressed_sgd_lr0.01_E15_s4: condition=sgd lr=0.01 rho=None seed=4 epochs=15 save=(15,) include_test=True
+05:19:04|INFO   |epoch 1/15 lr=0.01000 batch_loss_mean=0.4497 time=1.53s
+05:19:07|INFO   |epoch 2/15 lr=0.00989 batch_loss_mean=0.2903 time=3.17s
+05:19:11|INFO   |epoch 3/15 lr=0.00957 batch_loss_mean=0.2457 time=3.91s
+05:19:14|INFO   |epoch 4/15 lr=0.00905 batch_loss_mean=0.2210 time=2.42s
+05:19:16|INFO   |epoch 5/15 lr=0.00835 batch_loss_mean=0.1940 time=1.82s
+05:19:17|INFO   |epoch 6/15 lr=0.00750 batch_loss_mean=0.1772 time=1.67s
+05:19:19|INFO   |epoch 7/15 lr=0.00655 batch_loss_mean=0.1567 time=1.74s
+05:19:21|INFO   |epoch 8/15 lr=0.00552 batch_loss_mean=0.1385 time=1.91s
+05:19:23|INFO   |epoch 9/15 lr=0.00448 batch_loss_mean=0.1240 time=1.72s
+05:19:24|INFO   |epoch 10/15 lr=0.00345 batch_loss_mean=0.1084 time=1.76s
+05:19:26|INFO   |epoch 11/15 lr=0.00250 batch_loss_mean=0.0941 time=1.68s
+05:19:29|INFO   |epoch 12/15 lr=0.00165 batch_loss_mean=0.0849 time=2.71s
+05:19:31|INFO   |epoch 13/15 lr=0.00095 batch_loss_mean=0.0778 time=1.79s
+05:19:33|INFO   |epoch 14/15 lr=0.00043 batch_loss_mean=0.0727 time=1.90s
+05:19:34|INFO   |epoch 15/15 lr=0.00011 batch_loss_mean=0.0698 time=1.94s
+05:19:35|INFO   |EVAL ep=15 train_loss=0.06818 val_acc=0.9305 val_nll=0.1944 test_acc=0.9247
+05:19:35|INFO   |DONE compressed_sgd_lr0.01_E15_s4: final_train_loss=0.06818 mean_epoch_time=2.11s
+05:19:35|INFO   |compressed done: sgd_lr0.01_E15_s4
+05:19:35|INFO   |START compressed_sam_lr0.01_rho0.1_E15_s4: condition=sam lr=0.01 rho=0.1 seed=4 epochs=15 save=(15,) include_test=True
+05:19:37|INFO   |epoch 1/15 lr=0.01000 batch_loss_mean=0.5609 time=2.39s
+05:19:40|INFO   |epoch 2/15 lr=0.00989 batch_loss_mean=0.3388 time=2.40s
+05:19:42|INFO   |epoch 3/15 lr=0.00957 batch_loss_mean=0.2898 time=2.32s
+05:19:44|INFO   |epoch 4/15 lr=0.00905 batch_loss_mean=0.2632 time=2.31s
+05:19:47|INFO   |epoch 5/15 lr=0.00835 batch_loss_mean=0.2424 time=2.28s
+05:19:49|INFO   |epoch 6/15 lr=0.00750 batch_loss_mean=0.2295 time=2.23s
+05:19:51|INFO   |epoch 7/15 lr=0.00655 batch_loss_mean=0.2178 time=2.24s
+05:19:53|INFO   |epoch 8/15 lr=0.00552 batch_loss_mean=0.2086 time=2.24s
+05:19:55|INFO   |epoch 9/15 lr=0.00448 batch_loss_mean=0.1995 time=2.24s
+05:19:58|INFO   |epoch 10/15 lr=0.00345 batch_loss_mean=0.1935 time=2.24s
+05:20:00|INFO   |epoch 11/15 lr=0.00250 batch_loss_mean=0.1882 time=2.31s
+05:20:02|INFO   |epoch 12/15 lr=0.00165 batch_loss_mean=0.1841 time=2.41s
+05:20:05|INFO   |epoch 13/15 lr=0.00095 batch_loss_mean=0.1818 time=2.63s
+05:20:07|INFO   |epoch 14/15 lr=0.00043 batch_loss_mean=0.1799 time=2.26s
+05:20:10|INFO   |epoch 15/15 lr=0.00011 batch_loss_mean=0.1784 time=2.25s
+05:20:10|INFO   |EVAL ep=15 train_loss=0.17760 val_acc=0.9237 val_nll=0.2045 test_acc=0.9139
+05:20:10|INFO   |DONE compressed_sam_lr0.01_rho0.1_E15_s4: final_train_loss=0.17760 mean_epoch_time=2.32s
+05:20:10|INFO   |compressed done: sam_lr0.01_rho0.1_E15_s4
+=== analyze ===
+05:20:13|INFO   |metrics ('SGD', '40-epoch run', 5, 0): acc=0.8951 ece=0.0282 nll=0.2854
+05:20:15|INFO   |metrics ('SGD', '40-epoch run', 15, 0): acc=0.9179 ece=0.0306 nll=0.2664
+05:20:17|INFO   |metrics ('SGD', '40-epoch run', 40, 0): acc=0.9227 ece=0.0442 nll=0.3036
+05:20:20|INFO   |metrics ('TS-SGD', '40-epoch run', 40, 0): acc=0.9227 ece=0.0101 nll=0.2294
+05:20:22|INFO   |metrics ('SGD', 'compressed', 5, 0): acc=0.9141 ece=0.0108 nll=0.2398
+05:20:24|INFO   |metrics ('SGD', 'compressed', 15, 0): acc=0.9227 ece=0.0241 nll=0.2315
+05:20:25|INFO   |metrics ('SAM', '40-epoch run', 5, 0): acc=0.8988 ece=0.0093 nll=0.2722
+05:20:27|INFO   |metrics ('SAM', '40-epoch run', 15, 0): acc=0.9166 ece=0.0090 nll=0.2255
+05:20:29|INFO   |metrics ('SAM', '40-epoch run', 40, 0): acc=0.9221 ece=0.0079 nll=0.2112
+05:20:30|INFO   |metrics ('TS-SAM', '40-epoch run', 40, 0): acc=0.9221 ece=0.0121 nll=0.2127
+05:20:32|INFO   |metrics ('SAM', 'compressed', 5, 0): acc=0.8961 ece=0.0122 nll=0.2817
+05:20:34|INFO   |metrics ('SAM', 'compressed', 15, 0): acc=0.9129 ece=0.0078 nll=0.2378
+05:20:35|INFO   |metrics ('SGD', '40-epoch run', 5, 1): acc=0.8900 ece=0.0241 nll=0.3004
+05:20:37|INFO   |metrics ('SGD', '40-epoch run', 15, 1): acc=0.9194 ece=0.0354 nll=0.2685
+05:20:39|INFO   |metrics ('SGD', '40-epoch run', 40, 1): acc=0.9208 ece=0.0464 nll=0.3202
+05:20:41|INFO   |metrics ('TS-SGD', '40-epoch run', 40, 1): acc=0.9208 ece=0.0099 nll=0.2365
+05:20:42|INFO   |metrics ('SGD', 'compressed', 5, 1): acc=0.9151 ece=0.0076 nll=0.2388
+05:20:44|INFO   |metrics ('SGD', 'compressed', 15, 1): acc=0.9211 ece=0.0247 nll=0.2331
+05:20:45|INFO   |metrics ('SAM', '40-epoch run', 5, 1): acc=0.9027 ece=0.0166 nll=0.2728
+05:20:47|INFO   |metrics ('SAM', '40-epoch run', 15, 1): acc=0.9187 ece=0.0054 nll=0.2249
+05:20:49|INFO   |metrics ('SAM', '40-epoch run', 40, 1): acc=0.9250 ece=0.0036 nll=0.2078
+05:20:50|INFO   |metrics ('TS-SAM', '40-epoch run', 40, 1): acc=0.9250 ece=0.0062 nll=0.2086
+05:20:52|INFO   |metrics ('SAM', 'compressed', 5, 1): acc=0.8970 ece=0.0153 nll=0.2840
+05:20:54|INFO   |metrics ('SAM', 'compressed', 15, 1): acc=0.9147 ece=0.0101 nll=0.2365
+05:20:55|INFO   |metrics ('SGD', '40-epoch run', 5, 2): acc=0.9030 ece=0.0200 nll=0.2644
+05:20:57|INFO   |metrics ('SGD', '40-epoch run', 15, 2): acc=0.9150 ece=0.0329 nll=0.2631
+05:20:58|INFO   |metrics ('SGD', '40-epoch run', 40, 2): acc=0.9215 ece=0.0439 nll=0.3085
+05:21:00|INFO   |metrics ('TS-SGD', '40-epoch run', 40, 2): acc=0.9215 ece=0.0089 nll=0.2326
+05:21:02|INFO   |metrics ('SGD', 'compressed', 5, 2): acc=0.9151 ece=0.0077 nll=0.2354
+05:21:03|INFO   |metrics ('SGD', 'compressed', 15, 2): acc=0.9225 ece=0.0212 nll=0.2295
+05:21:05|INFO   |metrics ('SAM', '40-epoch run', 5, 2): acc=0.9015 ece=0.0104 nll=0.2741
+05:21:07|INFO   |metrics ('SAM', '40-epoch run', 15, 2): acc=0.9146 ece=0.0068 nll=0.2280
+05:21:08|INFO   |metrics ('SAM', '40-epoch run', 40, 2): acc=0.9229 ece=0.0085 nll=0.2125
+05:21:10|INFO   |metrics ('TS-SAM', '40-epoch run', 40, 2): acc=0.9229 ece=0.0120 nll=0.2137
+05:21:12|INFO   |metrics ('SAM', 'compressed', 5, 2): acc=0.8942 ece=0.0167 nll=0.2851
+05:21:13|INFO   |metrics ('SAM', 'compressed', 15, 2): acc=0.9125 ece=0.0092 nll=0.2384
+05:21:15|INFO   |metrics ('SGD', '40-epoch run', 5, 3): acc=0.8968 ece=0.0183 nll=0.2793
+05:21:16|INFO   |metrics ('SGD', '40-epoch run', 15, 3): acc=0.9132 ece=0.0372 nll=0.2755
+05:21:18|INFO   |metrics ('SGD', '40-epoch run', 40, 3): acc=0.9235 ece=0.0413 nll=0.3021
+05:21:20|INFO   |metrics ('TS-SGD', '40-epoch run', 40, 3): acc=0.9235 ece=0.0067 nll=0.2298
+05:21:22|INFO   |metrics ('SGD', 'compressed', 5, 3): acc=0.9139 ece=0.0091 nll=0.2394
+05:21:23|INFO   |metrics ('SGD', 'compressed', 15, 3): acc=0.9231 ece=0.0209 nll=0.2307
+05:21:25|INFO   |metrics ('SAM', '40-epoch run', 5, 3): acc=0.8966 ece=0.0096 nll=0.2793
+05:21:26|INFO   |metrics ('SAM', '40-epoch run', 15, 3): acc=0.9174 ece=0.0054 nll=0.2296
+05:21:28|INFO   |metrics ('SAM', '40-epoch run', 40, 3): acc=0.9243 ece=0.0046 nll=0.2130
+05:21:30|INFO   |metrics ('TS-SAM', '40-epoch run', 40, 3): acc=0.9243 ece=0.0088 nll=0.2143
+05:21:31|INFO   |metrics ('SAM', 'compressed', 5, 3): acc=0.8967 ece=0.0162 nll=0.2894
+05:21:33|INFO   |metrics ('SAM', 'compressed', 15, 3): acc=0.9112 ece=0.0111 nll=0.2402
+05:21:34|INFO   |metrics ('SGD', '40-epoch run', 5, 4): acc=0.8919 ece=0.0367 nll=0.3075
+05:21:36|INFO   |metrics ('SGD', '40-epoch run', 15, 4): acc=0.9134 ece=0.0406 nll=0.2888
+05:21:38|INFO   |metrics ('SGD', '40-epoch run', 40, 4): acc=0.9223 ece=0.0448 nll=0.3129
+05:21:39|INFO   |metrics ('TS-SGD', '40-epoch run', 40, 4): acc=0.9223 ece=0.0113 nll=0.2337
+05:21:41|INFO   |metrics ('SGD', 'compressed', 5, 4): acc=0.9123 ece=0.0107 nll=0.2445
+05:21:42|INFO   |metrics ('SGD', 'compressed', 15, 4): acc=0.9247 ece=0.0227 nll=0.2331
+05:21:44|INFO   |metrics ('SAM', '40-epoch run', 5, 4): acc=0.8944 ece=0.0147 nll=0.2865
+05:21:46|INFO   |metrics ('SAM', '40-epoch run', 15, 4): acc=0.9164 ece=0.0051 nll=0.2318
+05:21:47|INFO   |metrics ('SAM', '40-epoch run', 40, 4): acc=0.9238 ece=0.0071 nll=0.2130
+05:21:49|INFO   |metrics ('TS-SAM', '40-epoch run', 40, 4): acc=0.9238 ece=0.0106 nll=0.2145
+05:21:50|INFO   |metrics ('SAM', 'compressed', 5, 4): acc=0.8950 ece=0.0141 nll=0.2834
+05:21:52|INFO   |metrics ('SAM', 'compressed', 15, 4): acc=0.9139 ece=0.0095 nll=0.2374
+05:21:52|INFO   |compressed runs present for both conditions: True
+05:21:52|INFO   |Holm-adjusted p-values: accuracy=0.1348, ece=0.0001, ace=0.0001, nll=0.0001, brier=0.0037, aurc=0.0064, sam_vs_tssgd_nll=0.0027, sam_vs_tssgd_ece=0.0792
+05:21:52|INFO   |render: /Volumes/aii-s20015/work/run_S_3Y_l0tX7Xe/round-1/experiment-1/src/.venv/bin/python /Volumes/aii-s20015/.claude/skills/aii-data-fig-gen/scripts/chart_gen.py --spec /Volumes/aii-s20015/work/run_S_3Y_l0tX7Xe/round-1/experiment-1/src/results/figure_specs/fig_reliability_diagrams.json --out /Volumes/aii-s20015/work/run_S_3Y_l0tX7Xe/round-1/experiment-1/src/figures/fig_reliability_diagrams
+05:21:55|INFO   |
+05:21:55|ERROR  |findfont: Failed to find font weight normal for CMU Serif, now using 500.
+findfont: Failed to find font weight normal for CMU Serif, now using 500.
+findfont: Failed to find font weight normal for CMU Serif, now using 500.
+findfont: Failed to find font weight normal for CMU Serif, now using 500.
+findfont: Failed to find font weight normal for CMU Serif, now using 500.
+bad spec: constrained layout could not place this figure, so the axes would be drawn overlapping or at zero size. 3 panel(s) in a 1x3 grid across 6.5 in leaves 2.2 in per cell, and the labels need more than that. Give it a wider 'aspect' ('width_in' only up to 6.5 in), cut 'ncols' so each cell gets more of the width, show fewer panels, or shorten the labels.
+
+Traceback (most recent call last):
+  File "/Volumes/aii-s20015/work/run_S_3Y_l0tX7Xe/round-1/experiment-1/src/analyze.py", line 379, in <module>
+    main()
+  File "/Volumes/aii-s20015/work/run_S_3Y_l0tX7Xe/round-1/experiment-1/src/analyze.py", line 233, in main
+    render_figures(pooled)
+  File "/Volumes/aii-s20015/work/run_S_3Y_l0tX7Xe/round-1/experiment-1/src/analyze.py", line 277, in render_figures
+    raise RuntimeError(f"figure render failed: {name}")
+RuntimeError: figure render failed: fig_reliability_diagrams
