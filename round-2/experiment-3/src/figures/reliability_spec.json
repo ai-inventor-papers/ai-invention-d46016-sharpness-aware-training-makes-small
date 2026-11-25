@@ -1,0 +1,93 @@
+{
+  "type": "line",
+  "title": "Reliability diagram, pooled test set (5 seeds)",
+  "show_title": false,
+  "xlabel": "Mean confidence in bin (max softmax, temperature-scaled)",
+  "ylabel": "Accuracy in bin",
+  "aspect": "4:3",
+  "series": [
+    {
+      "label": "Ideal",
+      "x": [
+        0.0,
+        1.0
+      ],
+      "values": [
+        0.0,
+        1.0
+      ],
+      "linestyle": "--",
+      "marker": "none"
+    },
+    {
+      "label": "SGD + temperature scaling",
+      "x": [
+        0.25,
+        0.3088,
+        0.3727,
+        0.4373,
+        0.5044,
+        0.5669,
+        0.6328,
+        0.7011,
+        0.7683,
+        0.8348,
+        0.9041,
+        0.9905
+      ],
+      "values": [
+        0.25,
+        0.322,
+        0.3168,
+        0.4348,
+        0.5023,
+        0.5464,
+        0.6297,
+        0.674,
+        0.7468,
+        0.8097,
+        0.8877,
+        0.9875
+      ]
+    },
+    {
+      "label": "SAM + temperature scaling",
+      "x": [
+        0.2474,
+        0.3032,
+        0.3708,
+        0.4374,
+        0.505,
+        0.5668,
+        0.6328,
+        0.7016,
+        0.7673,
+        0.8353,
+        0.903,
+        0.9928
+      ],
+      "values": [
+        0.125,
+        0.24,
+        0.4107,
+        0.3967,
+        0.4757,
+        0.5269,
+        0.6274,
+        0.6997,
+        0.7508,
+        0.8038,
+        0.8747,
+        0.9889
+      ]
+    }
+  ],
+  "xlim": [
+    0.0,
+    1.0
+  ],
+  "ylim": [
+    0.0,
+    1.0
+  ]
+}

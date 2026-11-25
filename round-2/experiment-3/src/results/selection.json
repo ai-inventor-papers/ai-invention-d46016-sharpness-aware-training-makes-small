@@ -1,0 +1,18 @@
+{
+  "tuning_seed": 101,
+  "selection_criterion": "final-epoch validation NLL (raw logits), lowest wins",
+  "sgd": {
+    "lr": 0.001,
+    "rho": 0.0,
+    "val_nll": 0.21415172929711535
+  },
+  "sam": {
+    "lr": 0.01,
+    "rho": 0.1,
+    "val_nll": 0.18244109249290513
+  },
+  "sgd_at_lower_grid_edge_of_final_grid": false,
+  "sam_at_lower_grid_edge_of_final_grid": false,
+  "extension_0003_run": true,
+  "reduced_grid": false
+}

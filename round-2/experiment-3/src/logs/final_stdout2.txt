@@ -1,0 +1,15 @@
+07:27:47|INFO   |stage=final root=. device=mps torch=2.16.0.dev20261116
+07:27:48|INFO   |Normalisation from the 50k training split: mean=0.2862 std=0.3531
+07:27:48|INFO   |Data ready on mps: train (50000, 1, 28, 28), val (10000, 1, 28, 28), test (10000, 1, 28, 28)
+07:27:48|INFO   |skip finished run sgd_lr0.001_rho0_seed0
+07:27:48|INFO   |skip finished run sam_lr0.01_rho0.1_seed0
+07:27:48|INFO   |skip finished run sgd_lr0.001_rho0_seed1
+07:27:48|INFO   |skip finished run sam_lr0.01_rho0.1_seed1
+07:27:48|INFO   |skip finished run sgd_lr0.001_rho0_seed2
+07:27:48|INFO   |skip finished run sam_lr0.01_rho0.1_seed2
+07:27:48|INFO   |skip finished run sgd_lr0.001_rho0_seed3
+07:27:48|INFO   |skip finished run sam_lr0.01_rho0.1_seed3
+07:27:48|INFO   |skip finished run sgd_lr0.001_rho0_seed4
+07:27:48|INFO   |skip finished run sam_lr0.01_rho0.1_seed4
+07:27:48|INFO   |skip finished run sgd_lr0.001_rho0_seed0_det
+07:27:48|INFO   |DETERMINISM: {'max_abs_logit_diff_val': 0.0, 'max_abs_logit_diff_test': 0.0, 'test_acc_original': 0.9153, 'test_acc_rerun': 0.9153, 'device': 'mps', 'note': 'Difference is MPS nondeterminism unless it is large; a large difference means the shared-init or shared-order claim is broken.'}

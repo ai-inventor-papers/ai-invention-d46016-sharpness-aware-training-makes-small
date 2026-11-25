@@ -1,0 +1,8 @@
+{
+  "max_abs_logit_diff_val": 0.0,
+  "max_abs_logit_diff_test": 0.0,
+  "test_acc_original": 0.9153,
+  "test_acc_rerun": 0.9153,
+  "device": "mps",
+  "note": "Difference is MPS nondeterminism unless it is large; a large difference means the shared-init or shared-order claim is broken."
+}

@@ -1,0 +1,457 @@
+{
+  "metadata": {
+    "method_name": "SAM vs SGD calibration on Fashion-MNIST (retuned)",
+    "description": "Five paired seeds, validation-only tuning at seed 101, temperature scaling fitted on validation, 12-row paired family with Holm correction.",
+    "selection": {
+      "tuning_seed": 101,
+      "selection_criterion": "final-epoch validation NLL (raw logits), lowest wins",
+      "sgd": {
+        "lr": 0.001,
+        "rho": 0.0,
+        "val_nll": 0.21415172929711535
+      },
+      "sam": {
+        "lr": 0.01,
+        "rho": 0.1,
+        "val_nll": 0.18244109249290513
+      },
+      "sgd_at_lower_grid_edge_of_final_grid": false,
+      "sam_at_lower_grid_edge_of_final_grid": false,
+      "extension_0003_run": true,
+      "reduced_grid": false
+    },
+    "family_of_12_paired": [
+      {
+        "row": "SAM - SGD: accuracy",
+        "per_seed_diff": [
+          0.005199999999999982,
+          0.01100000000000001,
+          0.010000000000000009,
+          0.010599999999999943,
+          0.011099999999999999
+        ],
+        "mean": 0.009579999999999988,
+        "sd": 0.0024863628053846077,
+        "t": 8.615609587649992,
+        "df": 4,
+        "ci95_low": 0.006493267746240355,
+        "ci95_high": 0.012666732253759621,
+        "p_two_sided": 0.0009976429870352283,
+        "p_holm": 0.006983500909246598,
+        "significant_holm_0_05": true
+      },
+      {
+        "row": "SAM - SGD: ECE",
+        "per_seed_diff": [
+          -0.0015656441381178658,
+          -0.006987271657018191,
+          -0.007169316754146762,
+          -0.005165635805274376,
+          -0.004093017891497703
+        ],
+        "mean": -0.00499617724921098,
+        "sd": 0.0023075941314856492,
+        "t": -4.841315812187979,
+        "df": 4,
+        "ci95_low": -0.007860974461756709,
+        "ci95_high": -0.002131380036665252,
+        "p_two_sided": 0.008392069250211043,
+        "p_holm": 0.03356827700084417,
+        "significant_holm_0_05": true
+      },
+      {
+        "row": "SAM - SGD: NLL",
+        "per_seed_diff": [
+          -0.03550799874428176,
+          -0.04348171229994133,
+          -0.03549409316225971,
+          -0.027265133172140743,
+          -0.036314788667747816
+        ],
+        "mean": -0.03561274520927427,
+        "sd": 0.005747198990470758,
+        "t": -13.855883411267527,
+        "df": 4,
+        "ci95_low": -0.04274769126551434,
+        "ci95_high": -0.02847779915303421,
+        "p_two_sided": 0.00015728311358256884,
+        "p_holm": 0.0015728311358256884,
+        "significant_holm_0_05": true
+      },
+      {
+        "row": "SAM - SGD: Brier",
+        "per_seed_diff": [
+          -0.01491308751006483,
+          -0.018878010334783535,
+          -0.016962453203272512,
+          -0.013347918643660306,
+          -0.014637063737619305
+        ],
+        "mean": -0.015747706685880096,
+        "sd": 0.0021773555985757274,
+        "t": -16.17234348968522,
+        "df": 4,
+        "ci95_low": -0.01845081732583683,
+        "ci95_high": -0.013044596045923361,
+        "p_two_sided": 8.552040648149008e-05,
+        "p_holm": 0.001026244877777881,
+        "significant_holm_0_05": true
+      },
+      {
+        "row": "SAM - SGD: ACE",
+        "per_seed_diff": [
+          -0.001964968080066576,
+          -0.00761006311219213,
+          -0.005725824845370823,
+          -0.007356660754858242,
+          -0.007222688065930597
+        ],
+        "mean": -0.005976040971683674,
+        "sd": 0.00236016854115822,
+        "t": -5.661813390009412,
+        "df": 4,
+        "ci95_low": -0.008906107470637342,
+        "ci95_high": -0.0030459744727300057,
+        "p_two_sided": 0.004797402113473778,
+        "p_holm": 0.02398701056736889,
+        "significant_holm_0_05": true
+      },
+      {
+        "row": "SAM - TS-SGD: accuracy",
+        "per_seed_diff": [
+          0.005199999999999982,
+          0.01100000000000001,
+          0.010000000000000009,
+          0.010599999999999943,
+          0.011099999999999999
+        ],
+        "mean": 0.009579999999999988,
+        "sd": 0.0024863628053846077,
+        "t": 8.615609587649992,
+        "df": 4,
+        "ci95_low": 0.006493267746240355,
+        "ci95_high": 0.012666732253759621,
+        "p_two_sided": 0.0009976429870352283,
+        "p_holm": 0.006983500909246598,
+        "significant_holm_0_05": true
+      },
+      {
+        "row": "SAM - TS-SGD: ECE",
+        "per_seed_diff": [
+          0.004347399612683801,
+          -0.0004070458654830151,
+          0.0027128058624420713,
+          0.0008275137510409883,
+          0.002480947417334716
+        ],
+        "mean": 0.0019923241556037124,
+        "sd": 0.0018315285124044377,
+        "t": 2.432379411498358,
+        "df": 4,
+        "ci95_low": -0.00028145428118587145,
+        "ci95_high": 0.004266102592393297,
+        "p_two_sided": 0.07179628810671494,
+        "p_holm": 0.2153888643201448,
+        "significant_holm_0_05": false
+      },
+      {
+        "row": "SAM - TS-SGD: NLL",
+        "per_seed_diff": [
+          -0.032116862823475784,
+          -0.04052039697251711,
+          -0.032224090527581434,
+          -0.02467668153617819,
+          -0.03342925215179901
+        ],
+        "mean": -0.03259345680231031,
+        "sd": 0.005625251954541121,
+        "t": -12.956074789296093,
+        "df": 4,
+        "ci95_low": -0.039577009888771705,
+        "ci95_high": -0.02560990371584891,
+        "p_two_sided": 0.0002047401888129266,
+        "p_holm": 0.0018426616993163394,
+        "significant_holm_0_05": true
+      },
+      {
+        "row": "SAM - TS-SGD: Brier",
+        "per_seed_diff": [
+          -0.014290028424587639,
+          -0.018339134313016356,
+          -0.016417768217813156,
+          -0.012950436026612805,
+          -0.01422284655369735
+        ],
+        "mean": -0.015244042707145461,
+        "sd": 0.002131363417114159,
+        "t": -15.992915835648612,
+        "df": 4,
+        "ci95_low": -0.017890055666252586,
+        "ci95_high": -0.012598029748038336,
+        "p_two_sided": 8.937269165847668e-05,
+        "p_holm": 0.001026244877777881,
+        "significant_holm_0_05": true
+      },
+      {
+        "row": "SAM - TS-SGD: ACE",
+        "per_seed_diff": [
+          0.0055937275024075155,
+          0.0004330458695270458,
+          0.0008691359874955732,
+          -0.0010223585894361866,
+          0.0005057909514653309
+        ],
+        "mean": 0.0012758683442918558,
+        "sd": 0.0025196505151117935,
+        "t": 1.1322714523566038,
+        "df": 4,
+        "ci95_low": -0.001852189434063854,
+        "ci95_high": 0.0044039261226475656,
+        "p_two_sided": 0.3207945285204068,
+        "p_holm": 0.3207945285204068,
+        "significant_holm_0_05": false
+      },
+      {
+        "row": "TS-SAM - TS-SGD: ECE",
+        "per_seed_diff": [
+          0.004347399612683801,
+          -0.0004070458654830151,
+          0.0027128058624420713,
+          0.0008275137510409883,
+          0.002480947417334716
+        ],
+        "mean": 0.0019923241556037124,
+        "sd": 0.0018315285124044377,
+        "t": 2.432379411498358,
+        "df": 4,
+        "ci95_low": -0.00028145428118587145,
+        "ci95_high": 0.004266102592393297,
+        "p_two_sided": 0.07179628810671494,
+        "p_holm": 0.2153888643201448,
+        "significant_holm_0_05": false
+      },
+      {
+        "row": "TS-SAM - TS-SGD: NLL",
+        "per_seed_diff": [
+          -0.032116862823475784,
+          -0.04052039697251711,
+          -0.032224090527581434,
+          -0.02467668153617819,
+          -0.03342925215179901
+        ],
+        "mean": -0.03259345680231031,
+        "sd": 0.005625251954541121,
+        "t": -12.956074789296093,
+        "df": 4,
+        "ci95_low": -0.039577009888771705,
+        "ci95_high": -0.02560990371584891,
+        "p_two_sided": 0.0002047401888129266,
+        "p_holm": 0.0018426616993163394,
+        "significant_holm_0_05": true
+      }
+    ],
+    "placebo": [
+      {
+        "row": "PLACEBO SAM - SGD (shuffled test labels): acc",
+        "per_seed_diff": [
+          0.0015000000000000013,
+          -0.0022999999999999965,
+          -0.0005000000000000004,
+          -0.00019999999999999185,
+          -0.00010000000000000286
+        ],
+        "mean": -0.0003199999999999981,
+        "sd": 0.0013535139452550897,
+        "t": -0.5286548803640689,
+        "df": 4,
+        "ci95_low": -0.0020003401103348066,
+        "ci95_high": 0.0013603401103348105,
+        "p_two_sided": 0.6250185712367718,
+        "p_holm": 0.6250185712367718,
+        "significant_holm_0_05": false
+      },
+      {
+        "row": "PLACEBO SAM - SGD (shuffled test labels): nll",
+        "per_seed_diff": [
+          -0.21032433876751355,
+          -0.28467503034247166,
+          -0.0881984388212409,
+          -0.3640635517769102,
+          -0.17298711063925332
+        ],
+        "mean": -0.22404969406947792,
+        "sd": 0.10551143078546765,
+        "t": -4.748209199210165,
+        "df": 4,
+        "ci95_low": -0.35503843627576703,
+        "ci95_high": -0.09306095186318883,
+        "p_two_sided": 0.00898273111425585,
+        "p_holm": 0.0359309244570234,
+        "significant_holm_0_05": true
+      },
+      {
+        "row": "PLACEBO SAM - SGD (shuffled test labels): ece",
+        "per_seed_diff": [
+          -0.0006815834518297814,
+          0.004208497551383195,
+          0.001644958793208029,
+          0.0011667075893228018,
+          0.0016049834446749678
+        ],
+        "mean": 0.0015887127853518423,
+        "sd": 0.0017463557740421238,
+        "t": 2.034218821601962,
+        "df": 4,
+        "ci95_low": -0.0005793266828227745,
+        "ci95_high": 0.003756752253526459,
+        "p_two_sided": 0.11167536270900544,
+        "p_holm": 0.321943802072258,
+        "significant_holm_0_05": false
+      },
+      {
+        "row": "PLACEBO SAM - SGD (shuffled test labels): brier",
+        "per_seed_diff": [
+          0.0025645257333966054,
+          0.004034936347010021,
+          0.0016263682952004643,
+          0.003178947651402586,
+          0.0027380746306016057
+        ],
+        "mean": 0.0028285705315222566,
+        "sd": 0.0008805228542506531,
+        "t": 7.183091224837208,
+        "df": 4,
+        "ci95_low": 0.0017354322781258245,
+        "ci95_high": 0.0039217087849186885,
+        "p_two_sided": 0.0019896483851395493,
+        "p_holm": 0.009948241925697746,
+        "significant_holm_0_05": true
+      },
+      {
+        "row": "PLACEBO SAM - SGD (shuffled test labels): ace",
+        "per_seed_diff": [
+          -0.0006834063060725537,
+          0.004155660617626622,
+          0.001643770431648539,
+          0.0011380145961328303,
+          0.0017552611642075444
+        ],
+        "mean": 0.0016018601007085965,
+        "sd": 0.001730952096709384,
+        "t": 2.069305142781461,
+        "df": 4,
+        "ci95_low": -0.0005470562420932857,
+        "ci95_high": 0.0037507764435104787,
+        "p_two_sided": 0.10731460069075266,
+        "p_holm": 0.321943802072258,
+        "significant_holm_0_05": false
+      },
+      {
+        "row": "PLACEBO SGD - SGD (same model)",
+        "per_seed_diff": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "mean": 0.0,
+        "sd": 0.0,
+        "t": NaN,
+        "df": 4,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "p_two_sided": NaN
+      }
+    ],
+    "temperature_T": {
+      "sgd": [
+        1.0461480615264434,
+        1.0622309070325482,
+        1.0553405476216968,
+        1.0303694364562694,
+        1.0493752192665189
+      ],
+      "sam": [
+        0.9282452656460054,
+        0.9526285166373195,
+        0.9367468139921181,
+        0.9215032606456097,
+        0.949605695055536
+      ]
+    },
+    "final_train_loss": {
+      "sgd": [
+        0.12232201171875,
+        0.12013240234375,
+        0.12064994140625,
+        0.126229384765625,
+        0.12010583984375
+      ],
+      "sam": [
+        0.1079452734375,
+        0.111056748046875,
+        0.111119658203125,
+        0.11226271484375,
+        0.105751171875
+      ]
+    },
+    "reliability_bins_file": "results/reliability_bins.json",
+    "ace_note": "Top-label, equal-count binned variant; not comparable to per-class ACE values."
+  },
+  "datasets": [
+    {
+      "dataset": "FashionMNIST_test_10k",
+      "examples": [
+        {
+          "input": "Fashion-MNIST test image 0 (28x28 grayscale). Classify the clothing item.",
+          "output": "Ankle boot",
+          "metadata_test_index": 0,
+          "metadata_true_label": 9,
+          "predict_sgd_seed0": "Ankle boot",
+          "predict_sgd_seed1": "Ankle boot",
+          "predict_sgd_seed2": "Ankle boot",
+          "predict_sgd_seed3": "Ankle boot",
+          "predict_sgd_seed4": "Ankle boot",
+          "predict_sam_seed0": "Ankle boot",
+          "predict_sam_seed1": "Ankle boot",
+          "predict_sam_seed2": "Ankle boot",
+          "predict_sam_seed3": "Ankle boot",
+          "predict_sam_seed4": "Ankle boot"
+        },
+        {
+          "input": "Fashion-MNIST test image 1 (28x28 grayscale). Classify the clothing item.",
+          "output": "Pullover",
+          "metadata_test_index": 1,
+          "metadata_true_label": 2,
+          "predict_sgd_seed0": "Pullover",
+          "predict_sgd_seed1": "Pullover",
+          "predict_sgd_seed2": "Pullover",
+          "predict_sgd_seed3": "Pullover",
+          "predict_sgd_seed4": "Pullover",
+          "predict_sam_seed0": "Pullover",
+          "predict_sam_seed1": "Pullover",
+          "predict_sam_seed2": "Pullover",
+          "predict_sam_seed3": "Pullover",
+          "predict_sam_seed4": "Pullover"
+        },
+        {
+          "input": "Fashion-MNIST test image 2 (28x28 grayscale). Classify the clothing item.",
+          "output": "Trouser",
+          "metadata_test_index": 2,
+          "metadata_true_label": 1,
+          "predict_sgd_seed0": "Trouser",
+          "predict_sgd_seed1": "Trouser",
+          "predict_sgd_seed2": "Trouser",
+          "predict_sgd_seed3": "Trouser",
+          "predict_sgd_seed4": "Trouser",
+          "predict_sam_seed0": "Trouser",
+          "predict_sam_seed1": "Trouser",
+          "predict_sam_seed2": "Trouser",
+          "predict_sam_seed3": "Trouser",
+          "predict_sam_seed4": "Trouser"
+        }
+      ]
+    }
+  ]
+}

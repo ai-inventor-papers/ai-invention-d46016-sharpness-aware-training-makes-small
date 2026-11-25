@@ -1,0 +1,7 @@
+entries:
+  - path: data_cache/
+    delete: redownloadable
+    source: "uv run python -c \"from torchvision import datasets; datasets.FashionMNIST('data_cache', train=True, download=True); datasets.FashionMNIST('data_cache', train=False, download=True)\""
+  - path: .venv/
+    delete: regenerable
+    source: "uv venv .venv --python=3.12 && uv pip install torch torchvision numpy scipy loguru psutil matplotlib"
