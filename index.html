@@ -1,0 +1,456 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sharpness-Aware Minimization and Test NLL Beyond Temperature Scaling on Fashion-MNIST</title>
+<style>
+:root {
+  --ink: #1c1c1e;
+  --muted: #55575c;
+  --bg: #fbfbf8;
+  --card: #ffffff;
+  --rule: #d9dad4;
+  --accent: #1f5fa8;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-padding-top: 1rem; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 18px;
+  line-height: 1.65;
+}
+a { color: var(--accent); text-underline-offset: 0.18em; }
+a:hover { text-decoration-thickness: 2px; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -4rem;
+  background: var(--card);
+  color: var(--ink);
+  padding: 0.5rem 0.9rem;
+  border: 1px solid var(--ink);
+  z-index: 10;
+}
+.skip-link:focus { top: 0.75rem; }
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.5rem;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 1.25rem;
+}
+@media (min-width: 960px) {
+  .layout { grid-template-columns: 190px minmax(0, 1fr); gap: 3.5rem; padding: 0 2rem; }
+  .toc { position: sticky; top: 2rem; align-self: start; padding-top: 2.5rem; }
+}
+
+.toc { padding-top: 1.25rem; }
+.toc-title { margin: 0 0 0.5rem; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+.toc ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.25rem 1.1rem; }
+.toc li { margin: 0; }
+.toc a {
+  display: block;
+  padding: 0.2rem 0 0.2rem 0.6rem;
+  color: var(--muted);
+  text-decoration: none;
+  border-left: 2px solid transparent;
+  font-size: 0.95rem;
+}
+.toc a:hover { color: var(--ink); }
+.toc a.active { color: var(--accent); font-weight: 600; border-left-color: var(--accent); }
+@media (min-width: 960px) {
+  .toc ul { flex-direction: column; gap: 0; }
+}
+
+main { min-width: 0; padding: 1.25rem 0 4rem; }
+main > section { padding-top: 0.5rem; }
+p { max-width: 68ch; margin: 0 0 1.1rem; }
+ul.plain { max-width: 68ch; padding-left: 1.2rem; margin: 0 0 1.1rem; }
+ul.plain li { margin-bottom: 0.5rem; }
+
+h1 { font-size: 2.5rem; line-height: 1.15; font-weight: 750; letter-spacing: -0.01em; margin: 0.4rem 0 1.25rem; max-width: 22ch; }
+h2 { font-size: 1.75rem; line-height: 1.25; font-weight: 700; margin: 4.5rem 0 1rem; padding-top: 1.5rem; border-top: 1px solid var(--rule); }
+h3 { font-size: 1.25rem; line-height: 1.35; font-weight: 650; margin: 2.25rem 0 0.6rem; }
+.eyebrow { margin: 0; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+.lede { font-size: 1.2rem; line-height: 1.6; }
+
+.doc-links { list-style: none; padding: 0; margin: 1.5rem 0 0; display: flex; flex-wrap: wrap; gap: 0.6rem 1.5rem; }
+.doc-links li { margin: 0; }
+.doc-links a { font-weight: 600; }
+.round-line { margin: 0.9rem 0 0; font-size: 0.97rem; color: var(--muted); }
+.round-line a { margin-left: 0.25rem; }
+
+.cards { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); margin: 1.5rem 0 0; padding: 0; list-style: none; }
+.card { border: 1px solid var(--rule); border-radius: 4px; padding: 1.25rem 1.3rem; background: var(--card); }
+.card h3 { margin: 0 0 0.5rem; font-size: 1.1rem; }
+.card p { margin: 0; font-size: 1rem; }
+
+.table-wrap { overflow-x: auto; margin: 0.5rem 0 1.5rem; border-bottom: 1px solid var(--rule); }
+table { border-collapse: collapse; width: 100%; font-size: 0.95rem; font-variant-numeric: tabular-nums; min-width: 34rem; }
+caption { caption-side: top; text-align: left; font-size: 0.95rem; color: var(--muted); padding-bottom: 0.5rem; max-width: 68ch; }
+th, td { text-align: left; padding: 0.5rem 0.6rem; border-top: 1px solid var(--rule); vertical-align: top; }
+thead th { border-top: 2px solid var(--ink); border-bottom: 1px solid var(--ink); font-weight: 650; }
+td.num, th.num { text-align: right; white-space: nowrap; }
+tbody tr:last-child td { border-bottom: 1px solid var(--rule); }
+
+.code-note { font-size: 0.95rem; color: var(--muted); margin: -0.4rem 0 1.4rem; max-width: 68ch; }
+.code-note a { font-weight: 600; }
+
+.lead-flag { border-left: 3px solid var(--accent); padding: 0.1rem 0 0.1rem 1rem; margin: 1.5rem 0; max-width: 68ch; }
+.lead-flag p { margin: 0; }
+
+.figure-grid { display: grid; gap: 2.5rem; margin-top: 1.5rem; }
+figure { margin: 0; max-width: 100%; }
+.thumb {
+  display: block;
+  width: 100%;
+  padding: 0;
+  background: var(--card);
+  border: 1px solid var(--rule);
+  cursor: zoom-in;
+}
+.thumb img { display: block; width: 100%; height: auto; }
+figcaption { font-size: 0.95rem; color: var(--muted); margin-top: 0.7rem; max-width: 68ch; line-height: 1.5; }
+figcaption strong { color: var(--ink); }
+.enlarge-hint { font-size: 0.85rem; color: var(--muted); margin: 0.4rem 0 0; }
+
+button, .btn {
+  font: inherit;
+  font-size: 0.95rem;
+  color: var(--ink);
+  background: var(--card);
+  border: 1px solid var(--ink);
+  border-radius: 3px;
+  padding: 0.4rem 0.85rem;
+  cursor: pointer;
+}
+button:hover { background: #f0f0ec; }
+
+dialog {
+  border: 0;
+  padding: 0;
+  background: var(--card);
+  border-radius: 6px;
+  max-width: min(96vw, 1200px);
+  max-height: 94vh;
+  width: 100%;
+  color: var(--ink);
+}
+dialog::backdrop { background: rgba(20, 20, 20, 0.85); }
+dialog[open] { animation: lb-in 0.15s ease-out; }
+@keyframes lb-in { from { opacity: 0; } to { opacity: 1; } }
+.lb-inner { padding: 1rem 1.1rem 1.2rem; display: flex; flex-direction: column; gap: 0.75rem; max-height: 94vh; }
+.lb-top { display: flex; justify-content: flex-end; }
+.lb-inner img { display: block; max-width: 100%; max-height: 72vh; width: auto; height: auto; margin: 0 auto; object-fit: contain; }
+.lb-inner figcaption { margin: 0; overflow-y: auto; }
+
+.footer-wrap { border-top: 1px solid var(--rule); margin-top: 4rem; padding: 2rem 0 3rem; }
+.footer-wrap h2 { border-top: 0; margin: 0 0 0.75rem; padding-top: 0; font-size: 1.25rem; }
+.footer-wrap ul { list-style: none; padding: 0; margin: 0 0 1rem; display: flex; flex-wrap: wrap; gap: 0.5rem 1.4rem; max-width: 68ch; }
+.footer-wrap li { margin: 0; }
+.footer-wrap p { font-size: 0.95rem; color: var(--muted); }
+
+@media (max-width: 520px) {
+  body { font-size: 17px; }
+  h1 { font-size: 2rem; }
+  h2 { font-size: 1.5rem; margin-top: 3.25rem; }
+  .lede { font-size: 1.08rem; }
+  .toc ul { gap: 0.2rem 0.9rem; }
+  .toc a { padding-left: 0.4rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+</style></head>
+<body>
+<a class="skip-link" href="#main">Skip to main content</a>
+<div class="layout">
+  <nav class="toc" aria-label="Page sections" data-scrollspy>
+    <p class="toc-title">On this page</p>
+    <ul>
+      <li><a href="#contributions">Contributions</a></li>
+      <li><a href="#method">Method</a></li>
+      <li><a href="#results">Results</a></li>
+      <li><a href="#figures">Figures</a></li>
+      <li><a href="#limitations">Limitations</a></li>
+    </ul>
+  </nav>
+
+  <main id="main">
+    <header>
+      <p class="eyebrow">Research paper · Fashion-MNIST · five paired seeds</p>
+      <h1>Sharpness-Aware Minimization and Test NLL Beyond Temperature Scaling on Fashion-MNIST</h1>
+      <p class="lede">The question is whether sharpness-aware minimization (SAM) gives better test accuracy and calibration than plain stochastic gradient descent (SGD) on a small convolutional network trained on Fashion-MNIST. In one tuned comparison over five paired seeds, SAM's test negative log-likelihood (NLL) is 0.0326 lower than SGD's after both models are temperature-scaled (95% CI −0.0396 to −0.0256). That gap is a lead, not a confirmed finding: it is a single estimate, it was not specified in advance, and no independent study has reproduced it. SAM's lower raw expected calibration error (ECE) does not remain once SGD is temperature-scaled.</p>
+
+      <ul class="doc-links">
+        <li><a href="https://cdn.jsdelivr.net/gh/ai-inventor-papers/ai-invention-d46016-sharpness-aware-training-makes-small@main/paper.pdf">Read the paper (PDF)</a></li>
+        <li><a href="interactive.html">Explore the interactive demo</a></li>
+        <li><a href="https://cdn.jsdelivr.net/gh/ai-inventor-papers/ai-invention-d46016-sharpness-aware-training-makes-small@main/report.pdf">Read the full research report</a></li>
+        <li><a href="https://cdn.jsdelivr.net/gh/ai-inventor-papers/ai-invention-d46016-sharpness-aware-training-makes-small@main/exec_summary.pdf">Read the executive summary</a></li>
+        <li><a href="https://github.com/ai-inventor-papers/ai-invention-d46016-sharpness-aware-training-makes-small">Code repository</a></li>
+      </ul>
+      <p class="round-line">Round reports: <a href="https://cdn.jsdelivr.net/gh/ai-inventor-papers/ai-invention-d46016-sharpness-aware-training-makes-small@main/round-1/report.pdf">Round 1</a>, <a href="https://cdn.jsdelivr.net/gh/ai-inventor-papers/ai-invention-d46016-sharpness-aware-training-makes-small@main/round-2/report.pdf">Round 2</a></p>
+    </header>
+
+    <section id="contributions" aria-labelledby="contributions-title">
+      <h2 id="contributions-title">Contributions</h2>
+      <p>The paper makes four claims. Each card states one, with the interval or control that backs it.</p>
+      <ul class="cards">
+        <li class="card">
+          <h3>Lower NLL than temperature-scaled SGD</h3>
+          <p>SAM's test NLL is 0.0326 lower than validation-tuned SGD after both models are temperature-scaled (95% CI −0.0396 to −0.0256, Holm p = 0.0018). It is one tuned comparison over five paired seeds.</p>
+        </li>
+        <li class="card">
+          <h3>The raw ECE advantage is a scaling effect</h3>
+          <p>SAM's raw ECE is 0.0050 lower than SGD's (95% CI −0.0079 to −0.0021). Once SGD is temperature-scaled, the difference is +0.0020, with an interval that includes zero.</p>
+        </li>
+        <li class="card">
+          <h3>Accuracy depends on the SGD learning rate</h3>
+          <p>SAM's test accuracy is 0.96 points higher at the validation-tuned SGD learning rate. At a learning rate of 0.01, the accuracy difference does not differ from zero.</p>
+        </li>
+        <li class="card">
+          <h3>A shuffled-label control gives a larger gap</h3>
+          <p>With shuffled test labels, the raw SAM-minus-SGD NLL gap is −0.224, larger than the real raw gap of −0.036. The NLL advantage therefore cannot be read as learned label information.</p>
+        </li>
+      </ul>
+    </section>
+
+    <section id="method" aria-labelledby="method-title">
+      <h2 id="method-title">Method</h2>
+      <p>The pipeline has four parts: the data and network, two optimisers, a tuning step on validation data, and a calibration comparison. The parts are described in the order a model sees them.</p>
+
+      <h3>Data and network</h3>
+      <p>Fashion-MNIST has 60,000 grey 28 by 28 images in 10 fashion classes. The training images are split into 50,000 for training and 10,000 for validation. Each final model is evaluated once on the standard 10,000-image test set. The network has two convolutional blocks, each with batch normalisation and 2 by 2 max pooling, followed by two linear layers.</p>
+
+      <h3>The two optimisers</h3>
+      <p>SGD uses momentum 0.9 on mini-batches. SAM first computes the gradient <em>g</em> at the current weights <em>w</em>. It then moves to <em>w</em> + ρ<em>g</em>/‖<em>g</em>‖, a point within a small radius ρ where the loss is higher, computes the gradient there, and applies that gradient to <em>w</em>. Both optimisers share the architecture, batch size, weight decay, cosine learning-rate schedule, epoch count, initialisation and batch order for each seed. The only difference is the update rule, so any gap between them comes from that rule and the learning-rate settings.</p>
+
+      <h3>Tuning on validation data</h3>
+      <p>Learning rates and the SAM radius are chosen on a separate tuning seed (101) by the lowest final validation NLL. The grid covers SGD learning rates from 0.0003 to 0.03, SAM learning rates from 0.001 to 0.03 and SAM radii of 0.05, 0.1 and 0.2. The selected settings are SGD at learning rate 0.001 (validation NLL 0.214) and SAM at learning rate 0.01 with radius 0.1 (validation NLL 0.182). Neither selected value sits on an edge of its grid, and the test set plays no part in selection. Final results use seeds 0 to 4, which differ from the tuning seed.</p>
+
+      <h3>Calibration measures and temperature scaling</h3>
+      <p>Confidence is the highest class probability. ECE is the bin-weighted average gap between accuracy and confidence over 15 equal-width bins. Adaptive calibration error (ACE) uses equal-mass bins. NLL is the mean negative log probability of the true class, a proper scoring rule. For the control, one temperature divides the logits and is fitted to minimise validation NLL, then applied unchanged to the test logits. The fitted temperatures for both optimisers show the direction of any miscalibration.</p>
+
+      <h3>Statistics</h3>
+      <p>For each seed, the paper takes the difference between two groups, then reports the mean difference with a 95% paired t-interval (df = 4) and a two-sided p-value. The family of contrasts behind Table 1 is corrected with Holm's step-down procedure. The shuffled-label control shuffles the test labels and runs the same pipeline.</p>
+    </section>
+
+    <section id="results" aria-labelledby="results-title">
+      <h2 id="results-title">Results</h2>
+
+      <h3>Test NLL against temperature-scaled SGD</h3>
+      <p>This is the primary family. The comparison was run once, after tuning, and it was not specified in advance. Every seed gives a negative difference, between −0.025 and −0.041. Raw NLL is lower still (−0.0356), so temperature scaling removes part of the gap. About 0.033 in NLL remains once both models are scaled.</p>
+
+      <div class="table-wrap">
+        <table>
+          <caption><strong>Table 1.</strong> Paired differences, SAM minus baseline, five seeds (0 to 4), test set. Intervals are 95% paired t-intervals (df = 4). Holm p is corrected across the family of contrasts.</caption>
+          <thead>
+            <tr><th scope="col">Contrast</th><th scope="col">Metric</th><th scope="col" class="num">Mean difference</th><th scope="col" class="num">95% CI</th><th scope="col" class="num">Holm p</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>SAM minus SGD</td><td>Accuracy (points)</td><td class="num">+0.96</td><td class="num">+0.65 to +1.27</td><td class="num">0.007</td></tr>
+            <tr><td>SAM minus SGD</td><td>ECE</td><td class="num">−0.0050</td><td class="num">−0.0079 to −0.0021</td><td class="num">0.034</td></tr>
+            <tr><td>SAM minus SGD</td><td>NLL</td><td class="num">−0.0356</td><td class="num">−0.0427 to −0.0285</td><td class="num">0.0016</td></tr>
+            <tr><td>SAM minus TS-SGD</td><td>ECE</td><td class="num">+0.0020</td><td class="num">−0.0003 to +0.0043</td><td class="num">0.22</td></tr>
+            <tr><td>SAM minus TS-SGD</td><td>ACE</td><td class="num">+0.0013</td><td class="num">−0.0019 to +0.0044</td><td class="num">0.32</td></tr>
+            <tr><td>SAM minus TS-SGD</td><td>NLL (primary)</td><td class="num">−0.0326</td><td class="num">−0.0396 to −0.0256</td><td class="num">0.0018</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="code-note">Code for this result: <a href="https://github.com/ai-inventor-papers/ai-invention-d46016-sharpness-aware-training-makes-small/tree/main/round-2/experiment-3">Code: SAM vs SGD calibration on Fashion-MNIST</a>. Figure 1 in the gallery plots these contrasts.</p>
+
+      <div class="lead-flag">
+        <p>The NLL result is a lead: one estimate from one tuned comparison, run once after tuning, and not reproduced in an independent study.</p>
+      </div>
+
+      <h3>Raw ECE is a confidence-scale effect</h3>
+      <p>Raw SAM has a lower ECE than raw SGD (−0.0050, Holm p = 0.034). The fitted temperatures explain the difference. SGD has a mean temperature of 1.05 (range 1.03 to 1.06 across seeds), so raw SGD is overconfident. SAM has a mean of 0.94 (range 0.92 to 0.95), so raw SAM is slightly underconfident. Once SGD is scaled, the ECE difference is +0.0020 (interval −0.0003 to +0.0043, Holm p = 0.22) and the ACE difference is +0.0013 (interval −0.0019 to +0.0044). The calibration advantage that the raw comparison suggests is not supported in this design.</p>
+      <p class="code-note">Code for this result: <a href="https://github.com/ai-inventor-papers/ai-invention-d46016-sharpness-aware-training-makes-small/tree/main/round-1/experiment-1">Code: Does SAM Improve Calibration on Fashion-MNIST?</a></p>
+
+      <h3>Accuracy depends on the SGD learning rate</h3>
+      <p>SAM's accuracy is 0.96 points higher than SGD's at the validation-tuned learning rate (Holm p = 0.007). The size of this difference depends on the SGD learning rate. In the 40-epoch design, where SGD used learning rate 0.01, the difference was 0.15 points and was not significant (Holm p = 0.135).</p>
+
+      <h3>Shuffled-label control</h3>
+      <p>When the test labels are shuffled, the raw SAM-minus-SGD NLL difference is −0.224 (two-sided p = 0.009). That is larger in magnitude than the real raw difference of −0.036. NLL responds to how confident a model is, and a less confident model scores better on shuffled labels, so the NLL advantage is not evidence that SAM learns more label structure. Accuracy does not respond to the shuffle (shuffled-label control difference −0.0003).</p>
+
+      <h3>Supporting designs</h3>
+      <p>Each row below is a separate design with its own baseline, so these values are not pooled with Table 1.</p>
+      <div class="table-wrap">
+        <table>
+          <caption><strong>Table 2.</strong> Supporting designs. Each row is a separate design with its own baseline.</caption>
+          <thead>
+            <tr><th scope="col">Design</th><th scope="col" class="num">Seeds</th><th scope="col">Contrast</th><th scope="col" class="num">Mean difference (95% CI)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>SGD at learning rate 0.01, 40 epochs</td><td class="num">5</td><td>SAM minus TS-SGD, NLL</td><td class="num">−0.0196 (−0.0257 to −0.0136)</td></tr>
+            <tr><td>SGD at learning rate 0.01, 40 epochs</td><td class="num">5</td><td>SAM minus SGD, raw ECE</td><td class="num">−0.0378 (−0.0414 to −0.0341)</td></tr>
+            <tr><td>SGD trained to SAM's training loss, 10 epochs</td><td class="num">5</td><td>SAM minus TS-SGD, NLL</td><td class="num">−0.0082 (−0.0110 to −0.0053)</td></tr>
+            <tr><td>SGD trained to SAM's training loss, 10 epochs</td><td class="num">5</td><td>SAM minus SGD, raw ECE</td><td class="num">−0.0076 (−0.0091 to −0.0061)</td></tr>
+            <tr><td>SGD at learning rate 0.03, 60 epochs</td><td class="num">3</td><td>SAM minus SGD, ECE (descriptive)</td><td class="num">−0.017 (no interval)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>At matched training loss, SAM's accuracy is 0.25 points higher than SGD's at learning rate 0.01 (Holm p = 0.055). Its NLL advantage over temperature-scaled SGD remains, smaller in size than in the 40-epoch design. That is consistent with part of the 40-epoch NLL gap being a fit effect.</p>
+      <p class="code-note">Code for these checks: <a href="https://github.com/ai-inventor-papers/ai-invention-d46016-sharpness-aware-training-makes-small/tree/main/round-2/experiment-4">Code: SAM vs SGD Calibration at Matched Training Loss</a>.</p>
+
+      <h3>Training trajectories</h3>
+      <p>In a separate design, three seed pairs were trained for 60 epochs at learning rate 0.03 without tuning. At epoch 60 the test ECE is 0.028 for SAM and 0.045 for SGD, and the NLL is 0.076 lower for SAM. Under temperature scaling the ECE gap falls to 0.007 against 0.009. These are point estimates from three seeds, and no p-values are reported.</p>
+      <p>The validation gap is near zero over epochs 1 to 5, reaches its largest mean advantage for SAM around epochs 25 to 30, and then falls. The epoch-60 endpoint is therefore not the maximum. Within one 40-epoch run, the test ECE gap is −0.013 at epoch 5 and −0.038 at epoch 40. The gap grows with training in these trajectories, but the 60-epoch gap does not keep growing to the end.</p>
+      <p class="code-note">Code for these trajectories: <a href="https://github.com/ai-inventor-papers/ai-invention-d46016-sharpness-aware-training-makes-small/tree/main/round-1/experiment-2">Code: Does SAM's calibration gain track overfitting?</a>. Code for the validation-gap analysis: <a href="https://github.com/ai-inventor-papers/ai-invention-d46016-sharpness-aware-training-makes-small/tree/main/round-2/evaluation-1">Code: SAM calibration gap across training length</a>.</p>
+
+      <h3>What the result means for evaluation</h3>
+      <ul class="plain">
+        <li>The NLL result is the one that remains under the controls in this setting. Its size depends on the baseline: −0.0326 against the validation-tuned SGD, and −0.0082 against SGD matched to SAM's training loss. A gain of this kind is expected to shrink when the baseline is stronger.</li>
+        <li>The ECE result is a confidence-scale effect. Temperature scaling removes SAM's raw ECE advantage on this network. Calibration claims should be reported against a temperature-scaled baseline.</li>
+        <li>NLL and the Brier score respond to confidence level even when labels carry no information. An evaluation of a training method's calibration should include a shuffled-label check and report how far it moves the metric.</li>
+      </ul>
+    </section>
+
+    <section id="figures" aria-labelledby="figures-title">
+      <h2 id="figures-title">Figures</h2>
+      <p>Both figures are the paper's own, drawn from the same versions the PDF includes. Select a figure to enlarge it. The lightbox closes with the Close button, a click outside the image, or the Escape key.</p>
+      <div class="figure-grid">
+        <figure>
+          <button class="thumb" type="button" data-lightbox data-src="figures/fig2_v0.png" data-alt="Forest plot of five paired differences with 95% intervals. The NLL contrast against temperature-scaled SGD, the primary row, lies clearly left of zero at about −0.033. The NLL contrast against plain SGD lies further left, near −0.036. The ECE contrast against plain SGD lies left of zero at about −0.005. The ECE and ACE contrasts against temperature-scaled SGD sit close to zero, with intervals that include zero." aria-label="Enlarge Figure 1: headline contrasts with 95% intervals">
+            <img src="figures/fig2_v0.png" width="1300" height="975" alt="Forest plot of five paired differences with 95% intervals. The NLL contrast against temperature-scaled SGD, the primary row, lies clearly left of zero at about −0.033. The NLL contrast against plain SGD lies further left, near −0.036. The ECE contrast against plain SGD lies left of zero at about −0.005. The ECE and ACE contrasts against temperature-scaled SGD sit close to zero, with intervals that include zero.">
+          </button>
+          <p class="enlarge-hint">Select to enlarge.</p>
+          <figcaption><strong>Figure 1.</strong> Paired differences, SAM minus baseline, across five seeds with 95% paired t-intervals; Holm-adjusted p-values are shown per row. The NLL contrast against temperature-scaled SGD (TS-SGD, primary row) excludes zero; ECE against unscaled SGD does too, but ECE and ACE against TS-SGD do not. One tuned estimate: a lead, not a confirmed finding.</figcaption>
+        </figure>
+
+        <figure>
+          <button class="thumb" type="button" data-lightbox data-src="figures/fig3_v0.png" data-alt="Two panels of paired differences for five seeds, SAM minus temperature-scaled SGD. In panel a, the NLL difference is below zero for every seed, between about −0.025 and −0.041, with the mean near −0.033. In panel b, the ECE difference ranges from about −0.0004 to +0.0044, with four of five seeds above zero and the mean near +0.002, and a grey reference line marks zero." aria-label="Enlarge Figure 2: seed-level differences for NLL and ECE">
+            <img src="figures/fig3_v0.png" width="1300" height="732" alt="Two panels of paired differences for five seeds, SAM minus temperature-scaled SGD. In panel a, the NLL difference is below zero for every seed, between about −0.025 and −0.041, with the mean near −0.033. In panel b, the ECE difference ranges from about −0.0004 to +0.0044, with four of five seeds above zero and the mean near +0.002, and a grey reference line marks zero.">
+          </button>
+          <p class="enlarge-hint">Select to enlarge.</p>
+          <figcaption><strong>Figure 2.</strong> Paired SAM minus temperature-scaled SGD differences for five seeds (0–4); blue dots are seeds and blue squares the mean across seeds. Every seed gives lower NLL for SAM, while the ECE differences cross zero (gray markers show zero in (b) only).</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section id="limitations" aria-labelledby="limitations-title">
+      <h2 id="limitations-title">Limitations</h2>
+      <ul class="plain">
+        <li>The main result is a lead: one tuned estimate. It was not specified in advance and has not been reproduced in an independent study. The validation split serves both tuning and temperature fitting. The matched-fit check at the tuned SGD learning rate of 0.001 has not been run, so whether the NLL advantage holds at matched training loss at that rate is open. No held-out test was run on new seeds.</li>
+        <li>Five paired seeds give low power. An exact sign-flip test cannot reach p below 0.05 with five seeds (its smallest value is 0.0625), so the reported p-values rely on the t-approximation, and the intervals are wide.</li>
+        <li>The shuffled-label control shows that NLL and ECE respond to confidence level even without label information, so the NLL result does not isolate learned structure. The shuffled-label control was run against raw SGD, not against temperature-scaled SGD.</li>
+        <li>The matched-loss design used SGD at learning rate 0.01, the worst of the five SGD rates on validation NLL (0.273, against 0.214 at the selected rate). Its NLL and ECE advantages are therefore against a weaker baseline than the primary result's. The trajectory design used three seeds, without tuning, and reports point estimates only. A 60-epoch extension of the 40-epoch design was not run.</li>
+        <li>The study covers one dataset and one small network. Results on larger models, such as those of Tan et al. (2026), are not tested here.</li>
+      </ul>
+    </section>
+  </main>
+</div>
+
+<footer class="footer-wrap">
+  <div class="layout" style="padding-top:0">
+    <div style="grid-column: 1 / -1; min-width: 0;">
+      <h2>Links</h2>
+      <ul>
+        <li><a href="https://cdn.jsdelivr.net/gh/ai-inventor-papers/ai-invention-d46016-sharpness-aware-training-makes-small@main/paper.pdf">Read the paper (PDF)</a></li>
+        <li><a href="interactive.html">Explore the interactive demo</a></li>
+        <li><a href="https://cdn.jsdelivr.net/gh/ai-inventor-papers/ai-invention-d46016-sharpness-aware-training-makes-small@main/report.pdf">Read the full research report</a></li>
+        <li><a href="https://cdn.jsdelivr.net/gh/ai-inventor-papers/ai-invention-d46016-sharpness-aware-training-makes-small@main/exec_summary.pdf">Read the executive summary</a></li>
+        <li><a href="https://github.com/ai-inventor-papers/ai-invention-d46016-sharpness-aware-training-makes-small">Code repository</a></li>
+      </ul>
+      <p>Round reports: <a href="https://cdn.jsdelivr.net/gh/ai-inventor-papers/ai-invention-d46016-sharpness-aware-training-makes-small@main/round-1/report.pdf">Round 1</a>, <a href="https://cdn.jsdelivr.net/gh/ai-inventor-papers/ai-invention-d46016-sharpness-aware-training-makes-small@main/round-2/report.pdf">Round 2</a></p>
+      <h2>Code for each result</h2>
+      <ul>
+        <li><a href="https://github.com/ai-inventor-papers/ai-invention-d46016-sharpness-aware-training-makes-small/tree/main/round-1/experiment-1">Code: Does SAM Improve Calibration on Fashion-MNIST?</a></li>
+        <li><a href="https://github.com/ai-inventor-papers/ai-invention-d46016-sharpness-aware-training-makes-small/tree/main/round-1/experiment-2">Code: Does SAM's calibration gain track overfitting?</a></li>
+        <li><a href="https://github.com/ai-inventor-papers/ai-invention-d46016-sharpness-aware-training-makes-small/tree/main/round-2/experiment-3">Code: SAM vs SGD calibration on Fashion-MNIST</a></li>
+        <li><a href="https://github.com/ai-inventor-papers/ai-invention-d46016-sharpness-aware-training-makes-small/tree/main/round-2/experiment-4">Code: SAM vs SGD Calibration at Matched Training Loss</a></li>
+        <li><a href="https://github.com/ai-inventor-papers/ai-invention-d46016-sharpness-aware-training-makes-small/tree/main/round-2/evaluation-1">Code: SAM calibration gap across training length</a></li>
+      </ul>
+      <p>Code and raw outputs that reproduce each number are in the code repository.</p>
+    </div>
+  </div>
+</footer>
+
+<dialog id="lightbox" aria-labelledby="lb-caption">
+  <div class="lb-inner">
+    <div class="lb-top">
+      <button type="button" class="close" data-close>Close</button>
+    </div>
+    <img id="lb-img" src="figures/fig2_v0.png" width="1300" height="975" alt="">
+    <figcaption id="lb-caption"></figcaption>
+  </div>
+</dialog>
+
+<script>
+(function () {
+  var dlg = document.getElementById('lightbox');
+  var img = document.getElementById('lb-img');
+  var cap = document.getElementById('lb-caption');
+  var opener = null;
+  document.querySelectorAll('[data-lightbox]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      opener = btn;
+      img.src = btn.getAttribute('data-src');
+      img.alt = btn.getAttribute('data-alt') || '';
+      var fc = btn.parentElement.querySelector('figcaption');
+      cap.innerHTML = fc ? fc.innerHTML : '';
+      dlg.showModal();
+      dlg.querySelector('[data-close]').focus();
+    });
+  });
+  dlg.querySelector('[data-close]').addEventListener('click', function () { dlg.close(); });
+  dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
+  dlg.addEventListener('close', function () {
+    img.removeAttribute('src');
+    if (opener) { opener.focus(); opener = null; }
+  });
+})();
+</script>
+
+<script>
+/* aii-scroll-spy v1: paste verbatim */
+(function () {
+  var links = [], targets = [];
+  document.querySelectorAll('[data-scrollspy] a[href^="#"]').forEach(function (a) {
+    var el = document.getElementById(a.getAttribute('href').slice(1));
+    if (el) { links.push(a); targets.push(el); }
+  });
+  if (!links.length) return;
+  var queued = false;
+  function current() {
+    var view = window.innerHeight;
+    var doc = document.documentElement;
+    var atEnd = window.scrollY > 0 && view + window.scrollY >= doc.scrollHeight - 2;
+    var line = atEnd ? view - 1 : Math.min(view * 0.3, 200);
+    var best = null, bestTop = -Infinity;
+    targets.forEach(function (el) {
+      var top = el.getBoundingClientRect().top;
+      if (top <= line && top > bestTop) { best = el; bestTop = top; }
+    });
+    return best;
+  }
+  function update() {
+    queued = false;
+    var el = current();
+    links.forEach(function (a, i) {
+      var on = targets[i] === el;
+      a.classList.toggle('active', on);
+      if (on) a.setAttribute('aria-current', 'location');
+      else a.removeAttribute('aria-current');
+    });
+  }
+  function schedule() {
+    if (!queued) { queued = true; window.requestAnimationFrame(update); }
+  }
+  window.addEventListener('scroll', schedule, { passive: true });
+  window.addEventListener('resize', schedule);
+  window.addEventListener('load', schedule);
+  if (window.ResizeObserver) new ResizeObserver(schedule).observe(document.body);
+  update();
+})();
+</script>
+</body></html>
