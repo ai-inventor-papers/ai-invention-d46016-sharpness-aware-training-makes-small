@@ -1,0 +1,81 @@
+\documentclass[10pt,letterpaper]{article}
+\usepackage{geometry, amsmath, hyperref, booktabs, longtable, xcolor, array}
+\geometry{margin=1in}
+\hypersetup{colorlinks=true, linkcolor=black, citecolor=black, urlcolor=black}
+\setlength{\tabcolsep}{4pt}
+\sloppy
+
+\title{Sharpness-Aware Minimization and Test NLL Beyond Temperature Scaling on Fashion-MNIST}
+\author{Executive summary of the internal research report}
+\date{2026-11-25}
+
+\begin{document}
+\maketitle
+
+\section{Headline}
+
+On a small convolutional network trained on Fashion-MNIST, sharpness-aware minimization (SAM) has a lower test negative log-likelihood (NLL) than validation-tuned stochastic gradient descent (SGD) after both models are temperature-scaled: the paired difference is $-0.033$ nats (95\% CI $-0.040$ to $-0.026$; Holm-corrected $p = 0.0018$). The source is Artifact 3 in Iteration 2: one tuned comparison at SGD learning rate 0.001, five paired seeds, evaluated on the test set. The run record grades this result as a \emph{lead}, a single estimate that was not specified in advance and has not been reproduced in an independent study. The record and the artifact output files agree on the number, and no conflict needs flagging. The scope is one dataset, one small architecture and five seeds. A shuffled-label control gives a larger NLL gap ($-0.224$) than the real comparison ($-0.036$ on the same raw contrast), so the advantage reflects how confident the models are rather than learned label information. SAM's raw expected calibration error (ECE) advantage does not survive temperature scaling of SGD, and its accuracy advantage depends on the SGD learning rate.
+
+\section{Goal}
+
+The run asked whether SAM improves test accuracy and test calibration over plain SGD for a small CNN on Fashion-MNIST, and whether any calibration gain is more than a global change in confidence. Three criteria were set in advance: (a) lower mean test ECE and NLL for SAM than tuned SGD, with a paired interval excluding zero; (b) an NLL advantage that persists after temperature scaling of SGD; and (c) a calibration gap that is larger at full training than at short training. Accuracy was to be reported either way.
+
+\section{What was tried}
+
+\begin{itemize}
+\item \textbf{Iteration 1.} Four artifacts. Artifact 1 is a controlled comparison: five paired seeds at 40 epochs with learning rates and the SAM radius tuned on validation NLL, plus compressed 5- and 15-epoch schedules and a temperature-scaled SGD control. Artifact 2 is a mechanism study at a fixed learning rate of 0.03, three seeds, 60 epochs, tracking training loss, validation calibration and the top Hessian eigenvalue. A prior-work research artifact checked the literature; its verdict was ``partly done'', with Tan et al.\ already comparing SAM with temperature-scaled SGD on ResNets at CIFAR scale. The Iteration 1 review scored the record 4 of 5 and asked for a like-for-like calibrated comparison, a scoped criterion (a), and a within-trajectory test of criterion (c).
+\item \textbf{Iteration 2.} Three artifacts. Artifact 3 re-ran the primary comparison with learning rates tuned on validation NLL over a grid that extends below the Iteration 1 edge; its selected SGD learning rate is 0.001. Artifact 4 matched training loss by training SGD for 10 epochs against SAM's 40 epochs at learning rate 0.01, the weaker baseline. Evaluation 1 read the calibration gap along existing trajectories without training anything. The Iteration 2 review scored the record 5 of 5 and asked for the prior-work artifact to be reported, the placebo result to temper the NLL verdict, and the matched-loss conclusion to be scoped to its SGD baseline.
+\end{itemize}
+
+\section{Key results}
+
+Each row is read from the artifact's output files. The grade column gives the round record's grade for that artifact, except where a row says otherwise: rows marked ``no difference'' or ``not significant after correction'' are the report's own reading of a contrast that includes zero. Differences are SAM minus the comparator, except where marked. Holm p is over the artifact's own family.
+
+\begin{longtable}{>{\raggedright\arraybackslash}p{2.8cm}>{\raggedright\arraybackslash}p{2.6cm}>{\raggedright\arraybackslash}p{1.6cm}>{\raggedright\arraybackslash}p{2.9cm}>{\raggedright\arraybackslash}p{2.3cm}>{\raggedright\arraybackslash}p{2.3cm}}
+\toprule
+Contrast & Source (round) & Mean difference & 95\% CI & Holm p & Grade \\
+\midrule
+\endhead
+Test NLL vs temperature-scaled SGD & Artifact 3 (Iteration 2) & -0.03259 & [-0.03958, -0.02561] & 0.0018 & lead \\
+Test NLL vs temperature-scaled SGD & Artifact 1 (Iteration 1), calibrated pair & -0.01963 & [-0.02569, -0.01357] & unadj.\ p 0.0008 & lead \\
+Test NLL at matched training loss, temperature-scaled & Artifact 4 (Iteration 2) & -0.00818 & [-0.01103, -0.00533] & 0.0094 & lead \\
+Test NLL at matched training loss, raw & Artifact 4 (Iteration 2) & -0.01254 & [-0.01516, -0.00992] & 0.0019 & lead \\
+Test ECE, temperature-scaled SAM vs temperature-scaled SGD & Artifact 1 (Iteration 1) & +0.00054 & [-0.00291, +0.00399] & unadj.\ p 0.68 & no difference \\
+Test ECE, temperature-scaled SAM vs temperature-scaled SGD & Artifact 3 (Iteration 2) & +0.00199 & [-0.00028, +0.00427] & 0.2154 & no difference \\
+Test ECE, temperature-scaled, matched loss & Artifact 4 (Iteration 2) & -0.00013 & [-0.00159, +0.00134] & 0.97 & no difference \\
+Test ECE, raw & Artifact 3 (Iteration 2) & -0.00500 & [-0.00786, -0.00213] & 0.0336 & lead \\
+Test accuracy at tuned SGD learning rate & Artifact 3 (Iteration 2) & +0.00958 & [+0.00649, +0.01267] & 0.0070 & lead \\
+Test accuracy at SGD learning rate 0.01 & Artifact 1 (Iteration 1) & +0.00146 & [-0.00071, +0.00363] & 0.135 & no difference \\
+Test accuracy at matched training loss & Artifact 4 (Iteration 2) & +0.00246 & [+0.00069, +0.00423] & 0.055 & not significant after correction \\
+Shuffled-label NLL control (placebo) & Artifact 3 (Iteration 2) & -0.22405 & [-0.35504, -0.09306] & 0.0359 & placebo gap larger than real \\
+Calibration gap by training length, test ECE & Evaluation 1 (Iteration 2), within-run & -0.01333 at 5 epochs; -0.03778 at 40 & see report & n/a & null (round record) \\
+\bottomrule
+\end{longtable}
+
+The Iteration 1 compressed-schedule reversal at 5 epochs (SAM's ECE higher) came from separately trained runs. The same trajectory read within one run gives a negative gap at 5 epochs, so the reversal does not stand. The Evaluation 1 row is a descriptive reading of three seeds for the validation gap, which peaks at epoch 25 to 30 and then narrows.
+
+\section{What failed}
+
+\begin{itemize}
+\item \textbf{The ECE sub-claim.} SAM's raw ECE advantage is a global confidence effect. Once SGD is temperature-scaled, the paired ECE differences include zero in all three designs, so the calibrated ECE claim is withdrawn.
+\item \textbf{The Iteration 1 SGD baseline.} The learning rate of 0.01 was the lower edge of the Iteration 1 grid and was not the validation optimum (validation NLL 0.273 at 0.01 against 0.214 at 0.001). Its accuracy null of +0.15 points does not hold at the tuned rate, where the difference is +0.96 points.
+\item \textbf{Compressed schedules as the test of criterion (c).} Each compressed run is a separate training run, so the comparison does not follow one trajectory.
+\item \textbf{SAM at learning rate 0.03 with radius 0.2.} It failed to train (training loss 2.302, validation accuracy 0.1305) and was excluded.
+\item \textbf{Gap-against-training-loss slope.} It is a relationship within one trajectory, not a test of overfitting, and it is not used as evidence for a mechanism.
+\item \textbf{Label specificity of the NLL result.} The shuffled-label gap is larger than the real gap, so the NLL advantage cannot be credited to learned label information.
+\end{itemize}
+
+\section{Open questions}
+
+\begin{itemize}
+\item Does the NLL advantage hold at matched training loss when the SGD baseline is the validation-selected learning rate of 0.001? This comparison has not been run.
+\item Five seeds cannot reach an exact p-value below 0.0625, so no result is significant at 0.05 on an exact test. More seeds are needed before any result is reported as significant.
+\item Criterion (c) has not been read from per-epoch test metrics on one trajectory with the validation-selected baseline.
+\item The nearest-neighbour statement against Tan et al.\ and Morosini et al.\ is not yet written. Until it is, the record makes no positive claim of contribution beyond this dataset.
+\item The 60-epoch extension of Artifact 1 was not run, so whether SAM's lower fit at epoch 40 accounts for part of its calibration advantage is untested in that design.
+\end{itemize}
+
+\vspace{0.5em}
+\noindent The full internal report is 35 pages (\texttt{report.pdf}). Model checkpoints and per-sample logits are kept on the run's volume and are not in the published repository.
+
+\end{document}

@@ -1,0 +1,27 @@
+{
+  "type": "forest",
+  "title": "Paired NLL differences, 95% CI",
+  "null_line": 0.0,
+  "xlabel": "NLL difference (nats)",
+  "aspect": "16:9",
+  "categories": [
+    "A1 SAM − SGD, raw",
+    "A1 SAM − TS-SGD, raw",
+    "A1 TS-SAM − TS-SGD",
+    "A3 SAM − SGD, raw",
+    "A3 TS-SAM − TS-SGD",
+    "A4 SAM 40 − SGD 10, raw",
+    "A4 TS-SAM − TS-SGD 10",
+    "A2 (eval, 60 ep) TS-SAM − TS-SGD"
+  ],
+  "series": [
+    {
+      "label": "SAM minus comparator, mean and 95% CI",
+      "values": [-0.09796, -0.02088, -0.01963, -0.03561, -0.03259, -0.01254, -0.00818, -0.01641],
+      "errors": [0.01123, 0.00574, 0.00606, 0.00714, 0.00699, 0.00262, 0.00285, 0.01347]
+    }
+  ],
+  "color_map": {
+    "SAM minus comparator, mean and 95% CI": "#0173B2"
+  }
+}
