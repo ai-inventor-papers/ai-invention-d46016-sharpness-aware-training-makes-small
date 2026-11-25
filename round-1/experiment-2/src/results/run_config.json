@@ -1,0 +1,37 @@
+{
+ "lr": 0.03,
+ "momentum": 0.9,
+ "weight_decay": 0.0005,
+ "rho": 0.1,
+ "epochs": 60,
+ "batch": 128,
+ "schedule": "cosine per epoch (T_max=epochs)",
+ "hessian_iters": 20,
+ "hessian_batch": 2000,
+ "eval_epochs": [
+  1,
+  2,
+  5,
+  10,
+  15,
+  20,
+  25,
+  30,
+  35,
+  40,
+  45,
+  50,
+  55,
+  60
+ ],
+ "logit_epochs": [
+  5,
+  60
+ ],
+ "seeds": [
+  0,
+  1,
+  2
+ ],
+ "device": "mps"
+}

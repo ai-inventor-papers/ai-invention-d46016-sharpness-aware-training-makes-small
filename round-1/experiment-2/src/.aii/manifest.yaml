@@ -1,0 +1,12 @@
+entries:
+  - path: checkpoints/
+    keep: trained model weights and resume states for the six runs (about 44 MB), the only copy of the trained models; stays on the run volume
+  - path: scratch/
+    delete: redownloadable
+    source: "uv run method.py unit (torchvision downloads FashionMNIST into scratch/data); smoke outputs: uv run --no-sync --python .venv/bin/python method.py train --out scratch/smoke --epochs 2 --eval-epochs 1 2 --logit-epochs 1 2 --hess-iters 5 --hess-n 200 --seeds 0"
+  - path: .venv/
+    delete: regenerable
+    source: "uv venv .venv --python 3.12 && uv pip install --python .venv/bin/python torch==2.16.0.dev20261116+aii1 torchvision==0.30.0.dev20261116 numpy==2.5.5 scipy==1.18.1 matplotlib==3.11.2 loguru==0.8.0 (full pins in pyproject.toml)"
+  - path: __pycache__/
+    delete: regenerable
+    source: "uv run --no-sync --python .venv/bin/python method.py unit"

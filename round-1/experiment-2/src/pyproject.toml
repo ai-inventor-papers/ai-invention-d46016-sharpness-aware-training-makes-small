@@ -1,0 +1,31 @@
+[project]
+name = "sam-calibration-mechanism"
+version = "0.1.0"
+description = "Does SAM's calibration gain track overfitting? Fashion-MNIST, small CNN, SGD vs SAM."
+requires-python = "==3.12.*"
+dependencies = [
+    "contourpy==1.4.0",
+    "cycler==0.12.1",
+    "filelock==4.3.1",
+    "fonttools==4.68.0",
+    "fsspec==2026.9.0",
+    "jinja2==3.1.6",
+    "kiwisolver==1.5.1",
+    "loguru==0.8.0",
+    "markupsafe==3.0.4",
+    "matplotlib==3.11.2",
+    "mpmath==1.3.0",
+    "networkx==3.7",
+    "numpy==2.5.5",
+    "packaging==26.4",
+    "pillow==13.0.0",
+    "pyparsing==3.3.3",
+    "python-dateutil==4.0.0",
+    "scipy==1.18.1",
+    "setuptools==84.2.1",
+    "sympy==1.14.0",
+    "torch==2.16.0.dev20261116+aii1",
+    "torchvision==0.30.0.dev20261116",
+    "typing-extensions==4.16.0",
+    "tzdata==2026.6",
+]

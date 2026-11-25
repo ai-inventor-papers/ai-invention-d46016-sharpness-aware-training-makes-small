@@ -1,0 +1,39 @@
+{
+ "type": "bar",
+ "title": "Test ECE: unscaled vs temperature-scaled (epoch 60)",
+ "xlabel": "Optimiser",
+ "ylabel": "Test ECE (15 bins)",
+ "aspect": "4:3",
+ "categories": [
+  "SGD",
+  "SAM"
+ ],
+ "color_map": {
+  "unscaled": "#0173B2",
+  "temperature-scaled": "#DE8F05"
+ },
+ "series": [
+  {
+   "label": "unscaled",
+   "values": [
+    0.044579480592298736,
+    0.027481479855623773
+   ],
+   "errors": [
+    0.0017953777166147614,
+    0.0014844005832279664
+   ]
+  },
+  {
+   "label": "temperature-scaled",
+   "values": [
+    0.009423207591949282,
+    0.007030563855274188
+   ],
+   "errors": [
+    0.0008242276201149721,
+    0.0018260487380944322
+   ]
+  }
+ ]
+}
