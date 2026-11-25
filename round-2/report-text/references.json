@@ -1,0 +1,56 @@
+{
+  "Foret2020": {
+    "source": "semantic_scholar",
+    "title": "Sharpness-Aware Minimization for Efficiently Improving Generalization",
+    "first_author": "Foret",
+    "year": 2020,
+    "s2_paper_id": "a2cd073b57be744533152202989228cb4122270a",
+    "doi": "10.48550/arXiv.2010.01412",
+    "arxiv": "2010.01412"
+  },
+  "Guo2017": {
+    "source": "semantic_scholar",
+    "title": "On Calibration of Modern Neural Networks",
+    "first_author": "Guo",
+    "year": 2017,
+    "s2_paper_id": "d65ce2b8300541414bfe51d03906fca72e93523c",
+    "doi": "10.48550/arXiv.1706.04599",
+    "arxiv": "1706.04599"
+  },
+  "Nixon2019": {
+    "source": "semantic_scholar",
+    "title": "Measuring Calibration in Deep Learning",
+    "first_author": "Nixon",
+    "year": 2019,
+    "s2_paper_id": "3b656bba99dbcf6c6d8fd764d53ea64cd38c7050",
+    "doi": "10.48550/arXiv.1904.01685",
+    "arxiv": "1904.01685"
+  },
+  "Tan2025": {
+    "source": "semantic_scholar",
+    "title": "Towards Understanding The Calibration Benefits of Sharpness-Aware Minimization",
+    "first_author": "Tan",
+    "year": 2025,
+    "s2_paper_id": "bf109c1cdab0c8d597081be6962ea5848fa06221",
+    "doi": "10.48550/arXiv.2505.23866",
+    "arxiv": "2505.23866"
+  },
+  "Morosini2026": {
+    "source": "semantic_scholar",
+    "title": "Too Sharp, Too Sure: When Calibration Follows Curvature",
+    "first_author": "Morosini",
+    "year": 2026,
+    "s2_paper_id": "7f6c12ca16ad164b258be30258f111b0c6e000b3",
+    "doi": "10.48550/arXiv.2604.20614",
+    "arxiv": "2604.20614"
+  },
+  "Xiao2017": {
+    "source": "semantic_scholar",
+    "title": "Fashion-MNIST: a Novel Image Dataset for Benchmarking Machine Learning Algorithms",
+    "first_author": "Xiao",
+    "year": 2017,
+    "s2_paper_id": "f9c602cc436a9ea2f9e7db48c77d924e09ce3c32",
+    "doi": "10.48550/arXiv.1708.07747",
+    "arxiv": "1708.07747"
+  }
+}

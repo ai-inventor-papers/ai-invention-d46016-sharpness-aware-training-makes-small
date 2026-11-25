@@ -1,0 +1,1324 @@
+Calibrating Deep Neural Networks using Focal Loss
+Jishnu Mukhoti∗
+University of Oxford
+FiveAI Ltd.
+Viveka Kulharia∗
+University of Oxford
+Amartya Sanyal
+University of Oxford
+The Alan Turing Institute
+Stuart Golodetz
+FiveAI Ltd.
+Philip H. S. Torr
+University of Oxford
+FiveAI Ltd.
+Puneet K. Dokania
+University of Oxford
+FiveAI Ltd.
+Abstract
+Miscalibration – a mismatch between a model’s conﬁdence and its correctness – of
+Deep Neural Networks (DNNs) makes their predictions hard to rely on. Ideally, we
+want networks to be accurate, calibrated and conﬁdent. We show that, as opposed
+to the standard cross-entropy loss, focal loss [Lin et al., 2017] allows us to learn
+models that are already very well calibrated. When combined with temperature
+scaling, whilst preserving accuracy, it yields state-of-the-art calibrated models.
+We provide a thorough analysis of the factors causing miscalibration, and use
+the insights we glean from this to justify the empirically excellent performance
+of focal loss. To facilitate the use of focal loss in practice, we also provide a
+principled approach to automatically select the hyperparameter involved in the loss
+function. We perform extensive experiments on a variety of computer vision and
+NLP datasets, and with a wide variety of network architectures, and show that our
+approach achieves state-of-the-art calibration without compromising on accuracy in
+almost all cases. Code is available at https://github.com/torrvision/
+focal_calibration.
+1
+Introduction
+Deep neural networks have dominated computer vision and machine learning in recent years, and
+this has led to their widespread deployment in real-world systems [Cao et al., 2018, Chen et al., 2018,
+Kamilaris and Prenafeta-Boldú, 2018, Ker et al., 2018, Wang et al., 2018]. However, many current
+multi-class classiﬁcation networks in particular are poorly calibrated, in the sense that the probability
+values that they associate with the class labels they predict overestimate the likelihoods of those
+class labels being correct in the real world. This is a major problem, since if networks are routinely
+overconﬁdent, then downstream components cannot trust their predictions. The underlying cause is
+hypothesised to be that these networks’ high capacity leaves them vulnerable to overﬁtting on the
+negative log-likelihood (NLL) loss they conventionally use during training [Guo et al., 2017].
+Given the importance of this problem, numerous suggestions for how to address it have been proposed.
+Much work has been inspired by approaches that were not originally formulated in a deep learning
+context, such as Platt scaling [Platt, 1999], histogram binning [Zadrozny and Elkan, 2001], isotonic
+regression [Zadrozny and Elkan, 2002], and Bayesian binning and averaging [Naeini et al., 2015,
+Naeini and Cooper, 2016]. As deep learning has become more dominant, however, various works
+have begun to directly target the calibration of deep networks. For example, Guo et al. [2017]
+have popularised a modern variant of Platt scaling known as temperature scaling, which works by
+dividing a network’s logits by a scalar T > 0 (learnt on a validation subset) prior to performing
+∗Joint ﬁrst authors, order decided by coin ﬂip. Contact: {jishnu, viveka, puneet, phst}@robots.ox.ac.uk,
+amartya.sanyal@cs.ox.ac.uk, sgolodetz@gxstudios.net
+34th Conference on Neural Information Processing Systems (NeurIPS 2020), Vancouver, Canada.
+arXiv:2002.09437v2  [cs.LG]  26 Oct 2020
+
+softmax. Temperature scaling has the desirable property that it can improve the calibration of a
+network without in any way affecting its accuracy. However, whilst its simplicity and effectiveness
+have made it a popular network calibration method, it does have downsides. For example, whilst it
+scales the logits to reduce the network’s conﬁdence in incorrect predictions, this also slightly reduces
+the network’s conﬁdence in predictions that were correct [Kumar et al., 2018]. Moreover, it is known
+that temperature scaling does not calibrate a model under data distribution shift [Ovadia et al., 2019].
+By contrast, Kumar et al. [2018] initially eschew temperature scaling in favour of minimising a
+differentiable proxy for calibration error at training time, called Maximum Mean Calibration Error
+(MMCE), although they do later also use temperature scaling as a post-processing step to obtain
+better results than cross-entropy followed by temperature scaling [Guo et al., 2017]. Separately,
+Müller et al. [2019] propose training models on cross-entropy loss with label smoothing instead of
+one-hot labels, and show that label smoothing has a very favourable effect on model calibration.
+In this paper, we propose a technique for improving network calibration that works by replacing
+the cross-entropy loss conventionally used when training classiﬁcation networks with the focal loss
+proposed by Lin et al. [2017]. We observe that unlike cross-entropy, which minimises the KL
+divergence between the predicted (softmax) distribution and the target distribution (one-hot encoding
+in classiﬁcation tasks) over classes, focal loss minimises a regularised KL divergence between these
+two distributions, which ensures minimisation of the KL divergence whilst increasing the entropy of
+the predicted distribution, thereby preventing the model from becoming overconﬁdent. Since focal
+loss, as shown in §4, is dependent on a hyperparameter, γ, that needs to be cross-validated, we also
+provide a method for choosing γ automatically for each sample, and show that it outperforms all the
+baseline models.
+The intuition behind using focal loss is to direct the network’s attention during training towards
+samples for which it is currently predicting a low probability for the correct class, since trying to
+reduce the NLL on samples for which it is already predicting a high probability for the correct class
+is liable to lead to NLL overﬁtting, and thereby miscalibration [Guo et al., 2017]. More formally, we
+show in §4 that focal loss can be seen as implicitly regularising the weights of the network during
+training by causing the gradient norms for conﬁdent samples to be lower than they would have
+been with cross-entropy, which we would expect to reduce overﬁtting and improve the network’s
+calibration.
+Overall, we make the following contributions:
+1. In §3, we study the link that Guo et al. [2017] observed between miscalibration and NLL overﬁtting
+in detail, and show that the overﬁtting is associated with the predicted distributions for misclassiﬁed
+test samples becoming peakier as the optimiser tries to increase the magnitude of the network’s
+weights to reduce the training NLL.
+2. In §4, we propose the use of focal loss for training better-calibrated networks, and provide both
+theoretical and empirical justiﬁcations for this approach. In addition, we provide a principled
+method for automatically choosing γ for each sample during training.
+3. In §5, we show, via experiments on a variety of classiﬁcation datasets and network architectures,
+that DNNs trained with focal loss are more calibrated than those trained with cross-entropy loss
+(both with and without label smoothing), MMCE or Brier loss [Brier, 1950]. Finally, we also
+make the interesting observation that whilst temperature scaling may not work for detecting
+out-of-distribution (OoD) samples, our approach can. We show that our approach is better at
+detecting out-of-distribution samples, taking CIFAR-10 as the in-distribution dataset, and SVHN
+and CIFAR-10-C as out-of-distribution datasets.
+2
+Problem Formulation
+Let D = ⟨(xi, yi)⟩N
+i=1 denote a dataset consisting of N samples from a joint distribution D(X, Y),
+where for each sample i, xi ∈X is the input and yi ∈Y = {1, 2, ..., K} is the ground-truth class
+label. Let ˆpi,y = fθ(y|xi) be the probability that a neural network f with model parameters θ predicts
+for a class y on a given input xi. The class that f predicts for xi is computed as ˆyi = argmaxy∈Y ˆpi,y,
+and the predicted conﬁdence as ˆpi = maxy∈Y ˆpi,y. The network is said to be perfectly calibrated
+when, for each sample (x, y) ∈D, the conﬁdence ˆp is equal to the model accuracy P(ˆy = y|ˆp), i.e.
+the probability that the predicted class is correct. For instance, of all the samples to which a perfectly
+calibrated neural network assigns a conﬁdence of 0.8, 80% should be correctly predicted.
+2
+
+A popular metric used to measure model calibration is the expected calibration error (ECE) [Naeini
+et al., 2015], deﬁned as the expected absolute difference between the model’s conﬁdence and its
+accuracy, i.e. Eˆp
+
+|P(ˆy = y|ˆp) −ˆp|
+
+. Since we only have ﬁnite samples, the ECE cannot in practice
+be computed using this deﬁnition. Instead, we divide the interval [0, 1] into M equispaced bins, where
+the ith bin is the interval
+  i−1
+M ,
+i
+M
+
+. Let Bi denote the set of samples with conﬁdences belonging
+to the ith bin. The accuracy Ai of this bin is computed as Ai =
+1
+|Bi|
+P
+j∈Bi 1 (ˆyj = yj), where 1
+is the indicator function, and ˆyj and yj are the predicted and ground-truth labels for the jth sample.
+Similarly, the conﬁdence Ci of the ith bin is computed as Ci =
+1
+|Bi|
+P
+j∈Bi ˆpj, i.e. Ci is the average
+conﬁdence of all samples in the bin. The ECE can be approximated as a weighted average of the
+absolute difference between the accuracy and conﬁdence of each bin: ECE = PM
+i=1
+|Bi|
+N |Ai −Ci|.
+A similar metric, the maximum calibration error (MCE) [Naeini et al., 2015], is deﬁned as
+the maximum absolute difference between the accuracy and conﬁdence of each bin: MCE =
+maxi∈{1,...,M} |Ai −Ci|.
+AdaECE: One disadvantage of ECE is the uniform bin width. For a trained model, most of the
+samples lie within the highest conﬁdence bins, and hence these bins dominate the value of the ECE.
+We thus also consider another metric, AdaECE (Adaptive ECE), for which bin sizes are calculated so
+as to evenly distribute samples between bins (similar to the adaptive binning procedure in Nguyen
+and O’Connor [2015]): AdaECE = PM
+i=1
+|Bi|
+N |Ai −Ci| s.t. ∀i, j · |Bi| = |Bj|.
+Classwise-ECE: The ECE metric only considers the probability of the predicted class, without
+considering the other scores in the softmax distribution. A stronger deﬁnition of calibration would
+require the probabilities of all the classes in the softmax distribution to be calibrated [Kull et al., 2019,
+Vaicenavicius et al., 2019, Widmann et al., 2019, Kumar et al., 2019]. This can be achieved with a
+simple classwise extension of the ECE metric: ClasswiseECE = 1
+K
+PM
+i=1
+PK
+j=1
+|Bi,j|
+N
+|Ai,j −Ci,j|,
+where K is the number of classes, Bij denotes the set of samples from the jth class in the ith bin,
+Aij =
+1
+|Bij|
+P
+k∈Bij 1 (j = yk) and Ci,j =
+1
+|Bij|
+P
+k∈Bij ˆpkj.
+A common way of visualising calibration is to use a reliability plot [Niculescu-Mizil and Caruana,
+2005], which plots the accuracies of the conﬁdence bins as a bar chart (see Appendix Figure A.1).
+For a perfectly calibrated model, the accuracy for each bin matches the conﬁdence, and hence all of
+the bars lie on the diagonal. By contrast, if most of the bars lie above the diagonal, the model is more
+accurate than it expects, and is under-conﬁdent, and if most of the bars lie below the diagonal, then it
+is over-conﬁdent.
+3
+What Causes Miscalibration?
+We now discuss why high-capacity neural networks, despite achieving low classiﬁcation errors on
+well-known datasets, tend to be miscalibrated. A key empirical observation made by Guo et al.
+[2017] was that poor calibration of such networks appears to be linked to overﬁtting on the negative
+log-likelihood (NLL) during training. In this section, we further inspect this observation to provide
+new insights.
+For the analysis, we train a ResNet-50 network on CIFAR-10 with state-of-the-art performance
+settings [PyTorch-CIFAR]. We use Stochastic Gradient Descent (SGD) with a mini-batch of size 128,
+momentum of 0.9, and learning rate schedule of {0.1, 0.01, 0.001} for the ﬁrst 150, next 100, and
+last 100 epochs, respectively. We minimise cross-entropy loss (a.k.a. NLL) Lc, which, in a standard
+classiﬁcation context, is −log ˆpi,yi, where ˆpi,yi is the probability assigned by the network to the
+correct class yi for the ith sample. Note that the NLL is minimised when for each training sample
+i, ˆpi,yi = 1, whereas the classiﬁcation error is minimised when ˆpi,yi > ˆpi,y for all y̸ = yi. This
+indicates that even when the classiﬁcation error is 0, the NLL can be positive, and the optimisation
+algorithm can still try to reduce it to 0 by further increasing the value of ˆpi,yi for each sample (see
+Appendix A).
+To study how miscalibration occurs during training, we plot the average NLL for the train and test
+sets at each training epoch in Figures 1(a) and 1(b). We also plot the average NLL and the entropy of
+the softmax distribution produced by the network for the correctly and incorrectly classiﬁed samples.
+In Figure 1(c), we plot the classiﬁcation errors on the train and test sets, along with the test set ECE.
+3
+
+0
+50
+100 150 200 250 300 350
+Training epoch
+0.0
+0.2
+0.4
+0.6
+0.8
+1.0
+1.2
+1.4
+Train NLL / Train Entropy
+Train NLL correct
+Train NLL incorrect
+Train NLL
+Train Entropy correct
+Train Entropy incorrect
+(a)
+0
+50
+100 150 200 250 300 350
+Training epoch
+0.0
+0.2
+0.4
+0.6
+0.8
+1.0
+1.2
+1.4
+1.6
+Test NLL / Test Entropy
+Test NLL correct
+Test NLL incorrect
+Test NLL
+Test Entropy correct
+Test Entropy incorrect
+(b)
+0
+50
+100 150 200 250 300 350
+Training epoch
+0.0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+Train error / Test error / Test ECE
+Train classification error
+Test classification error
+Test ECE
+(c)
+Figure 1: Metrics related to calibration plotted whilst training a ResNet-50 network on CIFAR-10.
+Curse of misclassiﬁed samples: Figures 1(a) and 1(b) show that although the average train NLL
+(for both correctly and incorrectly classiﬁed training samples) broadly decreases throughout training,
+after the 150th epoch (where the learning rate drops by a factor of 10), there is a marked rise in
+the average test NLL, indicating that the network starts to overﬁt on average NLL. This increase in
+average test NLL is caused only by the incorrectly classiﬁed samples, as the average NLL for the
+correctly classiﬁed samples continues to decrease even after the 150th epoch. We also observe that
+after epoch 150, the test set ECE rises, indicating that the network is becoming miscalibrated. This
+corroborates the observation in Guo et al. [2017] that miscalibration and NLL overﬁtting are linked.
+Peak at the wrong place: We further observe that the entropies of the softmax distributions for both
+the correctly and incorrectly classiﬁed test samples decrease throughout training (in other words, the
+distributions get peakier). This observation, coupled with the one we made above, indicates that for
+the wrongly classiﬁed test samples, the network gradually becomes more and more conﬁdent about
+its incorrect predictions.
+Weight magniﬁcation: The increase in conﬁdence of the network’s predictions can happen if the
+network increases the norm of its weights W to increase the magnitudes of the logits. In fact,
+cross-entropy loss is minimised when for each training sample i, ˆpi,yi = 1, which is possible only
+when ||W|| →∞. Cross-entropy loss thus inherently induces this tendency of weight magniﬁcation
+in neural network optimisation. The promising performance of weight decay [Guo et al., 2017]
+(regulating the norm of weights) on the calibration of neural networks can perhaps be explained
+using this. This increase in the network’s conﬁdence during training is one of the key causes of
+miscalibration.
+4
+Improving Calibration using Focal Loss
+As discussed in §3, overﬁtting on NLL, which is observed as the network grows more conﬁdent
+on all of its predictions irrespective of their correctness, is strongly related to poor calibration.
+One cause of this is that the cross-entropy objective minimises the difference between the softmax
+distribution and the ground-truth one-hot encoding over an entire mini-batch, irrespective of how
+well a network classiﬁes individual samples in the mini-batch. In this work, we study an alternative
+loss function, popularly known as focal loss [Lin et al., 2017], that tackles this by weighting loss
+components generated from individual samples in a mini-batch by how well the model classiﬁes
+them. For classiﬁcation tasks where the target distribution is a one-hot encoding, it is deﬁned as
+Lf = −(1 −ˆpi,yi)γ log ˆpi,yi, where γ is a user-deﬁned hyperparameter2.
+Why might focal loss improve calibration? We know that cross-entropy forms an upper bound
+on the KL-divergence between the target distribution q and the predicted distribution ˆp, i.e. Lc ≥
+KL(q||ˆp), so minimising cross-entropy results in minimising KL(q||ˆp). Interestingly, a general
+form of focal loss can be shown to be an upper bound on the regularised KL-divergence, where the
+regulariser is the negative entropy of the predicted distribution ˆp, and the regularisation parameter is
+γ, the hyperparameter of focal loss (a proof of this can be found in Appendix B):
+Lf ≥KL(q||ˆp) −γH[ˆp].
+(1)
+2We note in passing that unlike cross-entropy loss, focal loss in its general form is not a proper loss function,
+as minimising it does not always lead to the predicted distribution ˆp being equal to the target distribution q (see
+Appendix B for the relevant deﬁnition and a longer discussion). However, when q is a one-hot encoding (as in
+our case, and for most classiﬁcation tasks), minimising focal loss does lead to ˆp being equal to q.
+4
+
+0
+50
+100 150 200 250 300 350
+Training epoch
+0.2
+0.4
+0.6
+0.8
+1.0
+1.2
+1.4
+1.6
+Test NLL
+CE
+Focal ( =1.0)
+Focal ( =2.0)
+Focal ( =3.0)
+(a)
+(b)
+0
+50
+100 150 200 250 300 350
+Training epoch
+0.2
+0.4
+0.6
+0.8
+1.0
+1.2
+Test NLL misclassified samples
+CE
+Focal ( =1.0)
+Focal ( =2.0)
+Focal ( =3.0)
+(c)
+0
+50
+100 150 200 250 300 350
+Training epoch
+0.0
+0.2
+0.4
+0.6
+0.8
+1.0
+Test Entropy (misclassified)
+CE
+Focal ( =1.0)
+Focal ( =2.0)
+Focal ( =3.0)
+(d)
+0
+50
+100 150 200 250 300 350
+Training epoch
+6
+8
+10
+12
+Weight norm
+CE
+Focal ( = 1)
+Focal ( = 2)
+Focal ( = 3)
+(e)
+Figure 2: How metrics related to model calibration change whilst training several ResNet-50 networks
+on CIFAR-10, using either cross-entropy loss, or focal loss with γ set to 1, 2 or 3.
+The most interesting property of this upper bound is that it shows that replacing cross-entropy with
+focal loss has the effect of adding a maximum-entropy regulariser [Pereyra et al., 2017] to the implicit
+minimisation that was previously being performed. In other words, trying to minimise focal loss
+minimises the KL divergence between ˆp and q, whilst simultaneously increasing the entropy of the
+predicted distribution ˆp. Note, in the case of ground truth with one-hot encoding, only the component
+of the entropy of ˆp corresponding to the ground-truth index, γ(−ˆpi,yi log ˆpi,yi), will be maximised
+(refer Appendix B). Encouraging the predicted distribution to have higher entropy can help avoid the
+overconﬁdent predictions produced by DNNs (see the ‘Peak at the wrong place’ paragraph of §3),
+and thereby improve calibration.
+Empirical observations: To analyse the behaviour of neural networks trained on focal loss, we use
+the same framework as mentioned above, and train four ResNet-50 networks on CIFAR-10, one using
+cross-entropy loss, and three using focal loss with γ = 1, 2 and 3. Figure 2(a) shows that the test NLL
+for the cross-entropy model signiﬁcantly increases towards the end of training (before saturating),
+whereas the NLLs for the focal loss models remain low. To better understand this, we analyse the
+behaviour of these models for correctly and incorrectly classiﬁed samples. Figure 2(b) shows that
+even though the NLLs for the correctly classiﬁed samples broadly-speaking decrease over the course
+of training for all the models, the NLLs for the focal loss models remain consistently higher than that
+for the cross-entropy model throughout training, implying that the focal loss models are relatively
+less conﬁdent than the cross-entropy model for samples that they predict correctly. This is important,
+as we have already discussed that it is overconﬁdence that normally makes deep neural networks
+miscalibrated. Figure 2(c) shows that in contrast to the cross-entropy model, for which the NLL
+for misclassiﬁed test samples increases signiﬁcantly after epoch 150, the rise in this value for the
+focal loss models is much less severe. Additionally, in Figure 2(d), we notice that the entropy of the
+softmax distribution for misclassiﬁed test samples is consistently (if marginally) higher for focal loss
+than for cross-entropy (consistent with Equation 1).
+Note that from Figure 2(a), one may think that applying early stopping when training a model on
+cross-entropy can provide better calibration scores. However, there is no ideal way of doing early
+stopping that provides the best calibration error and the best test set accuracy. For fair comparison,
+we chose 3 intermediate models for each loss function with the best val set ECE, NLL and accuracy,
+and observed that: a) for every stopping criterion, focal loss outperforms cross-entropy in both test
+set accuracy and ECE, b) when using val set ECE as a stopping criterion, the intermediate model
+for cross-entropy indeed improves its test set ECE, but at the cost of a signiﬁcantly higher test error.
+Please refer to Appendix J for more details.
+As per §3, an increase in the test NLL and a decrease in the test entropy for misclassiﬁed samples,
+along with no corresponding increase in the test NLL for the correctly classiﬁed samples, can be
+interpreted as the network starting to predict softmax distributions for the misclassiﬁed samples that
+are ever more peaky in the wrong place. Notably, our results in Figures 2(b), 2(c) and 2(d) clearly
+show that this effect is signiﬁcantly reduced when training with focal loss rather than cross-entropy,
+leading to a better-calibrated network whose predictions are less peaky in the wrong place.
+Theoretical justiﬁcation: As mentioned previously, once a model trained using cross-entropy
+reaches high training accuracy, the optimiser may try to further reduce the training NLL by increasing
+the conﬁdences for the correctly classiﬁed samples. It may achieve this by magnifying the network
+weights to increase the magnitudes of the logits. To verify this hypothesis, we plot the L2 norm of the
+weights of the last linear layer for all four networks as a function of the training epoch (see Figure
+2(e)). Notably, although the norms of the weights for the models trained on focal loss are initially
+higher than that for the cross-entropy model, a complete reversal in the ordering of the weight norms
+occurs between epochs 150 and 250. In other words, as the networks start to become miscalibrated,
+5
+
+(a)
+(b) Epoch 10
+(c) Epoch 100
+(d) Epoch 200
+Figure 3: (a): g(p, γ) vs. p and (b-d): histograms of the gradient norms of the last linear layer for
+both cross-entropy and focal loss.
+the weight norm for the cross-entropy model also starts to become greater than those for the focal loss
+models. In practice, this is because focal loss, by design, starts to act as a regulariser on the network’s
+weights once the model has gained a certain amount of conﬁdence in its predictions. This behaviour
+of focal loss can be observed even on a much simpler setup like a linear model (see Appendix C). To
+better understand this, we start by considering the following proposition (proof in Appendix D):
+Proposition 1. For focal loss Lf and cross-entropy Lc, the gradients ∂Lf
+∂w = ∂Lc
+∂w g(ˆpi,yi, γ), where
+g(p, γ) = (1 −p)γ −γp(1 −p)γ−1 log(p), γ ∈R+ is the focal loss hyperparameter, and w denotes
+the parameters of the last linear layer. Thus
+
+∂Lf
+∂w
+ ≤
+ ∂Lc
+∂w
+ if g(ˆpi,yi, γ) ∈[0, 1].
+Proposition 1 shows the relationship between the norms of the gradients of the last linear layer for
+focal loss and cross-entropy loss, for the same network architecture. Note that this relation depends
+on a function g(p, γ), which we plot in Figure 3(a) to understand its behaviour. It is clear that for
+every γ, there exists a (different) threshold p0 such that for all p ∈[0, p0], g(p, γ) ≥1, and for all
+p ∈(p0, 1], g(p, γ) < 1. (For example, for γ = 1, p0 ≈0.4.) We use this insight to further explain
+why focal loss provides implicit weight regularisation.
+Implicit weight regularisation: For a network trained using focal loss with a ﬁxed γ, during the
+initial stages of the training, when ˆpi,yi ∈(0, p0), g(ˆpi,yi, γ) > 1. This implies that the conﬁdences
+of the focal loss model’s predictions will initially increase faster than they would for cross-entropy.
+However, as soon as ˆpi,yi crosses the threshold p0, g(ˆpi,yi, γ) falls below 1 and reduces the size of
+the gradient updates made to the network weights, thereby having a regularising effect on the weights.
+This is why, in Figure 2(e), we ﬁnd that the weight norms of the models trained with focal loss are
+initially higher than that for the model trained using cross-entropy. However, as training progresses,
+we ﬁnd that the ordering of the weight norms reverses, as focal loss starts regularising the network
+weights. Moreover, we can draw similar insights from Figures 3(b), 3(c) and 3(d), in which we
+plot histograms of the gradient norms of the last linear layer (over all samples in the training set) at
+epochs 10, 100 and 200, respectively. At epoch 10, the gradient norms for cross-entropy and focal
+loss are similar, but as training progresses, those for cross-entropy decrease less rapidly than those
+for focal loss, indicating that the gradient norms for focal loss are consistently lower than those for
+cross-entropy throughout training.
+Finally, observe in Figure 3(a) that for higher γ values, the fall in g(p, γ) is steeper. We would thus
+expect a greater weight regularisation effect for models that use higher values of γ. This explains
+why, of the three models that we trained using focal loss, the one with γ = 3 outperforms (in terms
+of calibration) the one with γ = 2, which in turn outperforms the model with γ = 1. Based on
+this observation, one might think that, in general, a higher value of gamma would lead to a more
+calibrated model. However, this is not the case, as we notice from Figure 3(a) that for γ ≥7, g(p, γ)
+reduces to nearly 0 for a relatively low value of p (around 0.5). As a result, using values of γ that are
+too high will cause the gradients to die (i.e. reduce to nearly 0) early, at a point at which the network’s
+predictions remain ambiguous, thereby causing the training process to fail.
+How to choose γ: As discussed, focal loss provides implicit entropy and weight regularisation, which
+heavily depend on the value of γ. Finding an appropriate γ is normally done using cross-validation.
+Also, traditionally, γ is ﬁxed for all samples in the dataset. However, as shown, the regularisation
+effect for a sample i depends on ˆpi,yi, i.e. the predicted probability for the ground truth label for the
+sample. It thus makes sense to choose γ for each sample based on the value of ˆpi,yi. To this end, we
+provide Proposition 2 (proof in Appendix D), which we use to ﬁnd a solution to this problem:
+6
+
+Proposition 2. Given a p0, for 1 ≥p ≥p0 > 0, g(p, γ) ≤1 for all γ ≥γ∗= a
+b +
+1
+log aW−1
+ −
+a(1−a/b)
+b
+log a
+
+, where a = 1 −p0, b = p0 log p0, and W−1 is the Lambert-W function [Corless et al.,
+1996]. Moreover, for p ≥p0 > 0 and γ ≥γ∗, the equality g(p, γ) = 1 holds only for p = p0 and
+γ = γ∗.
+It is worth noting that there exist multiple values of γ where g(p, γ) ≤1 for all p ≥p0. For a given
+p0, Proposition 2 allows us to compute γ s.t. (i) g(p0, γ) = 1; (ii) g(p, γ) ≥1 for p ∈[0, p0); and (iii)
+g(p, γ) < 1 for p ∈(p0, 1]. This allows us to control the magnitude of the gradients for a particular
+sample i based on the current value of ˆpi,yi, and gives us a way of obtaining an informed value of γ
+for each sample. For instance, a reasonable policy might be to choose γ s.t. g(ˆpi,yi, γ) > 1 if ˆpi,yi
+is small (say less than 0.25), and g(ˆpi,yi, γ) < 1 otherwise. Such a policy will have the effect of
+making the weight updates larger for samples having a low predicted probability for the correct class
+and smaller for samples with a relatively higher predicted probability for the correct class.
+Following the aforementioned arguments, we choose a threshold p0 of 0.25, and use Proposition 2 to
+obtain a γ policy such that g(p, γ) is observably greater than 1 for p ∈[0, 0.25) and g(p, γ) < 1 for
+p ∈(0.25, 1]. In particular, we use the following schedule: if ˆpi,yi ∈[0, 0.2), then γ = 5, otherwise
+γ = 3 (note that g(0.2, 5) ≈1 and g(0.25, 3) ≈1: see Figure 3(a)). We ﬁnd this γ policy to perform
+consistently well across multiple classiﬁcation datasets and network architectures. Having said that,
+one can calculate multiple such schedules for γ following Proposition 2, using the intuition of having
+a relatively high γ for low values of ˆpi,yi and a relatively low γ for high values of ˆpi,yi.
+5
+Experiments
+We conduct image and document classiﬁcation experiments to test the performance of focal loss. For
+the former, we use CIFAR-10/100 [Krizhevsky, 2009] and Tiny-ImageNet [Deng et al., 2009] , and
+train ResNet-50, ResNet-110 [He et al., 2016], Wide-ResNet-26-10 [Zagoruyko and Komodakis,
+2016] and DenseNet-121 [Huang et al., 2017] models, and for the latter, we use 20 Newsgroups
+[Lang, 1995] and Stanford Sentiment Treebank (SST) [Socher et al., 2013] datasets and train Global
+Pooling CNN [Lin et al., 2014] and Tree-LSTM [Tai et al., 2015] models. Further details on the
+datasets and training can be found in Appendix E.
+Baselines Along with cross-entropy loss, we compare our method against the following baselines: a)
+MMCE (Maximum Mean Calibration Error) [Kumar et al., 2018], a continuous and differentiable
+proxy for calibration error that is normally used as a regulariser alongside cross-entropy, b) Brier
+loss [Brier, 1950], the squared error between the predicted softmax vector and the one-hot ground
+truth encoding (Brier loss is an important baseline as it can be decomposed into calibration and
+reﬁnement [DeGroot and Fienberg, 1983]), and c) Label smoothing [Müller et al., 2019] (LS): given a
+one-hot ground-truth distribution q and a smoothing factor α (hyperparameter), the smoothed vector
+s is obtained as si = (1 −α)qi + α(1 −qi)/(K −1), where si and qi denote the ith elements of s
+and q respectively, and K is the number of classes. Instead of q, s is treated as the ground truth. We
+train models using α = 0.05 and α = 0.1, but ﬁnd α = 0.05 to perform better. We thus report the
+results obtained from LS-0.05 with α = 0.05.
+Focal Loss: As mentioned in §4, our proposed approach is the sample-dependent schedule FLSD-53
+(γ = 5 for ˆpy ∈[0, 0.2), and γ = 3 for ˆpy ∈[0.2, 1]), which we ﬁnd to perform well across most
+classiﬁcation datasets and network architectures. In addition, we also train other focal loss baselines,
+including ones with γ ﬁxed to 1, 2 and 3, and also ones that have a training epoch-dependent schedule
+for γ. Among the focal loss models trained with a ﬁxed γ, using validation set we ﬁnd γ = 3 (FL-3)
+to perform the best. Details of all these approaches can be found in Appendix F.
+Temperature Scaling: In order to compute the optimal temperature, we use two different methods:
+(a) learning the temperature by minimising val set NLL, and (b) performing grid search over tempera-
+tures between 0 and 10, with a step of 0.1, and ﬁnding the one that minimises val set ECE. We ﬁnd
+the second approach to produce stronger baselines and report results obtained using this approach.
+Performance Gains: We report ECE% (computed using 15 bins) along with optimal temperatures in
+Table 1, and test set error in Table 2. We report the other calibration scores (AdaECE, Classwise-ECE,
+MCE and NLL) in Appendix F. Firstly, for all dataset-network pairs, we obtain very competitive
+classiﬁcation accuracies (shown in Table 2). Secondly, it is clear from Table 1, and Tables F.1
+and F.2 in the appendix, that focal loss with sample-dependent γ and with γ = 3 outperform all
+the baselines: cross-entropy, label smoothing, Brier loss and MMCE. They broadly produce the
+7
+
+0
+1
+2
+3
+4
+5
+ECE
+0
+1
+2
+3
+4
+5
+AdaECE
+0.0
+0.2
+0.4
+0.6
+0.8
+1.0
+Classwise-ECE
+0
+1
+2
+3
+4
+5
+ECE
+0
+1
+2
+3
+4
+5
+AdaECE
+0.0
+0.2
+0.4
+0.6
+0.8
+1.0
+Classwise-ECE
+Loss Functions
+Cross-Entropy
+Cross-Entropy(T)
+Brier Loss
+Brier Loss(T)
+MMCE
+MMCE(T)
+LS-0.05
+LS-0.05(T)
+FLSD-53
+FLSD-53(T)
+(a) ResNet-50 on CIFAR-10
+(b) ResNet-110 on CIFAR-10
+Figure 4: Bar plots with conﬁdence intervals for ECE, AdaECE and Classwise-ECE, computed for
+ResNet-50 (ﬁrst 3 ﬁgures) and ResNet-110 (last 3 ﬁgures) on CIFAR-10.
+Dataset
+Model
+Cross-Entropy
+Brier Loss
+MMCE
+LS-0.05
+FL-3 (Ours)
+FLSD-53 (Ours)
+Pre T
+Post T
+Pre T
+Post T
+Pre T
+Post T
+Pre T
+Post T
+Pre T
+Post T
+Pre T
+Post T
+CIFAR-100
+ResNet-50
+17.52
+3.42(2.1)
+6.52
+3.64(1.1)
+15.32
+2.38(1.8)
+7.81
+4.01(1.1)
+5.13
+1.97(1.1)
+4.5
+2.0(1.1)
+ResNet-110
+19.05
+4.43(2.3)
+7.88
+4.65(1.2)
+19.14
+3.86(2.3)
+11.02
+5.89(1.1)
+8.64
+3.95(1.2)
+8.56
+4.12(1.2)
+Wide-ResNet-26-10
+15.33
+2.88(2.2)
+4.31
+2.7(1.1)
+13.17
+4.37(1.9)
+4.84
+4.84(1)
+2.13
+2.13(1)
+3.03
+1.64(1.1)
+DenseNet-121
+20.98
+4.27(2.3)
+5.17
+2.29(1.1)
+19.13
+3.06(2.1)
+12.89
+7.52(1.2)
+4.15
+1.25(1.1)
+3.73
+1.31(1.1)
+CIFAR-10
+ResNet-50
+4.35
+1.35(2.5)
+1.82
+1.08(1.1)
+4.56
+1.19(2.6)
+2.96
+1.67(0.9)
+1.48
+1.42(1.1)
+1.55
+0.95(1.1)
+ResNet-110
+4.41
+1.09(2.8)
+2.56
+1.25(1.2)
+5.08
+1.42(2.8)
+2.09
+2.09(1)
+1.55
+1.02(1.1)
+1.87
+1.07(1.1)
+Wide-ResNet-26-10
+3.23
+0.92(2.2)
+1.25
+1.25(1)
+3.29
+0.86(2.2)
+4.26
+1.84(0.8)
+1.69
+0.97(0.9)
+1.56
+0.84(0.9)
+DenseNet-121
+4.52
+1.31(2.4)
+1.53
+1.53(1)
+5.1
+1.61(2.5)
+1.88
+1.82(0.9)
+1.32
+1.26(0.9)
+1.22
+1.22(1)
+Tiny-ImageNet
+ResNet-50
+15.32
+5.48(1.4)
+4.44
+4.13(0.9)
+13.01
+5.55(1.3)
+15.23
+6.51(0.7)
+1.87
+1.87(1)
+1.76
+1.76(1)
+20 Newsgroups
+Global Pooling CNN
+17.92
+2.39(3.4)
+13.58
+3.22(2.3)
+15.48
+6.78(2.2)
+4.79
+2.54(1.1)
+8.67
+3.51(1.5)
+6.92
+2.19(1.5)
+SST Binary
+Tree-LSTM
+7.37
+2.62(1.8)
+9.01
+2.79(2.5)
+5.03
+4.02(1.5)
+4.84
+4.11(1.2)
+16.05
+1.78(0.5)
+9.19
+1.83(0.7)
+Table 1: ECE (%) computed for different approaches both pre and post temperature scaling (cross-
+validating T on ECE). Optimal temperature for each method is indicated in brackets. T ≈1 indicates
+innately calibrated model.
+Dataset
+Model
+Cross-Entropy
+Brier Loss
+MMCE
+LS-0.05
+FL-3 (Ours)
+FLSD-53 (Ours)
+CIFAR-100
+ResNet-50
+23.3
+23.39
+23.2
+23.43
+22.75
+23.22
+ResNet-110
+22.73
+25.1
+23.07
+23.43
+22.92
+22.51
+Wide-ResNet-26-10
+20.7
+20.59
+20.73
+21.19
+19.69
+20.11
+DenseNet-121
+24.52
+23.75
+24.0
+24.05
+23.25
+22.67
+CIFAR-10
+ResNet-50
+4.95
+5.0
+4.99
+5.29
+5.25
+4.98
+ResNet-110
+4.89
+5.48
+5.4
+5.52
+5.08
+5.42
+Wide-ResNet-26-10
+3.86
+4.08
+3.91
+4.2
+4.13
+4.01
+DenseNet-121
+5.0
+5.11
+5.41
+5.09
+5.33
+5.46
+Tiny-ImageNet
+ResNet-50
+49.81
+53.2
+51.31
+47.12
+49.69
+49.06
+20 Newsgroups
+Global Pooling CNN
+26.68
+27.06
+27.23
+26.03
+29.26
+27.98
+SST Binary
+Tree-LSTM
+12.85
+12.85
+11.86
+13.23
+12.19
+12.8
+Table 2: Test set error (%) computed for different approaches.
+lowest calibration errors both before and after temperature scaling. This observation is particularly
+encouraging, as it also indicates that a principled method of obtaining values of γ for focal loss
+can produce a very calibrated model, with no need to use validation set for tuning γ. As shown in
+Figure 4, we also compute 90% conﬁdence intervals for ECE, AdaECE and Classwise-ECE using
+1000 bootstrap samples following Kumar et al. [2019], and using ResNet-50/110 trained on CIFAR-10
+(see Appendix G for more results). Note that FLSD-53 produces the lowest calibration errors in
+general, and the difference in the metric values between FLSD-53 and other approaches (except Brier
+loss) is mostly statistically signiﬁcant (i.e., conﬁdence intervals don’t overlap), especially before
+temperature scaling. In addition to the lower calibration errors, there are other advantages of focal
+loss as well, which we explore next.
+More advantages of focal loss: Behaviour on Out-of-Distribution (OoD) data: A perfectly calibrated
+model should have low conﬁdence whenever it misclassiﬁes, including when it encounters data which
+is OoD [Thulasidasan et al., 2019]. Although temperature scaling calibrates a model under the
+i.i.d. assumption, it is known to fail under distributional shift [Ovadia et al., 2019]. Since focal
+loss has implicit regularisation effects on the network (see §4), we investigate if it helps to learn
+representations that are more robust to OoD data. To do this, we use ResNet-110 and Wide-ResNet-
+26-10 trained on CIFAR-10 and consider the SVHN [Netzer et al., 2011] test set and CIFAR-10-C
+[Hendrycks and Dietterich, 2019] with Gaussian noise corruption at severity 5 as OoD data. We use
+the entropy of the softmax distribution as the measure of conﬁdence or uncertainty, and report the
+corresponding AUROC scores both before and after temperature scaling in Table 3. For both SVHN
+8
+
+Dataset
+Model
+Cross-Entropy
+Brier Loss
+MMCE
+LS-0.05
+FL-3 (Ours)
+FLSD-53 (Ours)
+Pre T
+Post T
+Pre T
+Post T
+Pre T
+Post T
+Pre T
+Post T
+Pre T
+Post T
+Pre T
+Post T
+CIFAR-10/SVHN
+ResNet-110
+61.71
+59.66
+94.80
+95.13
+85.31
+85.39
+68.68
+68.68
+96.74
+96.92
+90.83
+90.97
+Wide-ResNet-26-10
+96.82
+97.62
+94.51
+94.51
+97.35
+97.95
+84.63
+84.66
+98.19
+98.05
+98.29
+98.20
+CIFAR-10/CIFAR-10-C
+ResNet-110
+77.53
+75.16
+84.09
+83.86
+71.96
+70.02
+72.17
+72.18
+82.27
+82.18
+85.05
+84.70
+Wide-ResNet-26-10
+81.06
+80.68
+85.03
+85.03
+82.17
+81.72
+71.10
+71.16
+82.17
+81.86
+87.05
+87.30
+Table 3: AUROC (%) computed for models trained on CIFAR-10 (in-distribution), and using SVHN
+and CIFAR-10-C (Gaussian Noise corruption with severity level 5) respectively as the OoD datasets.
+0.0
+0.2
+0.4
+0.6
+0.8
+1.0
+FPR
+0.0
+0.2
+0.4
+0.6
+0.8
+1.0
+TPR
+CE
+BS
+MMCE
+LS
+FL ( = 3)
+FLSD-53
+(a) ResNet-110 (pre-T)
+0.0
+0.2
+0.4
+0.6
+0.8
+1.0
+FPR
+0.0
+0.2
+0.4
+0.6
+0.8
+1.0
+TPR
+CE
+BS
+MMCE
+LS
+FL ( = 3)
+FLSD-53
+(b) ResNet-110 (post-T)
+0.0
+0.2
+0.4
+0.6
+0.8
+1.0
+FPR
+0.0
+0.2
+0.4
+0.6
+0.8
+1.0
+TPR
+CE
+BS
+MMCE
+LS
+FL ( = 3)
+FLSD-53
+(c) Wide-ResNet (pre-T)
+0.0
+0.2
+0.4
+0.6
+0.8
+1.0
+FPR
+0.0
+0.2
+0.4
+0.6
+0.8
+1.0
+TPR
+CE
+BS
+MMCE
+LS
+FL ( = 3)
+FLSD-53
+(d) Wide-ResNet (post-T)
+Figure 5: ROC plots obtained from ResNet-110 and Wide-ResNet-26-10 architectures trained on
+CIFAR-10 (in-distribution) and tested on SVHN (OoD), both pre and post temperature scaling.
+and CIFAR-10-C (using Gaussian noise), models trained on focal loss clearly obtain the highest
+AUROC scores. Note that Focal loss even without temperature scaling performs better than other
+methods with temperature scaling. We also present the ROC plots pre and post temperature scaling
+for models trained on CIFAR-10 and tested on SVHN in Figure 5. Thus, it is quite encouraging to
+note that models trained on focal loss are not only better calibrated under the i.i.d. assumption, but
+also seem to perform better than other competitive loss functions when we try shifting the distribution
+from CIFAR-10 to SVHN or CIFAR-10-C (pre and post temperature scaling).
+Conﬁdent and Calibrated Models: It is worth noting that focal loss with sample-dependent γ has
+optimal temperatures that are very close to 1, mostly lying between 0.9 and 1.1 (see Table 1). This
+property is shown by the Brier loss and label smoothing models as well, albeit with worse calibration
+errors. By contrast, the temperatures for cross-entropy and MMCE models are signiﬁcantly higher,
+with values lying between 2.0 and 2.8. An optimal temperature close to 1 indicates that the model
+is innately calibrated, and cannot be made signiﬁcantly more calibrated by temperature scaling. In
+fact, a temperature much greater than 1 can make a model underconﬁdent in general, as it is applied
+irrespective of the correctness of model outputs. We observe this empirically for ResNet-50 and
+ResNet-110 trained on CIFAR-10. Although models trained with cross-entropy have much higher
+conﬁdence before temperature scaling than those trained with focal loss, after temperature scaling,
+focal loss models are signiﬁcantly more conﬁdent in their predictions. We provide quantitative and
+qualitative empirical results to support this claim in Appendix H.
+6
+Conclusion
+In this paper, we have studied the properties of focal loss, an alternative loss function that can yield
+classiﬁcation networks that are more naturally calibrated than those trained using the conventional
+cross-entropy loss, while maintaining accuracy. In particular, we show in §4 that focal loss implic-
+itly maximises entropy while minimising the KL divergence between the predicted and the target
+distributions. We also show that, because of its design, it naturally regularises the weights of a
+network during training, reducing NLL overﬁtting and thereby improving calibration. Furthermore,
+we empirically observe that models trained using focal loss are not only better calibrated under i.i.d.
+assumptions, but can also be better at detecting OoD samples which we show by taking CIFAR-10 as
+the in-distribution dataset and SVHN and CIFAR-10-C as out-of-distribution datasets, something
+which temperature scaling fails to achieve.
+9
+
+7
+Broader Impact
+Our work shows that using the right kind of loss function can lead to a calibrated model. This helps
+in improving the reliability of these models when used in real-world applications. It can help in
+deployment of the models such that users can be alerted when its prediction may not be trustworthy.
+We do not directly see a situation where calibrated neural networks can have a negative impact on
+society, but we do believe that research on making models more calibrated will help improve fairness
+and trust in AI.
+Acknowledgments and Disclosure of Funding
+This work was started whilst J Mukhoti was at FiveAI, and completed after he moved to the University
+of Oxford. V Kulharia is wholly funded by a Toyota Research Institute grant. A Sanyal acknowledges
+support from The Alan Turing Institute under the Turing Doctoral Studentship grant TU/C/000023.
+This work was also supported by the Royal Academy of Engineering under the Research Chair and
+Senior Research Fellowships scheme, EPSRC/MURI grant EP/N019474/1 and FiveAI.
+References
+Glenn W Brier. Veriﬁcation of forecasts expressed in terms of probability. Monthly weather review,
+1950.
+Chensi Cao, Feng Liu, Hai Tan, Deshou Song, Wenjie Shu, Weizhong Li, Yiming Zhou, Xiaochen
+Bo, and Zhi Xie. Deep Learning and Its Applications in Biomedicine. Genomics, Proteomics &
+Bioinformatics, 16(1):17–32, 2018.
+Hongming Chen, Ola Engkvist, Yinhai Wang, Marcus Olivecrona, and Thomas Blaschke. The rise of
+deep learning in drug discovery. Drug Discovery Today, 23(36):1241–1250, 2018.
+Robert M Corless, Gaston H Gonnet, David EG Hare, David J Jeffrey, and Donald E Knuth. On the
+Lambert W Function. Advances in Computational Mathematics, 5(1):329–359, 1996.
+Morris H DeGroot and Stephen E Fienberg. The Comparison and Evaluation of Forecasters. Journal
+of the Royal Statistical Society: Series D (The Statistician), 1983.
+Jia Deng, Wei Dong, Richard Socher, Li-Jia Li, Kai Li, and Li Fei-Fei. ImageNet: A Large-Scale
+Hierarchical Image Database. In CVPR, 2009.
+Chuan Guo, Geoff Pleiss, Yu Sun, and Kilian Q Weinberger. On Calibration of Modern Neural
+Networks. In ICML, 2017.
+Kaiming He, Xiangyu Zhang, Shaoqing Ren, and Jian Sun. Deep Residual Learning for Image
+Recognition. In CVPR, 2016.
+Dan Hendrycks and Thomas Dietterich. Benchmarking Neural Network Robustness to Common
+Corruptions and Perturbations. arXiv preprint arXiv:1903.12261, 2019.
+Gao Huang, Zhuang Liu, Laurens Van Der Maaten, and Kilian Q Weinberger. Densely Connected
+Convolutional Networks. In CVPR, 2017.
+Andreas Kamilaris and Francesc X Prenafeta-Boldú. Deep learning in agriculture: A survey. Com-
+puters and Electronics in Agriculture, 147:70–90, 2018.
+Justin Ker, Lipo Wang, Jai Rao, and Tchoyoson Lim. Deep Learning Applications in Medical Image
+Analysis. IEEE Access, 6:9375–9389, 2018.
+Alex Krizhevsky. Learning Multiple Layers of Features from Tiny Images. Technical report,
+Department of Computer Science, University of Toronto, 2009.
+Meelis Kull, Miquel Perello Nieto, Markus Kängsepp, Telmo Silva Filho, Hao Song, and Peter Flach.
+Beyond temperature scaling: Obtaining well-calibrated multi-class probabilities with Dirichlet
+calibration. In NeurIPS, 2019.
+10
+
+Ananya Kumar, Percy S Liang, and Tengyu Ma. Veriﬁed Uncertainty Calibration. In NeurIPS, 2019.
+Aviral Kumar, Sunita Sarawagi, and Ujjwal Jain. Trainable Calibration Measures For Neural Networks
+From Kernel Mean Embeddings. In ICML, 2018.
+Ken Lang. NewsWeeder: Learning to Filter Netnews. In Machine Learning Proceedings 1995, pages
+331–339. Elsevier, 1995.
+Min Lin, Qiang Chen, and Shuicheng Yan. Network In Network. In ICLR, 2014.
+Tsung-Yi Lin, Priya Goyal, Ross Girshick, Kaiming He, and Piotr Dollár. Focal Loss for Dense
+Object Detection. In ICCV, 2017.
+Rafael Müller, Simon Kornblith, and Geoffrey Hinton. When Does Label Smoothing Help? In
+NeurIPS, 2019.
+Mahdi Pakdaman Naeini and Gregory F Cooper. Binary Classiﬁer Calibration using an Ensemble of
+Near Isotonic Regression Models. In ICDM, 2016.
+Mahdi Pakdaman Naeini, Gregory F Cooper, and Milos Hauskrecht. Obtaining Well Calibrated
+Probabilities Using Bayesian Binning. In AAAI, 2015.
+Yuval Netzer, Tao Wang, Adam Coates, Alessandro Bissacco, Bo Wu, and Andrew Y Ng. Reading
+Digits in Natural Images with Unsupervised Feature Learning. In NeurIPS-W, 2011.
+Ng. 20 Newsgroups. https://github.com/aviralkumar2907/MMCE, 2018. Accessed:
+2019-05-22.
+Khanh Nguyen and Brendan O’Connor. Posterior calibration and exploratory analysis for natural
+language processing models. arXiv preprint arXiv:1508.05154, 2015.
+Alexandru Niculescu-Mizil and Rich Caruana. Predicting Good Probabilities With Supervised
+Learning. In ICML, 2005.
+Yaniv Ovadia, Emily Fertig, Jie Ren, Zachary Nado, D Sculley, Sebastian Nowozin, Joshua V Dillon,
+Balaji Lakshminarayanan, and Jasper Snoek. Can You Trust Your Model’s Uncertainty? Evaluating
+Predictive Uncertainty Under Dataset Shift. In NeurIPS, 2019.
+Jeffrey Pennington, Richard Socher, and Christopher D Manning. GloVe: Global Vectors for Word
+Representation. In Empirical Methods in Natural Language Processing (EMNLP), 2014.
+Gabriel Pereyra, George Tucker, Jan Chorowski, Łukasz Kaiser, and Geoffrey Hinton. Regularizing
+Neural Networks by Penalizing Conﬁdent Output Distributions. arXiv preprint arXiv:1701.06548,
+2017.
+John Platt. Probabilistic Outputs for Support Vector Machines and Comparisons to Regularized
+Likelihood Methods. Advances in Large Margin Classiﬁers, 10(3):61–74, 1999.
+PyTorch-CIFAR. Train CIFAR10 with PyTorch, 2019. Available online at https://github.
+com/kuangliu/pytorch-cifar (as of 22nd May 2019).
+Richard Socher, Alex Perelygin, Jean Wu, Jason Chuang, Christopher D Manning, Andrew Ng,
+and Christopher Potts. Recursive Deep Models for Semantic Compositionality Over a Sentiment
+Treebank. In Empirical Methods in Natural Language Processing (EMNLP), 2013.
+Kai Sheng Tai, Richard Socher, and Christopher D Manning. Improved Semantic Representations
+From Tree-Structured Long Short-Term Memory Networks. In Association for Computational
+Linguistics (ACL), 2015.
+Sunil Thulasidasan, Gopinath Chennupati, Jeff A Bilmes, Tanmoy Bhattacharya, and Sarah Michalak.
+On Mixup Training: Improved Calibration and Predictive Uncertainty for Deep Neural Networks.
+In NeurIPS, 2019.
+TreeLSTM.
+TreeLSTM.
+https://github.com/ttpro1995/TreeLSTMSentiment,
+2015. Accessed: 2019-05-22.
+11
+
+Juozas Vaicenavicius, David Widmann, Carl Andersson, Fredrik Lindsten, Jacob Roll, and Thomas B
+Schön. Evaluating model calibration in classiﬁcation. In AISTATS, 2019.
+Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N Gomez, Łukasz
+Kaiser, and Illia Polosukhin. Attention Is All You Need. In NeurIPS, 2017.
+Jinjiang Wang, Yulin Ma, Laibin Zhang, Robert X Gao, and Dazhong Wu. Deep learning for smart
+manufacturing: Methods and applications. JMSY, 48:144–156, 2018.
+David Widmann, Fredrik Lindsten, and Dave Zachariah. Calibration tests in multi-class classiﬁcation:
+A unifying framework. In NeurIPS, 2019.
+Bianca Zadrozny and Charles Elkan. Obtaining calibrated probability estimates from decision trees
+and naive Bayesian classiﬁers. In ICML, 2001.
+Bianca Zadrozny and Charles Elkan. Transforming Classiﬁer Scores into Accurate Multiclass
+Probability Estimates. In SIGKDD, 2002.
+Sergey Zagoruyko and Nikos Komodakis. Wide Residual Networks. In BMVC, 2016.
+12
+
+0.0
+0.2
+0.4
+0.6
+0.8
+1.0
+Confidence (epoch 100)
+0.0
+0.2
+0.4
+0.6
+0.8
+1.0
+Accuracy
+Expected
+Actual
+0.0
+0.2
+0.4
+0.6
+0.8
+1.0
+Confidence (epoch 200)
+0.0
+0.2
+0.4
+0.6
+0.8
+1.0
+Expected
+Actual
+0.0
+0.2
+0.4
+0.6
+0.8
+1.0
+Confidence (epoch 300)
+0.0
+0.2
+0.4
+0.6
+0.8
+1.0
+Expected
+Actual
+0.0
+0.2
+0.4
+0.6
+0.8
+1.0
+Confidence (epoch 350)
+0.0
+0.2
+0.4
+0.6
+0.8
+1.0
+Expected
+Actual
+0.0
+0.2
+0.4
+0.6
+0.8
+1.0
+Confidence (epoch 100)
+0
+10
+20
+30
+40
+50
+% of samples
+0.0
+0.2
+0.4
+0.6
+0.8
+1.0
+Confidence (epoch 200)
+0
+20
+40
+60
+80
+0.0
+0.2
+0.4
+0.6
+0.8
+1.0
+Confidence (epoch 300)
+0
+20
+40
+60
+80
+100
+0.0
+0.2
+0.4
+0.6
+0.8
+1.0
+Confidence (epoch 350)
+0
+20
+40
+60
+80
+100
+Figure A.1: The conﬁdence values for training samples at different epochs during the NLL training of
+a ResNet-50 on CIFAR-10 (see §3). Top row: reliability plots using 25 conﬁdence bins; bottom row:
+% of samples in each bin. As training progresses, the model gradually shifts all training samples to
+the highest conﬁdence bin. Notably, it continues to do so even after achieving 100% training accuracy
+by the 300 epoch point.
+Appendix: Calibrating Deep Neural Networks using Focal Loss
+In §A, we provide some empirical evidence for the observation made in §3 in the main paper using
+reliability plots. In §B, we discuss the relation between focal loss and a regularised KL divergence,
+where the regulariser is the entropy of the predicted distribution. In §C, we discuss the regularisation
+effect of focal loss on a simple setup, i.e. a generalised linear model trained on a simple data
+distribution. In §D, we show the proofs of the two propositions formulated in the main text. We then
+describe all the datasets and impleme

@@ -1,0 +1,1437 @@
+Towards Understanding Sharpness-Aware Minimization
+Maksym Andriushchenko 1 Nicolas Flammarion 1
+Abstract
+Sharpness-Aware Minimization (SAM) is a recent
+training method that relies on worst-case weight
+perturbations which signiﬁcantly improves gener-
+alization in various settings. We argue that the ex-
+isting justiﬁcations for the success of SAM which
+are based on a PAC-Bayes generalization bound
+and the idea of convergence to ﬂat minima are in-
+complete. Moreover, there are no explanations for
+the success of using m-sharpness in SAM which
+has been shown as essential for generalization. To
+better understand this aspect of SAM, we theoret-
+ically analyze its implicit bias for diagonal linear
+networks. We prove that SAM always chooses a
+solution that enjoys better generalization proper-
+ties than standard gradient descent for a certain
+class of problems, and this effect is ampliﬁed by
+using m-sharpness. We further study the proper-
+ties of the implicit bias on non-linear networks
+empirically, where we show that ﬁne-tuning a
+standard model with SAM can lead to signiﬁcant
+generalization improvements. Finally, we pro-
+vide convergence results of SAM for non-convex
+objectives when used with stochastic gradients.
+We illustrate these results empirically for deep
+networks and discuss their relation to the general-
+ization behavior of SAM. The code of our exper-
+iments is available at https://github.com/
+tml-epfl/understanding-sam.
+1. Introduction
+Understanding generalization of overparametrized deep neu-
+ral networks is a central topic of machine learning. Training
+objective has many global optima where the training data
+are perfectly ﬁtted (Zhang et al., 2017), but different global
+optima lead to dramatically different generalization perfor-
+mance (Liu et al., 2019). However, it has been observed
+1EPFL, Switzerland.
+Correspondence to:
+Maksym An-
+driushchenko <maksym.andriushchenko@epﬂ.ch>.
+Proceedings of the 39 th International Conference on Machine
+Learning, Baltimore, Maryland, USA, PMLR 162, 2022. Copy-
+right 2022 by the author(s).
+that stochastic gradient descent (SGD) tends to converge
+to well-generalizing solutions, even without any explicit
+regularization methods (Zhang et al., 2017). This suggests
+that the leading role is played by the implicit bias of the opti-
+mization algorithms used (Neyshabur et al., 2015): when the
+training objective is minimized using a particular algorithm
+and initialization method, it converges to a speciﬁc solution
+with favorable generalization properties. However, even
+though SGD has a very beneﬁcial implicit bias, signiﬁcant
+overﬁtting can still occur, particularly in the presence of
+label noise (Nakkiran et al., 2020) and adversarial perturba-
+tions (Rice et al., 2020).
+Recently it has been observed that the sharpness of the train-
+ing loss, i.e., how quickly it changes in some neighborhood
+around the parameters of the model, correlates well with the
+generalization error (Keskar et al., 2016; Jiang et al., 2019),
+and generalization bounds related to the sharpness have
+been derived (Dziugaite & Roy, 2018). The idea of minimiz-
+ing the sharpness to improve generalization has motivated
+recent works of Foret et al. (2021), Zheng et al. (2021),
+and Wu et al. (2020) which propose to use worst-case per-
+turbations of the weights on every iteration of training in
+order to improve generalization. We refer to this method
+as Sharpness-Aware Minimization (SAM) and focus mainly
+on the version proposed in Foret et al. (2021) that performs
+only one step of gradient ascent to approximately solve the
+weight perturbation problem before updating the weights.
+Despite the fact that SAM signiﬁcantly improves general-
+ization in various settings, the existing justiﬁcations based
+on the generalization bounds provided by Foret et al. (2021)
+and Wu et al. (2020) do not seem conclusive. The main rea-
+son is that their generalization bounds do not distinguish the
+robustness to worst-case weight perturbation from average-
+case robustness to Gaussian noise. However the latter does
+not sufﬁciently improve generalization as both Foret et al.
+(2021) and Wu et al. (2020) report. Furthermore, their anal-
+ysis does not distinguish whether the worst-case weight
+perturbation is computed based on some or on all training
+examples. As we will discuss, this feature has a crucial
+impact on generalization.
+In our paper, we aim to further investigate the reasons for
+SAM’s success and make the following contributions:
+• We discuss why the current understanding of the suc-
+arXiv:2206.06232v1  [cs.LG]  13 Jun 2022
+
+Towards Understanding Sharpness-Aware Minimization
+cess of SAM which is based on a PAC-Bayesian gen-
+eralization bound and on convergence to a ﬂatter min-
+imum is incomplete.
+• We test hypotheses regarding why maximization in
+SAM taken over fewer training points can lead to
+better generalization and conclude that the beneﬁt is
+likely to come from the better objective.
+• We study the implicit bias of this objective theoret-
+ically for diagonal linear networks. For non-linear
+networks, we study the implicit bias empirically and
+relate it to the theoretical model.
+• We prove convergence of SAM for non-convex objec-
+tives in the stochastic setting. We check convergence
+empirically for deep networks and relate it to the gen-
+eralization behavior of SAM.
+2. Background on SAM
+Related work.
+Here we discuss relevant works on ro-
+bustness in the weight space and its relation to generaliza-
+tion. Works on weight-space robustness of neural networks
+date back at least to the 1990s (Murray & Edwards, 1993;
+Hochreiter & Schmidhuber, 1995). Random perturbations
+of the weights are used extensively in deep learning (Jim
+et al., 1996; Graves et al., 2013), and most prominently in
+approaches such as dropout (Srivastava et al., 2014). Many
+practitioners have observed that using SGD with larger
+batches for training leads to worse generalization (LeCun
+et al., 2012), and Keskar et al. (2016) have shown that this
+degradation of performance is correlated with the sharpness
+of the found parameters. This observation has motivated
+many further works which focus on closing the generaliza-
+tion gap between small-batch and large-batch SGD (Wen
+et al., 2018; Haruki et al., 2019; Lin et al., 2020). More
+recently, Jiang et al. (2019) have shown a strong correlation
+between the sharpness and the generalization error on a large
+set of models under a variety of different settings hyperpa-
+rameters, beyond the batch size. This has motivated the
+idea of minimizing the sharpness during training to improve
+standard generalization, leading to Sharpness-Aware Mini-
+mization (SAM) (Foret et al., 2021). SAM modiﬁes SGD
+such that on every iteration of training, the gradient is taken
+not at the current iterate but rather at a worst-case point
+in its vicinity. Zheng et al. (2021) concurrently propose a
+similar weight perturbation method which also successfully
+improves standard generalization on multiple deep learning
+benchmarks. Wu et al. (2020) have also proposed an al-
+most identical algorithm with the same motivation, but with
+the focus on improving robust generalization of adversar-
+ial training. On the theoretical side, Mulayoff & Michaeli
+(2020) study the sharpness properties of minima of deep
+linear network, and Neu (2021); Wang & Mao (2022) study
+generalization bounds based on average-case sharpness and
+quantities related to the optimization trajectory of SGD.
+Sharpness. Let Strain = {xi, yi}n
+i=1 be the training data
+and ℓi(w) be the loss of a classiﬁer parametrized by weights
+w ∈R|w| and evaluated at point (xi, yi). Then the sharp-
+ness on a set of points S ⊆Strain is deﬁned as:
+s(w, S) ≜max
+∥δ∥2≤ρ
+1
+|S|
+X
+i:(xi,yi)∈S
+ℓi(w + δ) −ℓi(w). (1)
+In most of the past literature, sharpness is deﬁned for
+S = Strain (Keskar et al., 2016; Neyshabur et al., 2017;
+Jiang et al., 2019). However, Foret et al. (2021) recently
+introduced the notion of m-sharpness which is the average
+of the sharpness computed over all the batches S of size m
+from the training set Strain.
+Lower sharpness is correlated with lower test error (Keskar
+et al., 2016), however, the correlation is not always perfect
+(Neyshabur et al., 2017; Jiang et al., 2019). Moreover, the
+sharpness deﬁnition itself can be problematic since rescaling
+of incoming and outcoming weights of a node that leads to
+the same function can lead to very different sharpness values
+(Dinh et al., 2017). Kwon et al. (2021) suggest a sharpness
+deﬁnition that ﬁxes this rescaling problem but other prob-
+lems still exist such as the sensitivity of classiﬁcation losses
+to the scale of the parameters (Neyshabur et al., 2017).
+Sharpness-aware minimization. Foret et al. (2021) theo-
+retically base the SAM algorithm on the following objective:
+n-SAM:
+min
+w∈R|w| max
+∥δ∥2≤ρ
+n
+X
+i=1
+ℓi(w + δ),
+(2)
+which we denote as n-SAM since it is based on maximiza-
+tion of the sum of the losses over the n training points. They
+justify this objective via a PAC-Bayesian generalization
+bound, although they show empirically (see Fig. 3 therein)
+that the following objective leads to better generalization:
+m-SAM: min
+w∈R|w|
+X
+S⊂Strain,
+|S|=m
+max
+∥δ∥2≤ρ
+X
+i∈S
+ℓi(w + δ),
+(3)
+which we denote as m-SAM since it is based on maximiza-
+tion of the sum of the losses over batches of m training
+points and therefore related to the m-sharpness.
+To make SAM practical, Foret et al. (2021) propose to mini-
+mize the m-SAM objective with stochastic gradients. De-
+noting the batch indices at time t by It (|It| = m), this leads
+to the following update rule on each iteration of training:
+wt+1 = wt −γt
+|It|
+X
+i∈It
+∇ℓi
+ wt + ρt
+|It|
+X
+j∈It
+∇ℓj(wt)
+
+. (4)
+Importantly, the same batch It is used for the inner and
+outer gradient steps. We note that ρt can optionally include
+
+Towards Understanding Sharpness-Aware Minimization
+ResNet-18 on CIFAR-10
+10
+2
+10
+1
+100
+101
+102
+Perturbation radius used for training
+4.0%
+4.2%
+4.5%
+4.8%
+5.0%
+5.2%
+5.5%
+5.8%
+6.0%
+Test error
+Weight perturbations
+None (ERM)
+Random
+n-SAM
+128-SAM
+ResNet-34 on CIFAR-100
+10
+2
+10
+1
+100
+101
+102
+Perturbation radius used for training
+20.0%
+21.0%
+22.0%
+23.0%
+24.0%
+25.0%
+Test error
+Weight perturbations
+None (ERM)
+Random
+n-SAM
+128-SAM
+Figure 1: Comparison of different weight perturbation methods: no perturbations (ERM), random perturbations prior to taking the
+gradient on each iteration, n-SAM, and 128-SAM (see Sec. 2 for the notation). All models are trained with standard data augmentation
+and small batch sizes (128). We observe that among these methods only m-SAM with a low m (i.e., 128-SAM) substantially improves
+generalization.
+the gradient normalization suggested in Foret et al. (2021),
+i.e., ρt := ρ/∥1
+|It|
+P
+j∈It ∇ℓj(wt)∥2. However, we show in
+Sec. 5 that its usage is not necessary for improving general-
+ization, so we will omit it from our theoretical analysis.
+Importance of low-m, worst-case perturbations. In or-
+der to improve upon ERM, Foret et al. (2021) use SAM
+with low-m and worst-case perturbations. To clearly il-
+lustrate the importance of these two choices, we show the
+performance of the following weight perturbation meth-
+ods: no perturbations (ERM), random perturbations (prior
+to taking the gradient on each iteration), n-SAM, and 128-
+SAM. We use ResNet-18 on CIFAR-10 and ResNet-34 on
+CIFAR-100 (Krizhevsky & Hinton, 2009) with standard
+data augmentation and batch size 128 and refer to App. D
+for full experimental details, including our implementation
+of n-SAM. Fig. 1 clearly suggests that (1) the improvement
+from random perturbations is marginal, and (2) the only
+method that substantially improves generalization is low-m
+SAM (i.e., 128-SAM). Thus, worst-case perturbations and
+the use of m-sharpness in SAM are essential for the gen-
+eralization improvement (which depends continuously on
+m as noted by Foret et al. (2021), see Fig. 16 in App. E.1).
+We also note that using too low m is inefﬁcient in practice
+since it does not fully utilize the computational accelerators
+such as GPUs. Thus, using higher m values (such as 128)
+helps to balance the generalization improvement with the
+computational efﬁciency. Finally, we note that using SAM
+with large batch sizes without using a smaller m leads to
+suboptimal generalization (see Fig. 17 in App. E.2).
+3. Challenging the Existing Understanding of
+SAM
+In this section, we show the limitations of the current un-
+derstanding of SAM. In particular, we discuss that the gen-
+eralization bounds on which its only formal justiﬁcation
+relies on (such as those presented in Foret et al. (2021);
+Wu et al. (2020); Kwon et al. (2021)) cannot explain its
+success. Second, we argue that contrary to a common be-
+lief, convergence of SAM to ﬂatter minima measured in
+terms of m-sharpness does not always translate to better
+generalization.
+The existing generalization bound does not explain the
+success of SAM. The main theoretical justiﬁcation for SAM
+comes from the PAC-Bayesian generalization bound pre-
+sented, e.g., in Theorem 2 of Foret et al. (2021). How-
+ever, the bound is derived for random perturbations of
+the parameters, i.e.
+the leading term of the bound is
+Eδ∼N(0,σ)
+Pn
+i=1 ℓi(w + δ). The extension to worst-case
+perturbations, i.e. max∥δ∥2≤ρ
+Pn
+i=1 ℓi(w + δ), is done post
+hoc and only makes the bound less tight. Moreover, we can
+see empirically (Fig. 1) that both training methods suggested
+by the derivation of this bound (random perturbations and
+n-SAM) do not substantially improve generalization. This
+generalization bound can be similarly extended to m-SAM
+by upper bounding the leading term via the maximum taken
+over mini-batches. However, this bound would incorrectly
+suggest that 128-SAM should have the worst generalization
+among all the three weight-perturbation methods while it is
+the only method that successfully improves generalization.
+We note that coming up with tight generalization bounds
+even for well-established ERM for overparametrized models
+is an open research question (Nagarajan & Kolter, 2019).
+One could expect, however, that at least the relative tightness
+of the bounds could reﬂect the correct ranking between the
+three methods, but it is not the case. Thus, we conclude
+that the existing generalization bound cannot explain the
+generalization improvement of low-m SAM.
+A ﬂatter minimum does not always lead to better gener-
+alization. One could assume that although the generaliza-
+tion bound that relies on m-sharpness is loose, m-sharpness
+can still be an important quantity for generalization. This is
+suggested by its better correlation with the test error com-
+
+Towards Understanding Sharpness-Aware Minimization
+ResNet-18 on CIFAR-10
+0.01
+0.02
+0.04
+0.08
+0.16
+0.32
+0.64
+Perturbation radius 
+10
+2
+10
+1
+100
+101
+m=128 sharpness
+Large-batch ERM: 7.14% test err
+Large-batch SAM: 6.80% test err
+Small-batch ERM: 6.17% test err
+Small-batch SAM: 5.16% test err
+ResNet-34 on CIFAR-100
+0.01
+0.02
+0.04
+0.08
+0.16
+0.32
+0.64
+Perturbation radius 
+10
+2
+10
+1
+100
+101
+m=128 sharpness
+Large-batch ERM: 29.53% test err
+Large-batch SAM: 28.31% test err
+Small-batch ERM: 25.06% test err
+Small-batch SAM: 23.61% test err
+Figure 2: m = 128 sharpness computed over different perturba-
+tion radii ρ at the minima of ERM and SAM models trained with
+large (1024) and small batches (128). All models are trained with
+group normalization and achieve zero training error.
+pared to the sharpness computed on the whole training set
+(Foret et al., 2021). In particular, we could expect that
+convergence of SAM to better-generalizing minima can be
+explained by a lower m-sharpness of these minima. To
+check this hypothesis, we select multiple models trained
+with group normalization1 that achieve zero training error
+and measure their m-sharpness for m = 128 and different
+perturbation radii ρ in Fig. 2. We note that the considered
+networks are not reparametrized in an adversarial way (Dinh
+et al., 2017) and they all use the same weight decay parame-
+ters which makes them more comparable to each other. First
+of all, we observe that none of the radii ρ gives the correct
+ranking between the methods according to their test error,
+although m-sharpness ranks correctly SAM and ERM for
+the same batch size. In particular, we see that the minimum
+found by SAM with a large batch size (1024) is ﬂatter than
+the minimum found by ERM with a small batch size (128)
+although the ERM model leads to a better test error: 6.17%
+vs. 6.80% on CIFAR-10 and 25.06% vs. 28.31% on CIFAR-
+100. This shows that it is easy to ﬁnd counterexamples
+where ﬂatter minima generalize worse.
+We further note that there are simple examples that illustrate
+that m-sharpness cannot be a universal quantity at distin-
+guishing well-generalizing minima. E.g., consider a linear
+model fx(w) = ⟨w, x⟩and a decreasing margin-based loss
+ℓ, then the 1-sharpness has a closed-form solution:
+n
+X
+i=1
+max
+∥δ∥2≤ρ ℓ(yi ⟨w + δ, xi⟩) −ℓ(yi ⟨w, xi⟩) =
+n
+X
+i=1
+ℓ(yi ⟨w, xi⟩−ρ ∥xi∥2) −ℓ(yi ⟨w, xi⟩) .
+The 1-sharpness is inﬂuenced only by the term −ρ ∥xi∥2
+1We consider networks with group normalization (Wu & He,
+2018) instead of the more common batch normalization (Ioffe &
+Szegedy, 2015) since we observed a large discrepancy between
+m-sharpness computed with the training-time vs. test-time batch
+normalization (see the experiment in Fig. 19 in App. E.4).
+ResNet-18 on CIFAR-10
+4
+16
+64
+256
+1024
+m in m-sharpness
+2
+4
+6
+8
+10
+Suboptimality factor
+ERM model
+SAM model
+ResNet-34 on CIFAR-100
+4
+16
+64
+256
+1024
+m in m-sharpness
+2.0
+2.2
+2.4
+2.6
+2.8
+3.0
+3.2
+Suboptimality factor
+ERM model
+SAM model
+Figure 3: Suboptimality factor of m-sharpness (ρ = 0.1) com-
+puted using 100 steps of projected gradient ascent compared to
+only 1 step for ERM and SAM models with group normalization.
+which does not depend on a speciﬁc w. In particular, it
+implies that all global minimizers w∗of the training loss
+are equally sharp according to the 1-sharpness which, thus,
+cannot suggest which global minima generalize better.
+Since (m-)sharpness does not always distinguish better-
+from worse-generalizing minima, the common intuition
+about sharp vs. ﬂat minima (Keskar et al., 2016) can be
+incomplete. This suggests that it is likely that some other
+quantity is responsible for generalization which can be cor-
+related with (m-)sharpness in some cases, but not always.
+This motivates us to develop a better understanding of the
+role of m in m-SAM, particularly on simpler models which
+are amenable for a theoretical study.
+4. Understanding the Generalization Beneﬁts
+of SAM
+In this section, we ﬁrst check empirically whether the ad-
+vantage of lower m in m-SAM comes from a more accurate
+solution of the inner maximization problem or from speciﬁc
+properties of batch normalization. We conclude that it is not
+the case and hypothesize that the advantage comes rather
+from a better implicit bias of gradient descent induced by m-
+SAM. We characterize this implicit bias for diagonal linear
+networks showing that SAM can provably improve general-
+ization, and the improvement is larger for 1-SAM than for
+n-SAM. Then we complement the theoretical results with
+experiments on deep networks showing a few intriguing
+properties of SAM.
+4.1. Testing Two Natural Hypotheses for Why Low m
+in m-SAM Could be Beneﬁcial
+As illustrated in Fig. 1, the success of m-SAM fully relies on
+the effect of low m which is, however, remains unexplained
+in the current literature. As a starting point, we could con-
+sider the following two natural hypotheses for why low m
+could be beneﬁcial.
+Hypothesis 1: lower m leads to more accurate maxi-
+mization. Since m-SAM relies only on a single step of
+projected gradient ascent for the inner maximization prob-
+
+Towards Understanding Sharpness-Aware Minimization
+ResNet-18 on CIFAR-10
+0.00
+0.05
+0.10
+0.15
+0.20
+0.25
+0.30
+ used for training
+5.0%
+5.5%
+6.0%
+6.5%
+7.0%
+Test error
+m = 256, 10 steps
+m = 256, 1 step
+m = 4, 1 step
+ResNet-34 on CIFAR-100
+0.00
+0.05
+0.10
+0.15
+0.20
+0.25
+0.30
+0.35
+0.40
+ used for training
+23.0%
+24.0%
+25.0%
+26.0%
+27.0%
+Test error
+m = 256, 10 steps
+m = 256, 1 step
+m = 4, 1 step
+Figure 4: Test error of SAM models with group normalization
+trained with different numbers of projected gradient ascent steps
+(10 vs. 1) for m-SAM and different m values (256 vs. 4) using
+batch size 256.
+lem in Eq. (3), it is unclear in advance how accurately this
+problem is solved. One could assume that using a lower
+m can make the single-step solution more accurate as intu-
+itively the function which is being optimized might become
+“simpler” due to fewer terms in the summation. Indeed,
+there is evidence towards this hypothesis: Fig. 3 shows the
+suboptimality factor between m-sharpness computed using
+100 steps vs. 1 step of projected gradient ascent for ρ = 0.1
+(the optimal ρ for 256-SAM in terms of generalization) for
+ERM and SAM models. We can see that the suboptimality
+factor tends to increase over m and can be as large as 10×
+for the ERM model on CIFAR-10 for m = 1024. This
+ﬁnding suggests that the standard single-step m-SAM can
+indeed fail to ﬁnd an accurate maximizer and the value of
+m can have a signiﬁcant impact on it. However, despite
+this fact, using multiple steps in SAM does not improve
+generalization as we show in Fig. 4. E.g., on CIFAR-10 it
+merely leads to a shift of the optimal ρ from 0.1 to 0.05,
+without noticeable improvements of the test error. This is
+also in agreement with the observation from Foret et al.
+(2021) on why including second-order terms can slightly
+hurt generalization: solving the inner maximization problem
+more accurately leads to the fact that the same radius ρ can
+become effectively too large (as on CIFAR-10) leading to
+worse performance.
+Hypothesis 2: lower m results in a better regularizing
+effect of batch normalization. As pointed out in Hoffer
+et al. (2017) and Goyal et al. (2017), batch normalization
+(BN) has a beneﬁcial regularization effect that depends on
+the mini-batch size. In particular, using the BN statistics
+from a smaller subbatch is coined as ghost batch normaliza-
+tion (Hoffer et al., 2017) and tends to improve generalization.
+Thus, it could be the case that the generalization improve-
+ment of m-SAM is due to this effect as its implementation
+assumes using a smaller subbatch of size m. To test this
+hypothesis, in Fig. 4, we show results of networks trained
+instead with group normalization that does not lead to any
+extra dependency on the effective batch size. We can see
+that a signiﬁcant generalization improvement by m-SAM
+is still achieved for low m (m = 4 for batch size 256),
+and this holds for both datasets. Thus, the generalization
+−5
+0
+5
+β1
+−5
+0
+5
+β2
+α1 = α2 = 0.01
+−5
+0
+5
+β1
+−5
+0
+5
+β2
+α1 = α2 = 0.1
+−5
+0
+5
+β1
+−5
+0
+5
+β2
+α1 = α2 = 1.0
+Figure 5: Illustration of the hyperbolic entropy φα(β) for β ∈R2
+that interpolates between ∥β∥1 for small α and ∥β∥2 for large α.
+improvement of m-SAM is not speciﬁc to BN.
+We hypothesize instead that low-m SAM leads to a better
+implicit bias of gradient descent for commonly used neural
+network architectures, meaning that some important com-
+plexity measure of the model gets implicitly minimized over
+training that may not be obviously linked to m-sharpness.
+4.2. Provable Beneﬁt of SAM for Diagonal Linear
+Networks
+Here we theoretically study the implicit bias of full-batch 1-
+SAM and n-SAM for diagonal linear networks on a sparse
+regression problem. We show that 1-SAM has a better
+implicit bias than ERM and n-SAM which explains its
+improved generalization in this setting.
+Implicit bias of 1-SAM and n-SAM. The implicit bias of
+gradient methods is well understood for overparametrized
+linear models where all gradient-based algorithms enjoy the
+same implicit bias towards minimization of the ℓ2-norm of
+the parameters. For diagonal linear neural networks, where
+a linear predictor ⟨β, x⟩can be parametrized via β = w2
++ −
+w2
+−
+2 with a parameter vector w =
+ w+
+w−
+
+∈R2d, ﬁrst-order
+algorithms have a richer implicit bias. We consider here an
+overparametrized sparse regression problem, meaning that
+the ground truth β∗is a sparse vector, with the squared loss:
+L(w) := 1
+4n
+n
+X
+i=1
+(⟨w2
++ −w2
+−, xi⟩−yi)2,
+(5)
+where overparametrization means that n ≪d and there exist
+many w such that L(w) = 0. We note that in our setting, any
+global minimizer w∗of L(w∗) is also a global minimizer
+for the m-SAM algorithm for any m ∈{1, . . . , n} since all
+per-example gradients are zero and hence the ascent step
+of SAM will not modify w∗. Thus, any difference in gen-
+eralization between m-SAM and ERM has to be attributed
+rather to the implicit bias of each of these algorithms.
+We ﬁrst recall the seminal result of Woodworth et al. (2020)
+and refer the readers to App. B for further details. Assuming
+2See Woodworth et al. (2020) for why this parametrization is
+equivalent to a diagonal network β = u ⊙v. Moreover, the signs
+of ui and vi will not change throughout training, hence the use of
+the notation w+ and w−.
+
+Towards Understanding Sharpness-Aware Minimization
+global convergence, the solution selected by the gradient
+ﬂow initialized as w+ = w−= α ∈Rd
+>0 and denoted βα
+∞
+solves the following constrained optimization problem:
+βα
+∞=
+arg min
+β∈Rd s.t. Xβ=y
+φα(β),
+(6)
+where
+the
+potential
+φα
+is
+given
+as
+φα(β)
+=
+Pd
+i=1 α2
+i q(βi/α2
+i )
+with
+q(z)
+=
+2 −
+√
+4 + z2 +
+z arcsinh(z/2).
+As illustrated in Fig. 5, φα interpo-
+lates between the ℓ1 and the ℓ2 norms of β according to
+the initialization scale α. Large α’s lead to low ℓ2-type
+solutions, while small α’s lead to low ℓ1-type solutions
+which are known to induce good generalization properties
+for sparse problems (Woodworth et al., 2020).
+Our main theoretical result is that both 1-SAM and n-
+SAM dynamics, when considered in their full-batch ver-
+sion (see Sec. A for details), bias the ﬂow towards solu-
+tions which minimize the potential φα but with effective
+parameters α1-SAM and αn-SAM which are strictly smaller
+than α for a suitable inner step size ρ. In addition, typically
+∥α1-SAM∥1 < ∥αn-SAM∥1 and, therefore, the solution chosen
+by 1-SAM has better sparsity-inducing properties than the
+solution of n-SAM and standard ERM.
+Theorem 1 (Informal). Assuming global convergence, the
+solutions selected by the full-batch versions of the 1-SAM
+and n-SAM algorithms taken with inﬁnitesimally small step
+sizes and initialized at w+ = w−= α ∈Rd
+>0, solve the
+optimization problem (6) with effective parameters:
+α1-SAM = α⊙e−ρ∆1-SAM+O(ρ2), αn-SAM = α⊙e−ρ∆n-SAM+O(ρ2),
+where ∆1-SAM, ∆n-SAM ∈Rd
++ for which typically:
+∥∆1-SAM∥1 ≈d
+Z ∞
+0
+L(w(s))ds and
+∥∆n-SAM∥1 ≈d
+n
+Z ∞
+0
+L(w(s))ds.
+The results are formally stated in Theorem 4 and 5 in App. B.
+1-SAM has better implicit bias properties since its effective
+scale of α is considerably smaller than the one of n-SAM
+due to the lack of the 1
+n factor in the exponent. It is worth
+noting that the vectors ∆1-SAM and ∆n-SAM are linked with
+the integral of the loss function along the ﬂow. Thereby,
+the speed of convergence of the training loss impacts the
+magnitude of the biasing effect: the slower the convergence,
+the better the bias, similarly to what is observed for SGD
+in Pesme et al. (2021). Extending this result to stochastic
+implementations of 1-SAM and n-SAM algorithms could
+be done following Pesme et al. (2021) but is outside of the
+scope of this paper.
+Empirical evidence for the implicit bias. We compare the
+training and test loss of ERM, 1-SAM, and n-SAM in Fig. 6
+100
+102
+104
+106
+Number of iterations
+10-4
+10-2
+100
+Test Loss
+ERM
+n-SAM
+1-SAM
+100
+102
+104
+106
+Number of iterations
+10-20
+10-10
+100
+Train Loss
+ERM
+n-SAM
+1-SAM
+Figure 6: Implicit bias of 1-SAM and n-SAM compared to ERM
+for a diagonal linear network on a sparse regression problem. We
+can see that 1-SAM generalizes signiﬁcantly better than n-SAM
+and ERM.
+ERM
+Input
+Prediction
+SAM
+Input
+Prediction
+Figure 7: The effect of the implicit bias of ERM vs. SAM for a
+one hidden layer ReLU network trained with full-batch gradient
+descent. Each run is replicated over ﬁve random initializations.
+for the same perturbation radius ρ, and for different ρ in
+App. B.3 (Fig. 14). As predicted, the methods show differ-
+ent generalization abilities: ERM and n-SAM achieve ap-
+proximately the same performance whereas 1-SAM clearly
+beneﬁts from a better implicit bias. This is coherent with the
+deep learning experiments presented in Fig. 1 on CIFAR-10
+and CIFAR-100. We also note that the training loss of all the
+variants is converging to zero but the convergence of 1-SAM
+is slower. Additionally, we show a similar experiment with
+stochastic variants of the algorithms in App. B.3 (Fig. 13)
+where their performance is, as expected, better compared to
+their deterministic counterparts.
+4.3. Empirical Study of the Implicit Bias in Non-Linear
+Networks
+Here we conduct a series of experiments to characterize the
+implicit bias of SAM on non-linear networks.
+The sparsity-inducing bias of SAM for a simple ReLU
+network. We start from the simplest non-linear network:
+a one hidden layer ReLU network applied to a simple 1D
+regression problem from Blanc et al. (2020). We use it to
+illustrate the implicit bias of SAM in terms of the geometry
+of the learned function. For this, we train ReLU networks
+with 100 hidden units using full-batch gradient descent on
+the quadratic loss with ERM and SAM3 over ﬁve different
+random initializations. We plot the resulting functions in
+3Since n = 12 for this task, we observed no substantial differ-
+ence between 1-SAM and n-SAM.
+
+Towards Understanding Sharpness-Aware Minimization
+ResNet-18 on CIFAR-10
+0%
+20%
+40%
+60%
+80%
+100%
+Switch SAM
+ERM or ERM
+SAM at this % of epochs
+3.8%
+4.0%
+4.2%
+4.4%
+4.6%
+4.8%
+5.0%
+5.2%
+Test error
+SAM
+ERM
+ERM
+SAM
+ResNet-34 on CIFAR-100
+0%
+20%
+40%
+60%
+80%
+100%
+Switch SAM
+ERM or ERM
+SAM at this % of epochs
+18.5%
+19.0%
+19.5%
+20.0%
+20.5%
+21.0%
+21.5%
+Test error
+SAM
+ERM
+ERM
+SAM
+Figure 8: Test error of SAM →ERM and ERM →SAM when the
+methods are switched at different % of epochs. For example, for
+SAM →ERM, 0% corresponds to ERM and 100% corresponds to
+SAM. We observe that a method which is run at the beginning of
+training has little inﬂuence on the ﬁnal performance.
+Fig. 7. We observe that SAM leads to simpler interpolations
+of the data points than ERM, and it is much more stable
+over random initializations. In particular, SAM seems to
+be biased toward a sparse combination of ReLUs which is
+reminiscent of Chizat & Bach (2020) who show that the
+limits of the gradient ﬂow can be described as a max-margin
+classiﬁer that favors hidden low-dimensional structures by
+implicitly regularizing the F1 variation norm. Moreover,
+this also relates to our Theorem 1 where sparsity rather
+shows up in terms of the lower ℓ1-norm of the resulting
+linear predictor. This further illustrates that there can exist
+multiple ways in which one can describe the beneﬁcial effect
+of SAM. For deep non-linear networks, however, the effect
+of SAM is hard to visualize, but we can still characterize
+some of its important properties.
+The effect of SAM for deep networks at different stages
+of training. To develop a better understanding of the im-
+plicit bias of SAM for deep networks, we can analyze at
+which stages of training using SAM is necessary to get gen-
+eralization beneﬁts. One could assume, for example, that
+its effect is important only early in training so that the ﬁrst
+updates of SAM steer the optimization trajectory towards a
+better-generalizing minimum. In that case, switching from
+SAM to ERM would not degrade the performance. To better
+understand this, we train models ﬁrst with SAM and then
+switch to ERM for the remaining epochs (SAM →ERM)
+ResNet-18 on CIFAR-10
+700
+750
+800
+850
+900
+950
+1000
+1050
+1100
+Epoch
+4.0%
+4.5%
+5.0%
+5.5%
+6.0%
+Test error
+ERM
+ERM
+SAM
+SAM
+ERM
+ResNet-34 on CIFAR-100
+700
+750
+800
+850
+900
+950
+1000
+1050
+1100
+Epoch
+18.0%
+19.0%
+20.0%
+21.0%
+22.0%
+23.0%
+24.0%
+25.0%
+Test error
+ERM
+ERM
+SAM
+SAM
+ERM
+Figure 9:
+Test error over epochs for ERM compared to
+ERM →SAM and SAM →ERM training where the methods
+are switched only at the end of training. In particular, we can see
+that SAM can gradually escape the worse-generalizing minimum
+found by ERM.
+1.0
+0.5
+0.0
+0.5
+1.0
+1.5
+2.0
+Interpolation between model weights
+0.0
+0.5
+1.0
+Cross-entropy
+Test loss
+Train loss
+Test loss of ERM
+SAM
+Test loss of ERM
+Figure 10: Loss interpolations between wERM→SAM and wERM
+for a ResNet-18 trained on CIFAR-10.
+and also do a complementary experiment by switching from
+ERM to SAM (ERM →SAM) and show results in Fig. 8.
+Interestingly, we observe that a method that is used at the
+beginning of training has little inﬂuence on the ﬁnal perfor-
+mance. E.g., when SAM is switched to ERM within the ﬁrst
+70% epochs on CIFAR-100, the resulting model generalizes
+as well as ERM. Furthermore, we note a high degree of con-
+tinuity of the test error with respect to the number of epochs
+at which we switch the methods. This does not support
+the idea that the models converge to some entirely distinct
+minima and instead suggests convergence to different min-
+ima in a connected valley where some directions generalize
+progressively better. Another intriguing observation is that
+enabling SAM only towards the end of training is sufﬁcient
+to get a signiﬁcant improvement in terms of generalization.
+We discuss this phenomenon next in more detail.
+The importance of the implicit bias of SAM at the end
+of training. We take a closer look on the performance
+of ERM →SAM and SAM →ERM when we switch
+between the methods only for the last ≈10% of epochs
+in Fig. 9 where we plot the test error over epochs. First,
+we see that for SAM →ERM, once SAM converges to
+a well-generalizing minimum thanks to its implicit bias,
+then it is not important whether we continue optimization
+with SAM or with ERM, and we do not observe signiﬁcant
+overﬁtting when switching to ERM. At the same time, for
+ERM →SAM we observe a different behavior: the test error
+clearly improves when switching from ERM to SAM. This
+suggests that SAM (using a higher ρ than the standard value,
+see App. D) can gradually escape the worse-generalizing
+minimum which ERM converged to. This phenomenon
+
+Towards Understanding Sharpness-Aware Minimization
+is interesting since it suggests a practically relevant ﬁne-
+tuning scheme that can save computations as we can start
+from any pre-trained model and substantially improve its
+generalization. Moreover, interestingly, the ﬁnal point of
+the ERM →SAM model is situated in the same basin as the
+original ERM model as we show in Fig. 10 which resembles
+the asymmetric loss interpolations observed previously for
+stochastic weight averaging (He et al., 2019).
+We make very similar observations regarding ﬁne-tuning
+with SAM and linear connectivity also on a diagonal linear
+network as shown in App. B.3 (Fig. 15). We believe the
+observations from Fig. 9 can be explained by our Theorem 1
+which shows that for diagonal linear networks, the key quan-
+tity determining the magnitude of the implicit bias for SAM
+is the integral of the loss over the optimization trajectory
+w(s). In the case of ERM →SAM, the integral is taken only
+over the last epochs but this can still be sufﬁcient to improve
+the biasing effect. At the same time, for SAM →ERM,
+the integral is already large enough due to the ﬁrst 1000
+epochs with SAM and switching back to ERM preserves
+the implicit bias. We discuss it in more detail in App. B.3.
+5. Understanding the Optimization Aspects of
+SAM
+The results on the implicit bias of SAM presented above
+require that the algorithm converges to zero training error. In
+the current literature, however, a convergence analysis (even
+to a stationary point) is missing for SAM. In particular,
+we do not know what are the conditions on the training
+ERM loss, inner step size γt, and perturbation radius ρt so
+that SAM is guaranteed to converge. We also do not know
+whether SAM converges to a stationary point of the ERM
+objective. To ﬁll in this gap, we ﬁrst theoretically study
+convergence of SAM and then relate the theoretical ﬁndings
+with empirical observations on deep networks.
+5.1. Theoretical Analysis of Convergence of SAM
+Here we show that SAM leads to convergence guarantees
+in terms of the standard training loss. In the following, we
+analyze the convergence of the m-SAM algorithm whose
+update rule is deﬁned in Eq. (4). We make the following
+assumptions on the training loss L(w) = 1
+n
+Pn
+i=1 ℓi(w):
+(A1) (Bounded variance).
+There exists σ
+≥
+0 s.t.
+E[∥∇ℓi(w) −∇L(w)∥2] ≤σ2 for all i ∼U(J1, nK)
+and w ∈Rd.
+(A2) (Individual β-smoothness). There exists β ≥0 s.t.
+∥∇ℓi(w) −∇ℓi(v)∥≤β∥w −v∥for all w, v ∈Rd
+and i ∈J1, nK.
+(A3) (Polyak-Lojasiewicz).
+There exists µ
+>
+0 s.t.
+1
+2∥∇L(w)∥2 ≥µ(L(w) −L∗) for all w, v ∈Rd.
+Both assumptions (A1) and (A2) are standard in the op-
+timization literature and should hold for neural networks
+with smooth activations and losses (such as cross-entropy).
+The assumption (A2) requires the inputs to be bounded but
+this is typically satisﬁed (e.g., images are all in [0, 1]d).
+The assumption (A3) corresponds to easier problems (e.g.,
+strongly convex ones) for which global convergence can be
+proven. We have the following convergence result:
+Theorem 2. Assume (A1) and (A2) for the iterates (4).
+Then for any number of iterations T ≥0, batch size b,
+and step sizes γt =
+1
+√
+T β and ρt =
+1
+T 1/4β , we have:
+1
+T E
+"T −1
+X
+t=0
+∥∇L(wt)∥2
+#
+≤4β
+√
+T
+(L(w0) −L∗) + 8σ2
+b
+√
+T
+,
+In
+addition,
+under
+(A3),
+with
+step
+sizes
+γt
+=
+min{
+8t+4
+3µ(t+1)2 , 1
+2β } and ρt =
+p
+γt/β:
+E [L(wT )] −L∗≤3β2(L(w0) −L∗)
+µ2T 2
++ 22βσ2
+µ2bT .
+We provide the proof in App. C.2 and make several remarks:
+• We recover the rates of SGD with the usual condition
+on the step size γt (Ghadimi & Lan, 2013; Karimi
+et al., 2016).
+• The ascent step size ρt, however, has to be O(√γt) to
+ensure convergence, i.e., it tolerates a slower decrease
+than γt. This ﬁnding is aligned with the observation
+that the ascent step size should not be decreased as
+drastically as the descent step size when training neu-
+ral networks (see Fig. 21 in App. E.6).
+• On the technical side, the proof relies on the
+bound ⟨∇L(wt + η∇L(wt)), ∇L(wt)⟩≥(1 −
+ηβ)∥∇L(wt)∥2 which shows that SAM-step is well
+aligned with the gradient step (see Lemma 16 in
+App. C.2).
+5.2. Convergence of SAM for Deep Networks
+Here we relate the convergence analysis to empirical obser-
+vations for deep learning tasks.
+Both ERM and SAM converge for deep networks. We
+compare the behavior of ERM and SAM by training a
+ResNet-18 on CIFAR-10 and CIFAR-100 for 1000 epochs
+(see App. D for experimental details) and plot the results
+over epochs in Fig. 11. We observe that not only the ERM
+model but also the model trained with SAM ﬁts all the
+training points and converges to a nearly zero training loss:
+0.0013 ± 0.00002 for ERM vs 0.0034 ± 0.0004 for SAM
+on CIFAR-10. However, the SAM model has signiﬁcantly
+better generalization performance due to its implicit bias:
+4.75% ± 0.14% vs. 3.94% ± 0.09% test error. Moreover,
+
+Towards Understanding Sharpness-Aware Minimization
+ResNet-18 on CIFAR-10
+0
+200
+400
+600
+800
+1000
+Epoch
+0%
+5%
+10%
+15%
+20%
+Error
+Test, ERM
+Train, ERM
+Test, standard SAM
+Train, standard SAM
+Test, const- SAM
+Train, const- SAM
+ResNet-34 on CIFAR-100
+0
+200
+400
+600
+800
+1000
+Epoch
+0%
+10%
+20%
+30%
+40%
+50%
+60%
+Error
+Test, ERM
+Train, ERM
+Test, standard SAM
+Train, standard SAM
+Test, const- SAM
+Train, const- SAM
+Figure 11: Training and test error of ERM, standard SAM, and SAM with a constant step size ρ (i.e., without gradient normalization)
+over epochs. We can see that both ERM and SAM converge to zero training error and the gradient normalization is not crucial for SAM.
+ResNet-18 on CIFAR-10
+0
+200
+400
+600
+800
+1000
+Epoch
+0%
+20%
+40%
+60%
+80%
+100%
+Error
+Test error, ERM
+Train error on noisy samples, ERM
+Test error, SAM
+Train error on noisy samples, SAM
+ResNet-34 on CIFAR-100
+0
+200
+400
+600
+800
+1000
+Epoch
+0%
+20%
+40%
+60%
+80%
+100%
+Error
+Test error, ERM
+Train error on noisy samples, ERM
+Test error, SAM
+Train error on noisy samples, SAM
+Figure 12: Error rates of ERM and SAM over epochs on CIFAR-
+10 and CIFAR-100 with 60% label noise. We see that the test error
+increases when the models ﬁt the noisy samples.
+we observe no noticeable overﬁtting throughout training:
+the best and last model differ by at most 0.1% test error for
+both methods. Finally, we note that the behavior of ERM
+vs. SAM on CIFAR-100 is qualitatively similar.
+Performance of SAM with constant step sizes ρt. Our
+convergence proof in Sec. 5.1 for non-convex objectives
+relies on constant step sizes ρt. However, the standard SAM
+algorithm as introduced in Foret et al. (2021) uses step sizes
+ρt inversely proportional to the gradient norm. Thus, one
+can wonder if such step sizes are important for achieving
+better convergence or generalization. Fig. 11 shows that on
+CIFAR-10 and CIFAR-100, both methods converge to zero
+training error at a similar speed. Moreover, they achieve
+similar improvements in terms of generalization: 3.94% ±
+0.09% test error for standard SAM vs. 4.15% ± 0.16%
+for SAM with constant ρt on CIFAR-10. For CIFAR-100,
+the test error matches almost exactly: 19.22% ± 0.38% vs.
+19.30% ± 0.38%. We also note that the optimal ρ differs
+for both formulations: ρt = 0.2/ ∥∇∥2 with normalization
+vs. ρt = 0.3 without normalization, so simply removing
+the gradient normalization without doing a new grid search
+over ρt can lead to suboptimal results.
+Is it always beneﬁcial for SAM to converge to zero loss?
+Here we consider the setting of uniform label noise, i.e.,
+when a fraction of the training labels is changed to random
+labels and kept ﬁxed throughout the training. This setting
+differs from the standard noiseless case (typical for many
+vision datasets such as CIFAR-10) as converging to nearly
+zero training loss is harmful for ERM and leads to substan-
+tial overﬁtting. Thus, one could assume that the beneﬁcial
+effect of SAM in this setting can come from preventing con-
+vergence and avoiding ﬁtting the label noise. We plot test
+error and training error on noisy samples for a ResNet-18
+trained on CIFAR-10 and CIFAR-100 with 60% label noise
+in Fig. 12. We see that SAM noticeably improves general-
+ization over ERM, although later in training SAM also starts
+to ﬁt the noisy points which is in agreement with the conver-
+gence analysis. In App. E.7, we conﬁrm the same ﬁndings
+for SAM with constant ρt. Thus, SAM also requires early
+stopping either explicitly via a validation set or implicitly
+via restricting the number of training epochs as done, e.g.,
+in Foret et al. (2021). Interestingly, this experiment also sug-
+gests that the beneﬁcial effect of SAM is observed not only
+close to a minimum but also along the whole optimization
+trajectory. Overall, we conclude that SAM can easily overﬁt
+and its convergence in terms of the training loss can be a
+negative feature for datasets with noisy labels.
+6. Conclusions
+We showed why the existing justiﬁcations for the success of
+m-SAM based on generalization bounds and the idea of con-
+vergence to ﬂat minima are incomplete. We hypothesized
+that there exists some other quantity which is responsible for
+the improved generalization of m-SAM which is implicitly
+minimized. We analyzed the implicit bias of 1-SAM and
+n-SAM for diagonal linear networks showing that the im-
+plicit quantity which is minimized is related to the ℓ1-norm
+of the resulting linear predictor, and it is stronger for 1-
+SAM than for n-SAM. We further studied the properties of
+the implicit bias on non-linear networks empirically where
+we showed that ﬁne-tuning an ERM model with SAM can
+lead to signiﬁcant generalization improvements. Finally,
+we provided convergence results of SAM for non-convex
+objectives when used with stochastic gradient which we
+conﬁrmed empirically for deep networks and discussed its
+relation to the generalization behavior of SAM.
+
+Towards Understanding Sharpness-Aware Minimization
+References
+Guy Blanc, Neha Gupta, Gregory Valiant, and Paul Valiant.
+Implicit regularization for deep neural networks driven
+by an Ornstein-Uhlenbeck like process. In COLT, 2020.
+L´ena¨ıc Chizat and Francis Bach. Implicit bias of gradient
+descent for wide two-layer neural networks trained with
+the logistic loss. In COLT, 2020.
+Laurent Dinh, Razvan Pascanu, Samy Bengio, and Yoshua
+Bengio. Sharp minima can generalize for deep nets. In
+ICML, pp. 1019–1028. PMLR, 2017.
+Gintare Karolina Dziugaite and Daniel Roy. Entropy-sgd
+optimizes the prior of a pac-bayes bound: Generalization
+properties of entropy-sgd and data-dependent priors. In
+ICML, 2018.
+Pierre Foret, Ariel Kleiner, Hossein Mobahi, and Behnam
+Neyshabur. Sharpness-aware minimization for efﬁciently
+improving generalization. In ICLR, 2021.
+Saeed Ghadimi and Guanghui Lan. Stochastic ﬁrst- and
+zeroth-order methods for nonconvex stochastic program-
+ming. SIAM Journal on Optimization, 23(4):2341–2368,
+2013.
+Robert Mansel Gower, Nicolas Loizou, Xun Qian, Alibek
+Sailanbayev, Egor Shulgin, and Peter Richt´arik. SGD:
+General analysis and improved rates. In ICML, 2019.
+Priya Goyal, Piotr Doll´ar, Ross Girshick, Pieter Noord-
+huis, Lukasz Wesolowski, Aapo Kyrola, Andrew Tulloch,
+Yangqing Jia, and Kaiming He. Accurate, large mini-
+batch sgd: Training imagenet in 1 hour. arXiv preprint
+arXiv:1706.02677, 2017.
+Alex Graves, Abdel-rahman Mohamed, and Geoffrey Hin-
+ton. Speech recognition with deep recurrent neural net-
+works. In 2013 IEEE ICASSP, 2013.
+Kosuke Haruki, Taiji Suzuki, Yohei Hamakawa, Takeshi
+Toda, Ryuji Sakai, Masahiro Ozawa, and Mitsuhiro
+Kimura. Gradient noise convolution (GNC): Smooth-
+ing loss function for distributed large-batch sgd. arXiv
+preprint arXiv:1906.10822, 2019.
+Haowei He, Gao Huang, and Yang Yuan.
+Asymmetric
+valleys: Beyond sharp and ﬂat local minima. In NeurIPS,
+2019.
+Kaiming He, Xiangyu Zhang, Shaoqing Ren, and Jian Sun.
+Identity mappings in deep residual networks. In ECCV,
+2016.
+Sepp Hochreiter and J¨urgen Schmidhuber. Simplifying neu-
+ral nets by discovering ﬂat minima. In NeurIPS, 1995.
+Elad Hoffer, Itay Hubara, and Daniel Soudry. Train longer,
+generalize better: closing the generalization gap in large
+batch training of neural networks. In NeurIPS, 2017.
+Sergey Ioffe and Christian Szegedy. Batch normalization:
+Accelerating deep network training by reducing internal
+covariate shift. In ICML, 2015.
+Yiding Jiang, Behnam Neyshabur, Hossein Mobahi, Dilip
+Krishnan, and Samy Bengio. Fantastic generalization
+measures and where to ﬁnd them. In ICLR, 2019.
+Kam-Chuen Jim, C Lee Giles, and Bill G Horne. An anal-
+ysis of noise in recurrent neural networks: convergence
+and generalization.
+In IEEE Transactions on Neural
+Networks, 1996.
+Hamed Karimi, Julie Nutini, and Mark Schmidt.
+Lin-
+ear convergence of gradient and proximal-gradient
+methods under the Polyak-Lojasiewicz condition.
+In
+Joint European Conference on Machine Learning and
+Knowledge Discovery in Databases, 2016.
+Nitish Shirish Keskar, Dheevatsa Mudigere, Jorge Nocedal,
+Mikhail Smelyanskiy, and Ping Tak Peter Tang. On large-
+batch training for deep learning: Generalization gap and
+sharp minima. In ICLR, 2016.
+Galina Korpelevich. Extragradient method for ﬁnding sad-
+dle points and other problems. In Matekon, 1977.
+Alex Krizhevsky and Geoffrey Hinton. Learning multiple
+layers of features from tiny images. Technical Report,
+2009.
+Jungmin Kwon, Jeongseop Kim, Hyunseo Park, and
+In Kwon Choi. ASAM: Adaptive sharpness-aware mini-
+mization for scale-invariant learning of deep neural net-
+works. In ICML, 2021.
+Yann A LeCun, L´eon Bottou, Genevieve B Orr, and Klaus-
+Robert M¨uller. Efﬁcient backprop. In Neural networks:
+Tricks of the trade, pp. 9–48. Springer, 2012.
+Tao Lin, Lingjing Kong, Sebastian Stich, and Martin Jaggi.
+Extrapolation for large-batch training in deep learning. In
+ICML, 2020.
+Shengchao Liu, Dimitris Papailiopoulos, and Dimitris
+Achlioptas. Bad global minima exist and SGD can reach
+them. In NeurIPS, 2019.
+Rotem Mulayoff and Tomer Michaeli. Unique properties of
+ﬂat minima in deep networks. In ICML, 2020.
+Alan F Murray and Peter J Edwards. Synaptic weight noise
+during MLP learning enhances fault-tolerance, general-
+ization and learning trajectory. In NeurIPS, 1993.
+
+Towards Understanding Sharpness-Aware Minimization
+Vaishnavh Nagarajan and J Zico Kolter. Uniform conver-
+gence may be unable to explain generalization in deep
+learning. In NeurIPS, 2019.
+Preetum Nakkiran, Gal Kaplun, Yamini Bansal, Tristan
+Yang, Boaz Barak, and Ilya Sutskever.
+Deep double
+descent: Where bigger models and more data hurt. In
+ICLR, 2020.
+Yurii Nesterov. Introductory Lectures on Convex Optimization.
+Kluwer Academic, 2004.
+Gergely Neu. Information-theoretic generalization bounds
+for stochastic gradient descent. In COLT, 2021.
+Behnam Neyshabur, Ryota Tomioka, and Nathan Srebro.
+In search of the real inductive bias: On the role of im-
+plicit regularization in deep learning. In ICLR workshops,
+2015.
+Behnam
+Neyshabur,
+Srinadh
+Bhojanapalli,
+David
+McAllester, and Nati Srebro. Exploring generalization in
+deep learning. In NeurIPS, 2017.
+Scott Pesme, Loucas Pillaud-Vivien, and Nicolas Flammar-
+ion. Implicit bias of sgd for diagonal linear networks: a
+provable beneﬁt of stochasticity. In NeurIPS, 2021.
+Leslie Rice, Eric Wong, and J Zico Kolter. Overﬁtting in
+adversarially robust deep learning. In ICML, 2020.
+Nitish Srivastava, Geoffrey Hinton, Alex Krizhevsky, Ilya
+Sutskever, and Ruslan Salakhutdinov. Dropout: a simple
+way to prevent neural networks from overﬁtting. JMLR,
+2014.
+Ziqiao Wang and Yongyi Mao. On the generalization of
+models trained with SGD: Information-theoretic bounds
+and implications. In ICLR, 2022.
+Michael L. Waskom. Seaborn: statistical data visualization.
+Journal of Open Source Software, 6(60):3021, 2021. doi:
+10.21105/joss.03021. URL https://doi.org/10.
+21105/joss.03021.
+Wei Wen, Yandan Wang, Feng Yan, Cong Xu, Chunpeng
+Wu, Yiran Chen, and Hai Li. Smoothout: Smoothing out
+sharp minima to improve generalization in deep learning.
+arXiv preprint arXiv:1805.07898, 2018.
+Blake Woodworth, Suriya Gunasekar, Jason D. Lee, Edward
+Moroshko, Pedro Savarese, Itay Golan, Daniel

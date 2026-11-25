@@ -1,0 +1,5 @@
+# Heavy-path decisions for the iteration 2 report writer.
+# The workspace holds only text (the report, references, JSON vocabularies, the
+# domain corpus text files) and small PNG/PDF charts, all under the 10 MB floor.
+# Nothing here is a model, a cache or a binary dataset, so no path needs a decision.
+entries: []

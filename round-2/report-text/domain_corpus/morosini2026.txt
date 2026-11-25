@@ -1,0 +1,1290 @@
+Too Sharp, Too Sure: When Calibration Follows Curvature
+Alessandro Morosini 1 Matea Gjika 1 Tomaso Poggio 1 Pierfrancesco Beneventano 1
+Abstract
+Modern neural networks can achieve high accu-
+racy while remaining poorly calibrated, producing
+confidence estimates that do not match empirical
+correctness. Yet calibration is often treated as a
+post-hoc attribute. We take a different perspec-
+tive: we study calibration as a training-time phe-
+nomenon on small vision tasks, and ask whether
+calibrated solutions can be obtained reliably by
+intervening on the training procedure. We identify
+a tight coupling between calibration, curvature,
+and margins during training of deep networks un-
+der multiple gradient-based methods. Empirically,
+Expected Calibration Error (ECE) closely tracks
+curvature-based sharpness throughout optimiza-
+tion. Mathematically, we show that both ECE and
+Gauss–Newton curvature are controlled, up to
+problem-specific constants, by the same margin-
+dependent exponential tail functional along the
+trajectory. Guided by this mechanism, we intro-
+duce a margin-aware training objective that explic-
+itly targets robust-margin tails and local smooth-
+ness, yielding improved out-of-sample calibration
+across optimizers without sacrificing accuracy.
+1. Introduction
+Neural networks are now routinely used in settings where a
+model’s stated uncertainty matters as much as its accuracy,
+for example, in risk-sensitive domains such as healthcare or
+autonomous driving. In these contexts, we would like pre-
+dicted probabilities to reflect empirical correctness: among
+predictions made with confidence p, approximately a frac-
+tion p should be correct. However, modern deep networks
+are often miscalibrated, frequently exhibiting overconfi-
+dence even when wrong (Guo et al., 2017).
+A widely adopted response to overconfidence in neural net-
+1Massachusetts Institute of Technology, Cambridge, MA, USA.
+Correspondence to: Alessandro Morosini <morosini@mit.edu>,
+Pierfrancesco Beneventano <pierb@mit.edu>.
+Code available at:
+https://github.com/AlessandroMorosini/2sharp2sure.
+0
+2000
+4000
+6000
+8000 10000
+Step
+0.00
+0.05
+0.10
+0.15
+0.20
+ECE
+0
+2000
+4000
+6000
+8000 10000
+Step
+10
+1
+10
+2
+Sharpness
+0
+2000
+4000
+6000
+8000 10000
+Step
+0.00
+0.05
+0.10
+0.15
+0.20
+ECE
+0
+2000
+4000
+6000
+8000 10000
+Step
+10
+0
+10
+1
+10
+2
+Sharpness
+Gradient Descent
+Stochastic Gradient Descent
+lr = 2/50
+lr = 2/100
+lr = 2/150
+lr = 2/200
+Figure 1. Training dynamics for Gradient Descent and Stochastic
+Gradient Descent across learning rates on CIFAR-10. Expected
+Calibration Error closely tracks sharpness throughout train-
+ing: both rise as the model enters the edge of stability regime, peak
+around the same time, and decay together as training progresses.
+works is post-hoc calibration: models are trained for accu-
+racy and their predicted probabilities are adjusted afterward.
+While effective in many regimes, this framing treats calibra-
+tion as a post-training concern, rather than a property that
+emerges during training. Recent work, however, suggests
+that calibration may be influenced by training dynamics. For
+example, Sharpness-Aware Minimization (SAM), which bi-
+ases optimization toward flatter regions of the loss landscape,
+has been observed to generally reduce overconfidence (Tan
+et al., 2026). Since sharpness is a geometric property shaped
+along the optimization trajectory, these results hint at a link
+between calibration and loss geometry during training. Yet
+this connection remains poorly understood, motivating the
+following question:
+How does calibration evolve throughout optimization,
+and what aspects of the training govern it?
+Importantly, answering this question is non-trivial. Calibra-
+tion is defined in terms of the model’s predictive confidence
+distribution, whereas most training-time analyses charac-
+terize optimization through loss-landscape geometry, using
+quantities such as curvature or sharpness to reason about
+1
+arXiv:2604.20614v1  [cs.LG]  22 Apr 2026
+
+Too Sharp, Too Sure: When Calibration Follows Curvature
+stability and generalization. Bridging these viewpoints is
+challenging, particularly early in training when predictions
+are still rapidly evolving. While several recent studies have
+examined relationships between sharpness, flat minima, and
+calibration at convergence, the resulting picture is mixed:
+curvature proxies do not reliably predict calibration across
+architectures, regularization schemes, or optimizers (Mason-
+Williams et al., 2024). Crucially, these analyses focus on
+converged solutions. By contrast, we study how calibration
+and loss geometry co-evolve during training—a perspective
+that not only clarifies their relationship but also reveals dy-
+namics that can be exploited to improve calibration. After
+formalizing a training-time connection between calibration
+and loss geometry, we turn to a prescriptive goal:
+Can we intervene on the training procedure to reliably
+obtain calibrated solutions?
+Contributions.
+We study calibration during optimization
+by jointly tracking calibration metrics, such as Expected
+Calibration Error (ECE), and curvature-based sharpness
+proxies, such as Gauss–Newton (GN) sharpness, along the
+training trajectory (Section 3). We conduct this analysis
+throughout training rather than only at convergence. We ob-
+serve across multiple gradient-based optimization methods
+that
+Contribution 1. Calibration error and curvature-based
+measures exhibit a strong and consistent temporal cor-
+relation throughout training.
+Next, we probe whether the coupling between calibration
+and curvature is causal. We compare optimizers designed
+to minimize sharpness (i.e., favoring flatter minima) with
+methods that instead suppress steep descent directions along
+the trajectory. Despite both affecting curvature, we find that
+Contribution 2: Directional interventions yield con-
+sistently better in-sample calibration than flat-minima
+methods.
+This clarifies the distinction between “being flat” and “train-
+ing in stable directions” and its relation to confidence.
+We then provide a unifying explanation through the lens of
+the margin in Section 4. Intuitively, both confidence and
+curvature are shaped by how strongly the model separates
+the correct class from its nearest competitor. We formalize
+this connection by showing mathematically that
+Contribution 3: A single margin-based functional con-
+trols both calibration error and Gauss–Newton sharp-
+ness, up to problem-dependent constants.
+This perspective also clarifies an often-observed phe-
+nomenon: training and test calibration can diverge even
+when accuracy improves (Carrell et al., 2022; Wu et al.,
+2025). Once most examples achieve large positive margins,
+a relatively small set of near-boundary or negative-margin
+points can dominate the margin functional, making calibra-
+tion highly sensitive to how optimization shapes this tail.
+Based on the mathematical connection we establish between
+margins, curvature, and calibration, we design a new robust-
+margin-aware loss. This yields a principled training-time
+handle on calibration, which we confirm in Section 5:
+Contribution 4: We propose CalMO (CALibration
+with Margin Objective), a training objective that yields
+better-calibrated models without sacrificing accuracy.
+Our margin-based view also yields concrete diagnostics for
+optimizer behavior. In particular, we observe that Muon in-
+duces unusually large training margins, leading to near-
+zero training ECE, but severe test-time overconfidence.
+Consistent with this finding, Muon is also the optimizer
+that benefits most from CalMO, as robust-margin control
+directly targets this failure mode.
+2. Preliminaries and Related Work
+Calibration.
+A model is calibrated if its predicted con-
+fidence values reflect empirical correctness frequencies:
+among all predictions made with confidence p, approxi-
+mately a fraction p should be correct (Niculescu-Mizil &
+Caruana, 2005; DeGroot & Fienberg, 1983). Since cali-
+bration is a distributional property, it is typically assessed
+empirically from finite samples. The most widely used
+measure is ECE (Naeini et al., 2015), which compares accu-
+racy and confidence after binning predictions by confidence.
+Predictions are grouped into M bins according to their con-
+fidence (i.e., the maximum predicted class probability); we
+denote by Bm the set of predictions whose confidence falls
+in bin m. For each bin, we compute the empirical accuracy
+acc(Bm) and the average predicted confidence conf(Bm).
+ECE is then defined as
+ECE =
+M
+X
+m=1
+|Bm|
+n
+acc(Bm) −conf(Bm)
+.
+(1)
+Calibration is also evaluated through other summary statis-
+tics such as the Maximum Calibration Error (Naeini et al.,
+2015), reliability diagrams (Guo et al., 2017), kernel-based
+metrics such as the Kernel Calibration Error (KCE) (Ku-
+mar et al., 2018), or similar related metrics. Further de-
+tails, including the multiclass extension, are provided in
+Appendix B.1.
+2
+
+Too Sharp, Too Sure: When Calibration Follows Curvature
+Mitigating miscalibration.
+Existing approaches to miti-
+gating calibration error fall into two broad categories: post-
+hoc methods and intrinsic training-time methods. Post-hoc
+methods modify model outputs without adjusting the pa-
+rameters, and include techniques such as Platt scaling (Platt,
+2000) and temperature scaling (Guo et al., 2017). Intrin-
+sic methods incorporate calibration objectives directly into
+training by using regularization to penalize overconfident
+predictions (Pereyra et al., 2017), by incorporating differen-
+tial proxies for calibration into the loss (Kumar et al., 2018;
+Bohdal et al., 2023), or by applying label smoothing (Müller
+et al., 2019). A more detailed overview of these methods is
+provided in Appendix A.
+An important perspective links calibration to adversarial
+robustness. Points with small robust margin have been
+shown to be more likely miscalibrated; motivated by this, R-
+AdaLS (Qin et al., 2021) bins data points by robust margin
+and applies stronger label smoothing to low-margin samples.
+Moreover, state-of-the-art calibration losses can be unified
+as penalties on logit distances (Liu et al., 2022). These
+results suggest that calibration errors are tied to local margin
+geometry, rather than solely to global confidence statistics.
+Curvature along the trajectory.
+A complementary line
+of work treats curvature not as a static attribute of the final
+solution, but as a dynamical quantity that governs optimiza-
+tion stability throughout training. Early work established a
+link between “wide valleys” and generalization (Hochreiter
+& Schmidhuber, 1997), a picture later reinforced by the
+sharp-minima account of the large-batch generalization gap
+(Keskar et al., 2017), motivating the study of Hessian-based
+sharpness along the training trajectory. More recent analy-
+ses emphasize that curvature generally increases as gradient
+methods approach an edge-of-stability (EoS) regime, where
+the top curvature direction becomes commensurate with the
+inverse step size and the dynamics become oscillatory or
+unstable (Xing et al., 2018; Jastrz˛ebski et al., 2018; Jas-
+trz˛ebski et al., 2019; Cohen et al., 2021; 2022; Andreyev &
+Beneventano, 2024), before often decreasing toward the end
+of training.
+In parallel, neighborhood-based objectives reshape the
+training trajectory by explicitly penalizing worst-case loss
+increases under small weight perturbations (e.g., SAM),
+thereby suppressing sensitivity to sharp directions (Foret
+et al., 2021; Zhou et al., 2025); such procedures have also
+been observed to improve confidence estimates under cross-
+entropy (Tan et al., 2026). At the same time, evidence sug-
+gests that the sharpness–calibration relationship can be frag-
+ile across architectures and regularization schemes (Mason-
+Williams et al., 2024), pointing to the importance of how cur-
+vature directions are traversed, not only where optimization
+converges. Our trajectory-level study aligns with this view-
+point by jointly tracking calibration and curvature through-
+GD
+SGD
+AdamW
+Muon
+SAM
+Train ECE .83±.08 .84±.07
+.72±.07
+.63±.26
+.92±.04
+KCE .83±.08 .84±.07
+.70±.08
+.61±.28
+.91±.04
+Test
+ECE .96±.02 .97±.01
+.15±.15
+−.10±.28 .98±.01
+KCE .97±.01 .97±.01
+.21±.22
+−.16±.31 .98±.01
+Table 1. Pearson correlation between calibration metrics (ECE and
+KCE) and GN sharpness, mean ± std over 4 learning rates.
+out training and by contrasting convergence-to-flatness with
+explicit suppression of unstable high-curvature directions.
+3. The Coupling Between Calibration and
+Sharpness
+We track sharpness and ECE throughout training to study
+how loss landscape geometry relates to calibration. Fol-
+lowing Cohen et al. (2021), we train an MLP (2 hidden
+layers, 200 units, tanh activation) on CIFAR-10 under cross-
+entropy (CE) loss. This small-scale setup enables frequent
+computation of GN sharpness, which serves as a proxy for
+the top Hessian eigenvalue λmax. Models are trained using
+gradient descent (GD), stochastic gradient descent (SGD),
+AdamW (Kingma & Ba, 2015; Loshchilov & Hutter, 2019),
+Muon (Jordan et al., 2024), and SAM (Foret et al., 2021).
+We monitor GN sharpness and batch sharpness (Andreyev &
+Beneventano, 2024) as proxies for loss-landscape geometry,
+alongside ECE, KCE, loss, and accuracy.
+3.1. Calibration Temporally Correlates with Sharpness
+Figure 1 shows training dynamics for GD and SGD. Across
+all CE experiments1, training ECE and GN sharpness follow
+the same trajectory: both quantities are small at initializa-
+tion, increase as training enters an EoS regime, and decrease
+again later in training. This holds across optimizers and
+learning rates (see Figure 2 and Appendix C.1 for additional
+results). Similar observations extend to CIFAR-100 (Ap-
+pendix C.1). Table 1 quantifies this effect, showing strong
+Pearson correlations between ECE and (batch) sharpness
+throughout training; KCE closely matches ECE across all
+settings, confirming the coupling is not a binning artifact.
+As we show in Section 4, both calibration and sharpness
+converge to zero once all training points are correctly clas-
+sified, so their coupling at the end of training is expected.
+What is surprising is the strong correlation during train-
+ing, well before convergence, when the model is far from
+1We observe a similar temporal correlation on models trained
+with mean-squared error (MSE) loss. There, however, both GN
+sharpness and ECE increase and then plateau at high values. This
+behavior reflects the fact that MSE is not a proper scoring rule
+and induces systematic underconfidence; we therefore focus on
+CE in the main text and defer a detailed discussion of MSE to
+Appendix E.
+3
+
+Too Sharp, Too Sure: When Calibration Follows Curvature
+interpolation and calibration is nontrivial. To our knowl-
+edge, this has not been observed or explained before. These
+results suggest that calibration does not depend on training-
+metrics at convergence, but on the trajectory itself: models
+that stay in lower-sharpness regions remain better calibrated
+throughout training, not just asymptotically. We formalize
+this connection in Section 4.
+3.2. Converging to Flat Minima or Following Flat
+Directions?
+The strong temporal correlation between sharpness and cal-
+ibration established in the previous section raises a causal
+question: does calibration improve because optimization
+converges to flatter minima, or because training dynamics
+suppress movement along high-curvature directions? To
+disentangle these mechanisms, we formulate two competing
+hypotheses, and empirically find that suppressing directions
+of steep descent leads to improved in-sample calibration.
+Hypothesis 1 (Flat Minima for Calibration). Training pro-
+cedures that bias optimization toward flat minima lead to
+lower in-sample calibration error.
+Hypothesis 2 (Directional Flatness for Calibration). Train-
+ing procedures that suppress updates along directions of
+steep curvature lead to lower in-sample calibration error,
+even if the final solution is not globally flat.
+We test Hypothesis 1 using SAM (Zhou et al., 2025), which
+explicitly penalizes worst-case loss perturbations within
+a local neighborhood, and is known to bias optimization
+toward flatter minima. To test Hypothesis 2, we use optimiz-
+ers that directly suppress high-curvature directions during
+training. Muon (Jordan et al., 2024) rescales gradient com-
+ponents to equalize their magnitudes, effectively clamping
+updates along sharp directions while amplifying flatter ones.
+BulkSGD (Song et al., 2025) achieves a more extreme inter-
+vention by projecting gradients onto the subspace orthogo-
+nal to the top Hessian eigenvectors, thereby removing the
+steepest descent directions entirely. A more detailed analy-
+sis of the optimizers and their benefits in this experimental
+setting can be found in Appendix C.2.
+Figures 2 and 3 show the training dynamics. Although SAM
+consistently maintains lower sharpness than GD and SGD,
+its calibration trajectory closely mirrors that of standard
+training, with a comparable peak ECE and slower conver-
+gence. In contrast, both Muon and BulkSGD achieve sub-
+stantially lower peak calibration error and faster ECE decay,
+despite exhibiting markedly different sharpness profiles.
+Notably, Muon maintains low calibration error while op-
+erating in regimes that are not globally flat, and BulkSGD
+improves calibration even in the presence of pronounced
+instability. This suggests that calibration is sensitive to how
+optimization traverses sharp directions, rather than to the
+0
+2000
+4000
+6000
+8000 10000
+Step
+0.00
+0.05
+0.10
+0.15
+0.20
+ECE
+0
+2000
+4000
+6000
+8000 10000
+Step
+10
+0
+10
+1
+Sharpness
+0
+2000
+4000
+6000
+8000 10000
+Step
+0.00
+0.05
+0.10
+0.15
+ECE
+0
+2000
+4000
+6000
+8000 10000
+Step
+10
+1
+Sharpness
+SAM
+Muon
+lr = 2/50
+lr = 2/100
+lr = 2/150
+lr = 2/200
+Figure 2. Training dynamics for SAM and Muon across learning
+rates on CIFAR-10.
+absolute flatness of the loss landscape. However, BulkSGD
+induces oscillatory dynamics and a sharpness divergence
+when too many dominant directions are projected out, mak-
+ing it impractical as a standalone optimizer. Together, these
+results support Hypothesis 2 over Hypothesis 1: suppress-
+ing updates along high-curvature directions during training
+leads to improved in-sample calibration, whereas conver-
+gence to flat minima alone does not.
+3.3. Out-of-Sample Behavior
+The sharpness–calibration coupling is less consistent out of
+sample (Table 1). Across optimizers, test ECE does not con-
+sistently decrease alongside training ECE—in some cases
+it worsens as training progresses, even after sharpness and
+training calibration improve (Appendix C.1). Muon is an
+extreme example: training ECE drops to near zero while
+test ECE remains high, yielding a negative test correlation
+despite strong in-sample alignment. This reflects the cal-
+ibration generalization gap in overparameterized models
+(Carrell et al., 2022; Berta et al., 2025; Wu et al., 2025): a
+model that fits training data well can become overconfident
+on misclassified test examples, causing test ECE to increase
+and decouple from sharpness. In Muon’s case, the near-zero
+training ECE is consistent with the large training margins
+it induces (Section 4): once these are extreme, the model
+becomes overconfident on test examples near the decision
+boundary, precisely where the margin functional is most
+sensitive.
+Together with the findings from Section 3.2, these results
+point to an important distinction: on the one hand, direc-
+tional interventions yield better in-sample calibration than
+flat-minima methods, suggesting that how optimization tra-
+verses curvature matters more than where it converges; on
+4
+
+Too Sharp, Too Sure: When Calibration Follows Curvature
+(a) BulkSGD with learning rate
+2
+70
+(b) BulkSGD with learning rate
+2
+30
+Figure 3. Training dynamics for BulkSGD across different learning rates and number of projected-out gradients on CIFAR10.
+the other hand, in-sample improvements do not automati-
+cally transfer to test data, pointing to a fundamental train–
+test gap. In the following section, we formalize this train–
+test gap and use it to design a training-time intervention that
+improves out-of-sample calibration.
+4. Curvature and Calibration in the Separable
+and Non-separable Regimes
+In this section we explain the temporal alignment between
+calibration error and curvature observed in Section 3 through
+a common underlying quantity: the (robust) true logit mar-
+gin. Our central claim is that, across training, both ECE
+and Gauss–Newton sharpness respond to the evolution of
+the same margin-dependent tail functional. This provides a
+concrete mechanism linking predictive confidence to loss-
+landscape geometry.
+The analysis naturally separates into two regimes. Early in
+training, the data behave as overlap-dominated: a nontrivial
+fraction of examples exhibit small or negative true margins,
+and no uniform separability holds. The same regime persists
+at test time whenever accuracy is below 1, since any misclas-
+sified example has mθ(x, y) < 0 by definition—and, unlike
+on training, no cross-entropy mechanism pushes those mar-
+gins to grow. In either case, neither calibration error nor
+curvature is forced to be small, and both can be dominated
+by a few hard or ambiguous points. This perspective aligns
+with observations that loss and curvature are controlled by
+a small set of strongly opposing examples (Rosenfeld &
+Risteski, 2024). Later in training on the training set, models
+trained with cross-entropy typically enter an interpolating
+regime in which all true margins become strictly positive. In
+this regime, calibration error and curvature become tightly
+coupled: once the margin tail contracts, both quantities are
+forced to decrease together.
+Together, these results provide a mechanism-level explana-
+tion for the observed co-evolution of calibration and cur-
+vature during training, and clarify why training and test
+calibration can diverge even as accuracy improves. We con-
+clude the section by connecting these theoretical regimes to
+the empirical training dynamics observed in Section 3.
+Setup and Notation.
+Let (X, Y )
+∼
+π with Y
+∈
+{1, . . . , K}. A model θ ∈Rd produces logits zθ(x) ∈RK
+and probabilities pθ(x) = softmax(zθ(x)). Let ˆy(x) =
+arg maxk zθ(x)k (deterministic tie-break) and confidence
+ˆP(x) = maxk pθ(x)k. Define the true (logit) margin
+mθ(x, y) := zθ(x)y −max
+j̸=y zθ(x)j,
+and the robust true margin at radius ε > 0,
+mε,θ(x, y) := inf
+∥δ∥≤ε mθ(x + δ, y).
+Let ECEM denote the population π/sample D binned ECE
+computed by binning ˆP(X) into M bins. Let Jθ(x) :=
+∂zθ(x)/∂θ ∈RK×d and, for cross-entropy, Hz(p) :=
+diag(p)−pp⊤. Define the population Gauss–Newton matrix
+and its curvature proxy
+HGN(θ; π) := Eπ
+
+Jθ(X)⊤Hz(pθ(X))Jθ(X)
+
+,
+λmax := λmax
+ HGN(θ; π)
+
+.
+4.1. Regime I: overlap-dominated (non-separable)
+behavior
+In this subsection all the quantities (ECE, GN matrix, robust
+margin, robust margin moment) are considered at a popula-
+tion level. See details in Appendix B. Define the robust expo-
+nential margin moment Q(θ) := E(X,Y )∼π
+
+e−mε,θ(X,Y )
+.
+5
+
+Too Sharp, Too Sure: When Calibration Follows Curvature
+Theorem 4.1 (Overlap regime:
+robust-margin upper
+bounds). For any θ and any distribution π,
+ECEM ≤(K −1) Q(θ).
+If additionally ∥Jθ(X)∥op ≤CJ holds π-a.s., then
+λmax ≤2C2
+J (K −1) Q(θ).
+Proof is in Appendix B.4.
+Interpretation (two bottlenecks).
+Theorem 4.1 exposes
+two multiplicative controls:
+• a probability bottleneck Q(θ), dominated by the tail of
+small/negative robust margins,
+• a geometry bottleneck C2
+J (how parameter perturbations
+move logits).
+In overlap-dominated regimes (early training or test-time),
+a persistent set of small robust margins can keep Q(θ)
+bounded away from 0, so these bounds need not certify
+vanishing calibration error or curvature even if loss contin-
+ues to decrease.
+4.2. Regime II: Interpolating (separable) behavior on
+the training set
+In this subsection all the quantities (ECE, GN matrix, robust
+margin, robust margin moment) are considered at a finite-
+sample level. See details in Appendix B. Let γ(θ; D) :=
+min1≤i≤n mθ(xi, yi) and the empirical exponential margin
+moment QD(θ) := 1
+n
+Pn
+i=1 e−mθt(xi,yi).
+Theorem 4.2 (Interpolating regime: two-sided ECE–margin
+control and coupling to λmax). Assume γ(θ; D) > 0 (all
+training points correctly classified with strictly positive true
+margin). Then
+1
+K QD(θ) ≤ECEM ≤(K −1) QD(θ)
+≤(K −1) e−γ(θ;D).
+If additionally maxi∈[n] ∥Jθ(xi)∥op ≤CJ, then
+λmax ≤2C2
+J (K −1) QD(θ) ≤2C2
+J K(K −1) ECEM,
+equivalently ECEM ≥λmax/(2C2
+JK(K −1)).
+Proof is in Appendix B.5.
+Interpretation.
+In the interpolating regime, ECEM is
+equivalent up to constants to the exponential margin moment
+QD(θ), and λmax is controlled by the same moment (under
+bounded Jacobians). This implies that once the training set
+is correctly classified, GN sharpness cannot be large without
+in-sample ECE also being large. Moreover, in this regime,
+empirical binning becomes immaterial: ECEM reduces to
+the mean misconfidence (formalized in Appendix B).
+4.3. Discussion: how the two-regime proxy matches the
+observed train/test split
+Section 3 shows strong co-evolution of training ECE and
+sharpness, well before convergence. Asymptotic interpola-
+tion alone is insufficient to explain this observation. The-
+orem 4.1–4.2 provide a mechanism-level lens: throughout
+training, both quantities respond to the evolution of the same
+margin-dependent tail functional, and in the interpolating
+regime this coupling becomes two-sided.
+A remaining question is: why test ECE can increase while
+the logged (predicted) margin increases. Two caveats ex-
+plain this:
+• The bounds depend on the true margin mθ(x, y), not
+the predicted margin zˆy −z(2). A model can become
+more confidently wrong on a subset of test points: pre-
+dicted margins increase, accuracy plateaus, and test ECE
+increases.
+• The sharpness control involves a geometry term (Jaco-
+bians). Even if Hz(p) contracts as predictions become
+more one-hot, large Jacobian norms (or failure of uniform
+Jacobian control) can keep curvature proxies large.
+5. From Margin Theory to Calibrated
+Training
+Section 4 establishes that calibration error is controlled by
+the margin functional Q(θ) = E[e−mε,θ(X,Y )], with the
+bound ECE ≤(K −1) Q(θ) holding on any distribution.
+This motivates directly targeting Q(θ) during training. We
+propose an objective that enforces robust margins.
+5.1. Calibration with Margin Objective
+To minimize the ECE bound, we want large robust margins.
+For this, we combine two strategies: (i) directly raising the
+margin at adversarial points, and (ii) ensuring clean margins
+do not collapse under perturbation:
+LCalMO(θ) = E(x,y)
+h
+ℓCE(θ; x, y) + λr Rrob(θ; x, y)
++ λs Rsmooth(θ; x, y)
+i
+.
+(2)
+where λr, λs ≥0 are hyperparameters and Rrob and
+Rsmooth are defined below.
+Robustness regularizer.
+Following TRADES (Zhang
+et al., 2019), we encourage consistent predictions between
+clean and adversarial inputs:
+Rrob(θ; x, y) = DKL
+ pθ(x) ∥pθ(xadv)
+
+,
+where xadv ∈arg max∥x′−x∥≤ε ℓCE(θ; x′, y). Combined
+with cross-entropy at x, this raises the margin at the worst
+point in the ε-neighborhood, directly targeting mε,θ(x, y).
+6
+
+Too Sharp, Too Sure: When Calibration Follows Curvature
+Smoothness regularizer.
+By Lemma B.5, if the margin
+has local Lipschitz constant Lm(x, y), then
+mε,θ(x, y) ≥mθ(x, y) −εLm(x, y),
+(3)
+implying e−mε,θ ≤e−mθ · eεLm. When Lm is large, this
+bound becomes vacuous even for large clean margins. To
+prevent this, we penalize:
+Rsmooth(θ; x, y) = ∥∇xmθ(x, y)∥2
+2.
+For neural networks with Lipschitz activations, mθ is lo-
+cally Lipschitz with Lm(x, y) = ∥∇xmθ(x, y)∥almost
+everywhere. This keeps mθ −εLm close to mθ, ensuring
+large clean margins translate to large robust margins.
+Why naive margin maximization fails.
+As training pro-
+gresses, clean margins mθ(xi, yi) on training points grow,
+Qtrain →0, and training ECE vanishes. Yet test ECE re-
+mains high. The issue is that large clean margins need
+not imply large robust margins: a model can achieve
+mθ(x, y) ≫0 while the margin collapses at x + δ for
+small perturbations.
+The robust margin mε,θ(x, y) =
+inf∥δ∥≤ε mθ(x + δ, y) captures this distinction. If robust
+margins at training points are large, nearby test points—
+which lie within a ε-neighborhood under typical data
+distributions—inherit reasonable margins. Fragile margins,
+large only at training locations, provide no such transfer.
+5.2. Empirical Results with CalMO
+Setup.
+We run a controlled fixed-budget experiment:
+within each optimizer, only the loss function varies; all
+other training choices are held fixed. Concretely, we train
+ResNet-20 (He et al., 2016) on CIFAR-10. We compare
+four gradient-based optimizers spanning different training
+dynamics: SGD, AdamW, Muon, and SAM. Learning rates
+are tuned per optimizer: η = 0.01 for SGD, Muon and SAM,
+η = 0.001 for AdamW. All runs use batch size 128 for
+10,000 steps. We compare standard cross-entropy against
+CalMO with hyperparameters λr = 0.5 (robustness) and
+λs = 0.01 (flatness). The adversarial perturbation radius is
+ε = 8/255, computed via 3-step PGD. Adversarial exam-
+ples are initialized at the clean input x (no random start) and
+updated with step size α = 2/255. We report test accuracy
+and ECE computed with 15 bins.
+These values are fixed without tuning; our aim is to validate
+that the robust-margin regularization motivated by Section 4
+yields calibration gains over CE, and to demonstrate that
+training-time intervention on the loss landscape can improve
+calibration without relying on post-hoc corrections. We
+report test values in Table 2; training values are reported in
+Table A1 in the Appendix.
+Performance.
+CalMO lowers test ECE across all four
+optimizers (Table 2), with reductions ranging from 0.003
+Optimizer Method
+Acc (%)
+ECE ↓
+SGD
+CE
+75.2 ± 1.2
+0.081 ± 0.021
+Flat. (λr=0) 80.8 ± 0.1 0.053 ± 0.003
+Rob. (λs=0)
+78.2 ± 0.9
+0.062 ± 0.011
+CalMO
+80.1 ± 1.4
+0.056 ± 0.001
+AdamW
+CE
+80.7 ± 0.4
+0.061 ± 0.007
+Flat. (λr=0) 83.3 ± 0.9
+0.047 ± 0.002
+Rob. (λs=0)
+82.4 ± 0.2
+0.039 ± 0.009
+CalMO
+83.2 ± 1.1
+0.045 ± 0.007
+Muon
+CE
+80.3 ± 0.3
+0.065 ± 0.016
+Flat. (λr=0)
+81.0 ± 0.2
+0.046 ± 0.012
+Rob. (λs=0) 81.9 ± 0.4
+0.052 ± 0.010
+CalMO
+81.7 ± 0.9
+0.019 ± 0.002
+SAM
+CE
+85.0 ± 0.3
+0.020 ± 0.005
+Flat. (λr=0)
+84.1 ± 0.3
+0.016 ± 0.004
+Rob. (λs=0) 85.5 ± 0.4
+0.021 ± 0.006
+CalMO
+85.2 ± 0.4
+0.017 ± 0.005
+Table 2.
+CalMO vs CE. ResNet-20 on CIFAR-10, test set.
+Flat.: flatness only (λr=0, λs=0.01); Rob.: robustness only
+(λr=0.5, λs=0); CalMO: λr=0.5, λs=0.01. The relative im-
+portance of each term varies with optimizer, but CalMO strikes a
+balance across all settings.
+(SAM: 0.020 →0.017) to 0.046 (Muon: 0.065 →0.019);
+test accuracy is preserved or improves in every case, by be-
+tween +0.2 and +4.9 points, consistent with regularization
+helping under the fixed 10k-step budget. The Muon gap
+is the sharpest illustration of the mechanism of Section 4:
+directional optimization drives training margins to extreme
+values that collapse under input perturbation (fragile mar-
+gins), keeping test ECE high, and CalMO’s robust-margin
+term directly targets this tail.
+Computational cost.
+CalMO incurs additional cost from
+the robustness and flatness terms. The robustness term
+requires a 3-step PGD attack per iteration; however, these
+compute gradients with respect to the input rather than the
+model parameters, making each PGD step relatively cheap.
+The flatness term adds one forward pass and one input-
+gradient computation. This cost can be reduced by using
+only the flatness term (λr = 0). All methods are trained for
+10k steps, and we report performance at the best validation
+step. Matching compute by training CE longer does not
+close the gap: CE reaches its validation optimum well before
+10k steps, after which performance degrades.
+Ablation.
+To isolate the roles of robustness and flatness
+in shaping calibration, we ablate the CalMO objective into
+its components and evaluate their effects across optimizers.
+The results reveal a consistent but optimizer-dependent pat-
+tern. For SGD, enforcing flatness alone yields most of the
+calibration gains, while robustness provides limited benefit.
+For AdamW the two terms split roles: robustness yields
+the largest ECE reduction, while flatness yields the largest
+7
+
+Too Sharp, Too Sure: When Calibration Follows Curvature
+accuracy gain, suggesting that its adaptive preconditioning
+stabilizes parameter-space geometry along the directions
+relevant for accuracy, while leaving calibration sensitive to
+robust-margin control. Muon exhibits a different behavior:
+neither robustness nor flatness alone is sufficient to sub-
+stantially reduce ECE, but their combination leads to the
+greatest calibration. This supports the theoretical mecha-
+nism developed in Section 4, where calibration is governed
+jointly by the robust-margin tail and geometric sensitivity.
+From this perspective, CalMO should not be viewed as a uni-
+versally superior training objective, but rather as a targeted
+intervention that controls these two terms.
+6. Conclusion
+We studied calibration as a training-time phenomenon rather
+than a static property of a converged model, and showed
+that calibration and sharpness are tightly coupled along the
+optimization trajectory across multiple optimizers. This cou-
+pling arises from a shared dependence on margin growth,
+explaining both the temporal co-evolution of Expected Cali-
+bration Error and curvature during training, as well as the
+frequent divergence between train and test calibration in
+overlap-dominated regimes.
+Building on this perspective, we distinguished between
+two competing mechanisms for improving calibration: con-
+vergence to flat minima and suppression of updates along
+high-curvature directions. Empirically, optimizers that im-
+plement directional control, such as Muon and BulkSGD,
+yielded consistently better in-sample calibration than meth-
+ods targeting flat minima alone. Guided by the margin-
+based bounds, we proposed CalMO, a training objective
+that jointly regulates robust margins and local smoothness,
+and showed that their combined regulation can substan-
+tially improve out-of-sample calibration—most notably for
+directionally amplified optimizers such as Muon—while
+preserving predictive accuracy.
+Limitations.
+Our empirical study relies on explicit cur-
+vature diagnostics (Gauss–Newton / Hessian-based mea-
+surements), which are computationally expensive and con-
+strain the scale of architectures and datasets we can probe.
+Our theoretical results identify a margin-tail mediator that
+upper-bounds both calibration error and curvature under a
+Jacobian-control assumption; we do not claim that these cer-
+tificates are tight or that the Jacobian bounds hold uniformly
+in all deep networks. A natural next step is to develop scal-
+able, distributionally robust proxies for the mediator (for ex-
+ample, low-rank spectral estimators, mini-batch surrogates,
+or input-space stability measurements) and to characterize
+when they preserve the qualitative regime predictions we
+derive.
+Our experiments also cover small-scale image classification
+only; extending the trajectory-level analysis to language-
+model training, where calibration is a central open question,
+is a natural follow-up. More broadly, we see the trajec-
+tory perspective itself—tracking how calibration, curvature,
+and margins co-evolve rather than inspecting them only at
+convergence—as a lens applicable to other training-time
+phenomena in deep networks.
+8
+
+Too Sharp, Too Sure: When Calibration Follows Curvature
+References
+Andreyev, A. and Beneventano, P.
+Edge of stochas-
+tic stability: Revisiting the edge of stability for SGD.
+arXiv preprint arXiv:2412.20553, 2024. doi: 10.48550/
+arXiv.2412.20553.
+URL https://arxiv.org/
+abs/2412.20553.
+Bartlett,
+P. L.,
+Foster,
+D. J.,
+and Telgarsky,
+M.
+Spectrally-normalized
+margin
+bounds
+for
+neural
+networks.
+In Advances in Neural Information
+Processing Systems,
+volume 30,
+pp. 6240–6249,
+2017.
+URL https://proceedings.neurips.
+cc/paper_files/paper/2017/hash/
+b22b257ad0519d4500539da3c8bcf4dd-Abstract.
+html.
+Berta, E., Holzmüller, D., Jordan, M. I., and Bach,
+F.
+Rethinking early stopping:
+Refine, then cali-
+brate.
+arXiv preprint arXiv:2501.19195, 2025.
+doi:
+10.48550/arXiv.2501.19195. URL https://arxiv.
+org/abs/2501.19195.
+Bohdal, O., Yang, Y., and Hospedales, T. Meta-calibration:
+Learning of model calibration using differentiable ex-
+pected calibration error. Transactions on Machine Learn-
+ing Research, 2023. URL https://openreview.
+net/forum?id=R2hUure38l. Accepted by TMLR.
+Carrell, A. M., Mallinar, N., Lucas, J., and Nakkiran,
+P. The calibration generalization gap. arXiv preprint
+arXiv:2210.01964, 2022.
+URL https://arxiv.
+org/abs/2210.01964.
+Chaudhari, P., Choromanska, A., Soatto, S., LeCun, Y., Bal-
+dassi, C., Borgs, C., Chayes, J., Sagun, L., and Zecchina,
+R. Entropy-SGD: Biasing gradient descent into wide val-
+leys. In International Conference on Learning Represen-
+tations, 2017. URL https://openreview.net/
+forum?id=B1YfAfcgl.
+Cohen, J. M., Kaur, S., Li, Y., Kolter, J. Z., and Tal-
+walkar, A.
+Gradient descent on neural networks
+typically occurs at the edge of stability.
+In In-
+ternational Conference on Learning Representations,
+2021. URL https://openreview.net/forum?
+id=jh-rTtvkGeM. ICLR 2021 Poster.
+Cohen, J. M., Ghorbani, B., Krishnan, S., Agarwal, N.,
+Medapati, S., Badura, M., Suo, D., Cardoze, D., Nado, Z.,
+Dahl, G. E., and Gilmer, J. Adaptive gradient methods
+at the edge of stability, 2022. URL https://arxiv.
+org/abs/2207.14484.
+DeGroot, M. H. and Fienberg, S. E. The comparison and
+evaluation of forecasters. Journal of the Royal Statistical
+Society: Series D (The Statistician), 32(1-2):12–22, 1983.
+doi: 10.2307/2987588.
+Dinh, L., Pascanu, R., Bengio, S., and Bengio, Y. Sharp
+minima can generalize for deep nets. In Precup, D. and
+Teh, Y. W. (eds.), Proceedings of the 34th International
+Conference on Machine Learning, volume 70 of Pro-
+ceedings of Machine Learning Research, pp. 1019–1028.
+PMLR, 2017. URL https://proceedings.mlr.
+press/v70/dinh17b.html.
+Foret, P., Kleiner, A., Mobahi, H., and Neyshabur, B.
+Sharpness-aware minimization for efficiently improving
+generalization. In International Conference on Learning
+Representations, 2021. URL https://openreview.
+net/forum?id=6Tm1mposlrM. ICLR 2021 Spot-
+light.
+Guo, C., Pleiss, G., Sun, Y., and Weinberger, K. Q. On
+calibration of modern neural networks. In Proceedings
+of the 34th International Conference on Machine Learn-
+ing, volume 70 of Proceedings of Machine Learning Re-
+search, pp. 1321–1330. PMLR, 2017. URL https://
+proceedings.mlr.press/v70/guo17a.html.
+He, K., Zhang, X., Ren, S., and Sun, J. Deep residual learn-
+ing for image recognition. In Proceedings of the IEEE
+conference on computer vision and pattern recognition,
+pp. 770–778, 2016.
+Hochreiter, S. and Schmidhuber, J. Flat minima. Neural
+Computation, 9(1):1–42, 1997. doi: 10.1162/neco.1997.
+9.1.1.
+Hoffer, E., Hubara, I., and Soudry, D. Train longer, general-
+ize better: Closing the generalization gap in large batch
+training of neural networks. In Advances in Neural Infor-
+mation Processing Systems, volume 30, pp. 1731–1741,
+2017.
+URL https://proceedings.neurips.
+cc/paper_files/paper/2017/hash/
+a5e0ff62be0b08456fc7f1e88812af3d-Abstract.
+html.
+Jastrz˛ebski, S., Kenton, Z., Ballas, N., Fischer, A., Bengio,
+Y., and Storkey, A. On the relation between the sharpest
+directions of DNN loss and the SGD step length. In
+International Conference on Learning Representations,
+2019. URL https://openreview.net/forum?
+id=SkgEaj05t7.
+Jastrz˛ebski, S., Kenton, Z., Arpit, D., Ballas, N., Fischer,
+A., Bengio, Y., and Storkey, A.
+Three Factors Influ-
+encing Minima in SGD. arXiv:1711.04623 [cs, stat],
+September 2018. URL http://arxiv.org/abs/
+1711.04623. arXiv:1711.04623.
+Jiang, Y., Neyshabur, B., Mobahi, H., Krishnan, D., and
+Bengio, S. Fantastic generalization measures and where
+to find them. In International Conference on Learning
+Representations, 2020. URL https://openreview.
+net/forum?id=SJgIPJBFvH.
+9
+
+Too Sharp, Too Sure: When Calibration Follows Curvature
+Jordan, K., Jin, Y., Boza, V., You, J., Cesista, F., New-
+house, L., and Bernstein, J. Muon: An optimizer for
+hidden layers in neural networks, 2024. URL https:
+//kellerjordan.github.io/posts/muon/.
+Keskar, N. S., Mudigere, D., Nocedal, J., Smelyanskiy,
+M., and Tang, P. T. P. On large-batch training for deep
+learning: Generalization gap and sharp minima.
+In
+International Conference on Learning Representations,
+2017. URL https://openreview.net/forum?
+id=H1oyRlYgg.
+Kingma, D. P. and Ba, J. Adam: A method for stochastic
+optimization. In International Conference on Learning
+Representations, 2015. URL https://arxiv.org/
+abs/1412.6980.
+Kull, M., Perello-Nieto, M., Kängsepp, M., Silva Filho,
+T., Song, H., and Flach, P. Beyond temperature scaling:
+Obtaining
+well-calibrated
+multi-class
+probabilities
+with Dirichlet calibration.
+In Advances in Neural
+Information Processing Systems, volume 32, pp. 12316–
+12326,
+2019.
+URL https://proceedings.
+neurips.cc/paper/2019/hash/
+8ca01ea920679a0fe3728441494041b9-Abstract.
+html.
+Kumar, A., Sarawagi, S., and Jain, U. Trainable calibration
+measures for neural networks from kernel mean embed-
+dings. In Proceedings of the 35th International Confer-
+ence on Machine Learning, volume 80 of Proceedings
+of Machine Learning Research, pp. 2805–2814. PMLR,
+2018. URL https://proceedings.mlr.press/
+v80/kumar18a.html.
+Lengyel, D., Jennings, N., Parpas, P., and Kantas, N. On
+flat minima, large margins and generalizability. Open-
+Review (ICLR 2021 submission), 2021. URL https:
+//openreview.net/forum?id=Ki5Mv0iY8C.
+Li, Y. and Sur, P. Optimal and provable calibration in high-
+dimensional binary classification: Angular calibration
+and Platt scaling. In Advances in Neural Information Pro-
+cessing Systems, 2025. URL https://openreview.
+net/forum?id=SgQAleMecy. NeurIPS 2025 Spot-
+light.
+Liang, T., Poggio, T., Rakhlin, A., and Stokes, J. Fisher-
+Rao metric, geometry, and complexity of neural networks.
+In Proceedings of the 22nd International Conference on
+Artificial Intelligence and Statistics, volume 89 of Pro-
+ceedings of Machine Learning Research, pp. 888–896.
+PMLR, 2019.
+Lin, T.-Y., Goyal, P., Girshick, R., He, K., and Dollár, P.
+Focal loss for dense object detection. In Proceedings of
+the IEEE international conference on computer vision,
+pp. 2980–2988, 2017.
+Liu, B., Ben Ayed, I., Galdran, A., and Dolz, J. The devil is
+in the margin: Margin-based label smoothing for network
+calibration. In Proceedings of the IEEE/CVF Conference
+on Computer Vision and Pattern Recognition, pp. 80–88,
+2022.
+Loshchilov, I. and Hutter, F. Decoupled weight decay reg-
+ularization. In International Conference on Learning
+Representations, 2019. URL https://openreview.
+net/forum?id=Bkg6RiCqY7.
+Maddox, W. J., Benton, G., and Wilson, A. G. Rethinking
+parameter counting in deep models: Effective dimension-
+ality revisited. arXiv preprint arXiv:2003.02139, 2020.
+URL https://arxiv.org/abs/2003.02139.
+Mason-Williams, I., Ekholm, F., and Huszár, F. Explicit
+regularisation, sharpness and calibration. In NeurIPS
+2024 Workshop on Scientific Methods for Understanding
+Deep Learning (SciForDL). OpenReview.net, October
+2024. URL https://openreview.net/forum?
+id=ZQTiGcykl6.
+Möllenhoff, T. and Khan, M. E. SAM as an optimal relax-
+ation of Bayes. In International Conference on Learning
+Representations, 2023. URL https://openreview.
+net/forum?id=k4fevFqSQcX.
+Mukhoti, J., Kulharia, V., Sanyal, A., Golodetz, S., Torr,
+P. H. S., and Dokania, P. K. Calibrating deep neural
+networks using focal loss.
+In Advances in Neural
+Information Processing Systems, volume 33, pp. 15288–
+15299,
+2020.
+URL https://proceedings.
+neurips.cc/paper/2020/hash/
+aeb7b30ef1d024a76f21a1d40e30c302-Abstract.
+html.
+Müller, R., Kornblith, S., and Hinton, G. E.
+When
+does label smoothing help?
+In Advances in Neural
+Information Processing Systems, volume 32, pp. 4696–
+4705,
+2019.
+URL
+https://proceedings.
+neurips.cc/paper/2019/hash/
+f1748d6b0fd9d439f71450117eba2725-Abstract.
+html.
+Naeini, M. P., Cooper, G. F., and Hauskrecht, M. Obtain-
+ing well calibrated probabilities using Bayesian binning.
+In Proceedings of the Twenty-Ninth AAAI Conference
+on Artificial Intelligence, pp. 2901–2907, 2015.
+doi:
+10.1609/aaai.v29i1.9602. URL https://ojs.aaai.
+org/index.php/AAAI/article/view/9602.
+Nagarajan, V. and Kolter, J. Z. Deterministic PAC-bayesian
+generalization bounds for deep networks via generalizing
+noise-resilience. In International Conference on Learning
+Representations, 2019. URL https://openreview.
+net/forum?id=Hygn2o0qKX.
+10
+
+Too Sharp, Too Sure: When Calibration Follows Curvature
+Neyshabur, B., Bhojanapalli, S., McAllester, D., and
+Srebro,
+N.
+Exploring
+generalization
+in
+deep
+learning.
+In
+Advances
+in
+Neural
+Information
+Processing Systems,
+volume 30,
+pp. 5947–5956,
+2017.
+URL https://proceedings.neurips.
+cc/paper_files/paper/2017/hash/
+10ce03a1ed01077e3e289f3e53c72813-Abstract.
+html.
+Niculescu-Mizil, A. and Caruana, R. Predicting good prob-
+abilities with supervised learning. In Proceedings of the
+22nd International Conference on Machine Learning, pp.
+625–632, 2005. doi: 10.1145/1102351.1102430.
+Ovadia, Y., Fertig, E., Ren, J., Nado, Z., Sculley,
+D., Nowozin, S., Dillon, J. V., Lakshminarayanan,
+B., and Snoek, J.
+Can you trust your model’s un-
+certainty?
+evaluating predictive uncertainty under
+dataset shift.
+In Advances in Neural Information
+Processing Systems, volume 32, pp. 13991–14002,
+2019.
+URL https://proceedings.neurips.
+cc/paper_files/paper/2019/hash/
+8558cb408c1d76621371888657d2eb1d-Abstract.
+html.
+Pereyra, G., Tucker, G., Chorowski, J., Kaiser, Ł., and
+Hinton, G. Regularizing neural networks by penalizing
+confident output distributions. In ICLR 2017 Workshop
+Track Proceedings. OpenReview.net, 2017. URL https:
+//openreview.net/forum?id=HyhbYrGYe.
+Platt, J. C. Probabilistic outputs for support vector machines
+and comparisons to regularized likelihood methods. In
+Smola, A. J., Bartlett, P. L., Schölkopf, B., and Schuur-
+mans, D. (eds.), Advances in Large Margin Classifiers,
+pp. 61–74. MIT Press, 2000.
+Qin, Y., Wang, X., Beutel, A., and Chi, E.
+Im-
+proving calibration through the relationship with
+adversarial robustness.
+In Advances in Neural
+Information Processing Systems, volume 34, pp. 14358–
+14369,
+2021.
+URL https://proceedings.
+neurips.cc/paper/2021/hash/
+78421a2e0e1168e5cd1b7a8d23773ce6-Abstract.
+html.
+Rosenfeld, E. and Risteski, A. Outliers with opposing sig-
+nals have an outsized effect on neural network optimiza-
+tion. In International Conference on Learning Represen-
+tations, 2024. URL https://openreview.net/
+forum?id=kIZ3S3tel6. ICLR 2024 Poster.
+Song, M., Ahn, K., and Yun, C. Does SGD really happen in
+tiny subspaces? In International Conference on Learning
+Representations, 2025. URL https://openreview.
+net/forum?id=v6iLQBoIJw. ICLR 2025 Poster.
+Soudry, D., Hoffer, E., Nacson, M. S., Gunasekar, S., and
+Srebro, N. The implicit bias of gradient descent on separa-
+ble data. Journal of Machine Learning Research, 19(70):
+1–57, 2018.
+URL https://jmlr.org/papers/
+v19/18-188.html.
+Stutz, D., Hein, M., and Schiele, B.
+Confidence-
+calibrated adversarial training:
+Generalizing to un-
+seen attacks.
+In Daumé III, H. and Singh, A. (eds.),
+Proceedings of the 37th International Conference on
+Machine Learning, volume 119 of Proceedings of
+Machine Learning Research, pp. 9155–9166. PMLR,
+2020. URL https://proceedings.mlr.press/
+v119/stutz20a.html.
+Stutz, D., Hein, M., and Schiele, B. Relating adversarially
+robust generalization to flat minima. In Proceedings of
+the IEEE/CVF International Conference on Computer Vi-
+sion (ICCV), pp. 7807–7817, 2021.
+URL https:
+//openaccess.thecvf.com/content/
+ICCV2021/papers/Stutz_Relating_
+Adversarially_Robust_Generalization_
+to_Flat_Minima_ICCV_2021_paper.pdf.
+Tan, C., Zhou, Y., Ye, H., Dai, G., Liu, J., Song, Z., Zhang,
+J., Zhao, Z., Hao, Y., and Xu, Y. Towards understanding
+the calibration benefits of sharpness-aware minimization.
+In International Conference on Learning Representations,
+2026. URL https://openreview.net/forum?
+id=c0ERcCz6lD. ICLR 2026 Poster.
+Thulasidasan, S., Chennupati, G., Bilmes, J. A., Bhat-
+tacharya, T., and Michalak, S.
+On mixup training:
+Improved
+calibration
+and
+predictive
+uncertainty
+for deep neural networks.
+In Advances in Neu-
+ral
+Information
+Processing
+Systems,
+volume
+32,
+2019.
+URL https://proceedings.neurips.
+cc/paper_files/paper/2019/hash/
+36ad8b5f42db492827016448975cc22d-Abstract.
+html.
+Tsuzuku, Y., Sato, I., and Sugiyama, M.
+Normalized
+flat minima:
+Exploring scale invariant definition of
+flat minima for neural networks using PAC-bayesian
+analysis.
+In Daumé III, H. and Singh, A. (eds.),
+Proceedings of the 37th International Conference on
+Machine Learning, volume 119 of Proceedings of
+Machine Learning Research, pp. 9636–9647. PMLR,
+2020. URL https://proceedings.mlr.press/
+v119/tsuzuku20a.html.
+Wu, J., Bartlett, P., Telgarsky, M., and Yu, B. Benefits of
+early stopping in gradient descent for overparameterized
+logistic regression. In Proceedings of the 42nd Interna-
+tional Conference on Machine Learning, volume 267 of
+11
+
+Too Sharp, Too Sure: When Calibration Follows Curvature
+Proceedings of Machine Learning Research, pp. 67081–
+67110. PMLR, 2025. URL https://proceedings.
+mlr.press/v267/wu25b.html.
+Xing, C., Arpit, D., Tsirigotis, C., and Bengio, Y. A walk
+with SGD. arXiv preprint arXiv:1802.08770, 2018. URL
+https://arxiv.org/abs/1802.08770.
+Zadrozny, B. and Elkan, C. Transforming classifier scores
+into accurate multiclass probability estimates. In Pro-
+ceedings of the Eighth ACM SIGKDD International Con-
+ference on Knowledge Discovery and Data Mining, pp.
+694–699, 2002. doi: 10.1145/775047.775151.
+Zhang, H., Yu, Y., Jiao, J., Xing, E., El Ghaoui, L., and
+Jordan, M. Theoretically principled trade-off between
+robustness and accuracy. In International conference on
+machine learning, pp. 7472–7482. PMLR, 2019.
+Zhang, J., Kailkhura, B., and Han, T. Y.-J. Mix-n-Match:
+Ensemble and compos

@@ -1,0 +1,22 @@
+{
+  "fig3": {
+    "title": "Paired NLL differences, SAM minus comparator",
+    "caption": "Paired NLL differences at 40 epochs. Each dot is a mean over five paired seeds and each bar is a 95% t-interval (df = 4). A line marks zero. Row labels give the artifact number: Artifact 1 (art_SL9gPfE09HlN), Artifact 2 (art_WOFinDmS2PoX, its 60-epoch run read in Evaluation 1), Artifact 3 (art_v2M5ZOOHpgid) and Artifact 4 (art_7yu4oYgjmi55). Rows marked TS compare temperature-scaled models."
+  },
+  "fig4": {
+    "title": "Validation calibration gap by training epoch",
+    "caption": "Validation gaps, SAM minus SGD, by training epoch in Artifact 2 (three paired seeds, learning rate 0.03). Left: ECE. Right: NLL. The line is the mean over seeds and the shaded region is the 95% t-interval (df = 2). The shaded region is wide at the early epochs and smaller from epoch 25 on, and with three seeds the shape of the trajectory is a reading of point estimates only."
+  },
+  "fig5": {
+    "title": "Paired ECE differences, SAM minus comparator",
+    "caption": "Paired ECE differences, drawn from the same rows as Figure 3, with the same intervals and the same labels. The ECE rows in Figure 5 are read against the zero line; the row for Artifact 3, temperature-scaled SAM minus temperature-scaled SGD crosses it."
+  },
+  "fig1": {
+    "title": "SAM minus SGD paired differences",
+    "caption": "Paired differences, SAM minus the comparator, at epoch 40 over five seeds. Points are mean differences and bars are 95% t-intervals (df = 4), in x100 metric units: percentage points for accuracy, ECE, ACE, Brier and AURC, and x100 nats for NLL. Left: against SGD. Right: against temperature-scaled SGD. The accuracy interval crosses zero, and the NLL gap against temperature-scaled SGD excludes zero."
+  },
+  "fig2": {
+    "title": "Test ECE and NLL at epoch 60",
+    "caption": "Test ECE (left) and test NLL (right) at epoch 60 for SGD and SAM, with and without temperature scaling. Bars are means over three seeds and error bars are sample standard deviations across seeds. The scaled SAM and SGD ECE values are close, and the NLL advantage for SAM remains after scaling."
+  }
+}

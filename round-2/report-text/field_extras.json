@@ -1,0 +1,5 @@
+[
+{"extra": "A proposed SAM variant (CSAM) evaluated against SAM and other calibration approaches", "claim_kind": "calibration method comparison", "seen_in": ["Towards Understanding The Calibration Benefits of Sharpness-Aware Minimization (2026)"], "needs_during_run": "a second optimiser arm and calibration metrics on the same test logits", "delivered_in": "paper"},
+{"extra": "Calibration evaluated on a large-scale benchmark beyond small datasets", "claim_kind": "scale of calibration claim", "seen_in": ["Towards Understanding The Calibration Benefits of Sharpness-Aware Minimization (2026)"], "needs_during_run": "training on ImageNet-1K-scale data", "delivered_in": "paper"},
+{"extra": "Post-hoc calibration methods compared across several architectures and datasets", "claim_kind": "calibration method comparison", "seen_in": ["On Calibration of Modern Neural Networks (2017)"], "needs_during_run": "validation logits for each post-processing method", "delivered_in": "paper"}
+]
